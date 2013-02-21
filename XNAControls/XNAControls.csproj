@@ -98,6 +98,7 @@
     <Compile Include="Box.cs" />
     <Compile Include="CharacterEventArgs.cs" />
     <Compile Include="CharacterEventHandler.cs" />
+    <Compile Include="CharacterRenderer.cs" />
     <Compile Include="KeyboardInput.cs" />
     <Compile Include="KeyEventArgs.cs" />
     <Compile Include="KeyEventHandler.cs" />
