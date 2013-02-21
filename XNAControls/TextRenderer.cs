@@ -27,7 +27,11 @@ namespace XNAControls
 
         protected XNA.Graphics.Texture2D CreateTexture(XNA.Graphics.GraphicsDevice device, string text)
         {
+#if XNA3
+            return CreateTexture(device, false, this.font, text, this.textRenderingHint);
+#else
             return CreateTexture(device, true, this.font, text, this.textRenderingHint);
+#endif
         }
 
         public static XNA.Graphics.Texture2D CreateTexture(XNA.Graphics.GraphicsDevice device, bool premultiplyAlpha, Font font, string text, TextRenderingHint textRenderingHint = TextRenderingHint.ClearTypeGridFit)
