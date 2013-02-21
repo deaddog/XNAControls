@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAControls", "XNAControls\XNAControls.csproj", "{86CD1D0C-A2B7-4326-BA23-7AB2362AEDBB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{86CD1D0C-A2B7-4326-BA23-7AB2362AEDBB}.Debug|x86.ActiveCfg = Debug|x86
+		{86CD1D0C-A2B7-4326-BA23-7AB2362AEDBB}.Debug|x86.Build.0 = Debug|x86
+		{86CD1D0C-A2B7-4326-BA23-7AB2362AEDBB}.Release|x86.ActiveCfg = Release|x86
+		{86CD1D0C-A2B7-4326-BA23-7AB2362AEDBB}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
