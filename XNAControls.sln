@@ -3,16 +3,34 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XNAControls", "XNAControls\XNAControls.csproj", "{86CD1D0C-A2B7-4326-BA23-7AB2362AEDBB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoonifyControls", "MoonifyControls\MoonifyControls.csproj", "{84D70B36-E224-4ED3-9BB0-49CEF72E60BD}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "MoonifyContents", "MoonifyContents\MoonifyContents.contentproj", "{476E7AD3-1E3A-4353-A03B-C04DB7846A77}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{86CD1D0C-A2B7-4326-BA23-7AB2362AEDBB}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{86CD1D0C-A2B7-4326-BA23-7AB2362AEDBB}.Debug|x86.ActiveCfg = Debug|x86
 		{86CD1D0C-A2B7-4326-BA23-7AB2362AEDBB}.Debug|x86.Build.0 = Debug|x86
+		{86CD1D0C-A2B7-4326-BA23-7AB2362AEDBB}.Release|Any CPU.ActiveCfg = Release|x86
 		{86CD1D0C-A2B7-4326-BA23-7AB2362AEDBB}.Release|x86.ActiveCfg = Release|x86
 		{86CD1D0C-A2B7-4326-BA23-7AB2362AEDBB}.Release|x86.Build.0 = Release|x86
+		{84D70B36-E224-4ED3-9BB0-49CEF72E60BD}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{84D70B36-E224-4ED3-9BB0-49CEF72E60BD}.Debug|x86.ActiveCfg = Debug|x86
+		{84D70B36-E224-4ED3-9BB0-49CEF72E60BD}.Debug|x86.Build.0 = Debug|x86
+		{84D70B36-E224-4ED3-9BB0-49CEF72E60BD}.Release|Any CPU.ActiveCfg = Release|x86
+		{84D70B36-E224-4ED3-9BB0-49CEF72E60BD}.Release|x86.ActiveCfg = Release|x86
+		{84D70B36-E224-4ED3-9BB0-49CEF72E60BD}.Release|x86.Build.0 = Release|x86
+		{476E7AD3-1E3A-4353-A03B-C04DB7846A77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{476E7AD3-1E3A-4353-A03B-C04DB7846A77}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{476E7AD3-1E3A-4353-A03B-C04DB7846A77}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{476E7AD3-1E3A-4353-A03B-C04DB7846A77}.Release|x86.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
