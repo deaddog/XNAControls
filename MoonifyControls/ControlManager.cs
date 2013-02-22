@@ -7,7 +7,7 @@ namespace MoonifyControls
     public class ControlManager : ControlManagerBase
     {
         public ControlManager(Game game)
-            : base(game, "MoonifyContent")
+            : base(game, "MoonifyContents")
         {
         }
     }
