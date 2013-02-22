@@ -95,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControlManager.cs" />
+    <Compile Include="ListBox.cs" />
     <Compile Include="MoonifyBoxes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
