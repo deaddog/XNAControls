@@ -53,9 +53,9 @@ namespace XNAControls
         }
         public event EventHandler SizeChanged;
 
-        internal protected void _CharacterEntered(CharacterEventArgs e) { OnCharacterEntered(e); }
-        internal protected void _KeyDown(KeyEventArgs e) { OnKeyDown(e); }
-        internal protected void _KeyUp(KeyEventArgs e) { OnKeyUp(e); }
+        internal protected virtual void _CharacterEntered(CharacterEventArgs e) { OnCharacterEntered(e); }
+        internal protected virtual void _KeyDown(KeyEventArgs e) { OnKeyDown(e); }
+        internal protected virtual void _KeyUp(KeyEventArgs e) { OnKeyUp(e); }
 
         protected virtual void OnCharacterEntered(CharacterEventArgs e)
         {
