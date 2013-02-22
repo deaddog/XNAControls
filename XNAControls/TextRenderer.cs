@@ -7,7 +7,7 @@ using XNA = Microsoft.Xna.Framework;
 
 namespace XNAControls
 {
-    internal abstract class TextRenderer
+    public abstract class TextRenderer
     {
         private const byte NONMULTIPLIEDCOLOR = 255;
 

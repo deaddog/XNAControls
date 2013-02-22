@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XNAControls
 {
-    internal class CharacterRenderer : TextRenderer
+    public class CharacterRenderer : TextRenderer
     {
         private Dictionary<char, Texture2D> characters = new Dictionary<char, Texture2D>();
 

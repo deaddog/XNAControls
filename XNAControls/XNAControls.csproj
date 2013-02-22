@@ -100,7 +100,7 @@
     <Compile Include="CharacterEventHandler.cs" />
     <Compile Include="CharacterRenderer.cs" />
     <Compile Include="Control.cs" />
-    <Compile Include="ControlManager.cs" />
+    <Compile Include="ControlManagerBase.cs" />
     <Compile Include="KeyboardInput.cs" />
     <Compile Include="KeyEventArgs.cs" />
     <Compile Include="KeyEventHandler.cs" />
