@@ -7,6 +7,13 @@ namespace XNAControls
 {
     public class Control
     {
+        internal static class MessageSet
+        {
+            public static const uint KEYBOARD_CHARACTER = 0x00000001;
+            public static const uint KEYBOARD_KEYDOWN = 0x00000002;
+            public static const uint KEYBOARD_KEYUP = 0x00000003;
+        }
+
         private bool enabled;
         private Vector2 position;
         private Vector2 size;
@@ -52,6 +59,10 @@ namespace XNAControls
                 SizeChanged(this, e);
         }
         public event EventHandler SizeChanged;
+
+        protected internal virtual void Message(uint msg, params int[] par)
+        {
+        }
 
         internal protected virtual void _CharacterEntered(CharacterEventArgs e) { OnCharacterEntered(e); }
         internal protected virtual void _KeyDown(KeyEventArgs e) { OnKeyDown(e); }
