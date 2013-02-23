@@ -100,10 +100,28 @@ namespace MoonifyControls
         }
         public event EventHandler BackgroundTextChanged;
 
-        protected override void _CharacterEntered(CharacterEventArgs e)
+        protected override void Message(uint msg, params int[] par)
         {
-            if (char.IsControl(e.Character))
-                switch (e.Character)
+            switch (msg)
+            {
+                case 0x00000001:
+                    handleCharacter(Convert.ToChar(par[0]));
+                    base.Message(msg, par);
+                    break;
+
+                case 0x00000002:
+                    handleKeyDown((Keys)par[0]);
+                    base.Message(msg, par);
+                    break;
+
+                default: base.Message(msg, par); break;
+            }
+        }
+
+        private void handleCharacter(Char character)
+        {
+            if (char.IsControl(character))
+                switch (character)
                 {
                     case '\b':
                         if (caretIndex > 0)
@@ -116,15 +134,14 @@ namespace MoonifyControls
                 }
             else
             {
-                text = (text.Substring(0, caretIndex) + e.Character + text.Substring(caretIndex));
+                text = (text.Substring(0, caretIndex) + character + text.Substring(caretIndex));
                 caretIndex++;
                 OnTextChanged(EventArgs.Empty);
             }
-            base._CharacterEntered(e);
         }
-        protected override void _KeyDown(KeyEventArgs e)
+        private void handleKeyDown(Keys key)
         {
-            switch (e.KeyCode)
+            switch (key)
             {
                 case Keys.PageDown: this.IconType = this.IconType == IconTypes.None ? IconTypes.Search : IconTypes.None; break;
                 case Keys.Left: if (caretIndex > 0) caretIndex--; break;
@@ -141,7 +158,6 @@ namespace MoonifyControls
                     }
                     break;
             }
-            base._KeyDown(e);
         }
 
         public override void LoadResources(ContentManager content)
