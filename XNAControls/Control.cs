@@ -7,12 +7,9 @@ namespace XNAControls
 {
     public class Control
     {
-        internal static class MessageSet
-        {
-            public static const uint KEYBOARD_CHARACTER = 0x00000001;
-            public static const uint KEYBOARD_KEYDOWN = 0x00000002;
-            public static const uint KEYBOARD_KEYUP = 0x00000003;
-        }
+        internal const uint KEYBOARD_CHARACTER = 0x00000001;
+        internal const uint KEYBOARD_KEYDOWN = 0x00000002;
+        internal const uint KEYBOARD_KEYUP = 0x00000003;
 
         private bool enabled;
         private Vector2 position;
@@ -62,11 +59,19 @@ namespace XNAControls
 
         protected internal virtual void Message(uint msg, params int[] par)
         {
+            switch (msg)
+            {
+                case Control.KEYBOARD_CHARACTER:
+                    OnCharacterEntered(new CharacterEventArgs(Convert.ToChar(par[0]), par[1]));
+                    break;
+                case Control.KEYBOARD_KEYDOWN:
+                    OnKeyDown(new KeyEventArgs((Microsoft.Xna.Framework.Input.Keys)par[0], (par[1] & 1) != 0, (par[1] & 2) != 0));
+                    break;
+                case Control.KEYBOARD_KEYUP:
+                    OnKeyUp(new KeyEventArgs((Microsoft.Xna.Framework.Input.Keys)par[0], (par[1] & 1) != 0, (par[1] & 2) != 0));
+                    break;
+            }
         }
-
-        internal protected virtual void _CharacterEntered(CharacterEventArgs e) { OnCharacterEntered(e); }
-        internal protected virtual void _KeyDown(KeyEventArgs e) { OnKeyDown(e); }
-        internal protected virtual void _KeyUp(KeyEventArgs e) { OnKeyUp(e); }
 
         protected virtual void OnCharacterEntered(CharacterEventArgs e)
         {

@@ -13,7 +13,7 @@ namespace XNAControls
         private ContentManager content;
         private SpriteBatch spriteBatch;
         private Texture2D background;
-        
+
         private Control keyboardControl = null;
 
         public ControlManagerBase(Game game, string contentRoot)
@@ -23,9 +23,18 @@ namespace XNAControls
             this.controls = new ControlCollection(this);
 
             KeyboardInput.Initialize(game.Window);
-            KeyboardInput.CharacterEntered += (s, e) => { if (keyboardControl != null) keyboardControl._CharacterEntered(e); };
-            KeyboardInput.KeyDown += (s, e) => { if (keyboardControl != null) keyboardControl._KeyDown(e); };
-            KeyboardInput.KeyUp += (s, e) => { if (keyboardControl != null) keyboardControl._KeyUp(e); };
+            KeyboardInput.CharacterEntered += (s, e) =>
+            {
+                keyboardControl.Message(Control.KEYBOARD_CHARACTER, e.Character, e.Param);
+            };
+            KeyboardInput.KeyDown += (s, e) =>
+            {
+                keyboardControl.Message(Control.KEYBOARD_KEYDOWN, 0 + (e.Shift ? 1 : 0) + (e.Control ? 2 : 0));
+            };
+            KeyboardInput.KeyUp += (s, e) =>
+            {
+                keyboardControl.Message(Control.KEYBOARD_KEYUP, 0 + (e.Shift ? 1 : 0) + (e.Control ? 2 : 0));
+            };
         }
 
         public ControlCollection Controls
