@@ -17,5 +17,9 @@ namespace MoonifyControls
         {
             get { return new Box(0, 3, 204, 3, 0, 0, 4, 94, 4, 0); }
         }
+        public static Box ImageBox
+        {
+            get { return new Box(1, 5, 240, 5, 1, 0, 5, 240, 5, 2); }
+        }
     }
 }
