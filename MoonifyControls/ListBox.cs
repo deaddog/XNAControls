@@ -22,6 +22,8 @@ namespace MoonifyControls
 
         private CharacterRenderer font;
 
+        #region Index management
+
         private int _selectionIndex = -1;
         private int selectionIndex
         {
@@ -36,9 +38,7 @@ namespace MoonifyControls
                 if (_selectionIndex != value)
                 {
                     _selectionIndex = value;
-
-                    if (SelectedIndexChanged != null)
-                        SelectedIndexChanged(this, EventArgs.Empty);
+                    OnSelectedIndexChanged(EventArgs.Empty);
                 }
             }
         }
@@ -48,7 +48,14 @@ namespace MoonifyControls
             set { selectionIndex = value; }
         }
 
+        protected virtual void OnSelectedIndexChanged(EventArgs e)
+        {
+            if (SelectedIndexChanged != null)
+                SelectedIndexChanged(this, e);
+        }
         public event EventHandler SelectedIndexChanged;
+
+        #endregion
 
         private ObjectCollection items;
 
