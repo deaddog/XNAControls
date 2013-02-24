@@ -180,6 +180,7 @@ namespace MoonifyControls
             {
                 return item.ToString();
             }
+
             public string GetText(T item)
             {
                 if (!printedValue.ContainsKey(item))
@@ -190,10 +191,22 @@ namespace MoonifyControls
             {
                 return GetText(list[index]);
             }
+
+            /// <summary>
+            /// Gets or sets the method used for converting objects of type <typeparamref name="T"/> into a string (their visual representation).
+            /// If this is null, the objects ToString method is used.
+            /// </summary>
             public Func<T, string> ItemToString
             {
                 get { return toString == itemToString ? null : toString; }
                 set { toString = (value ?? toString); printedValue.Clear(); }
+            }
+
+            public void Refresh(T item)
+            {
+                if (item == null)
+                    throw new ArgumentNullException("item");
+                printedValue.Remove(item);
             }
             public void Refresh(int index)
             {
@@ -204,17 +217,26 @@ namespace MoonifyControls
 
             public int IndexOf(T item)
             {
-                throw new NotImplementedException();
+                return list.IndexOf(item);
             }
 
             public void Insert(int index, T item)
             {
-                throw new NotImplementedException();
+                if (list.Contains(item))
+                    throw new InvalidOperationException(this.GetType().Name + " cannot contain multiples of the same instance.");
+
+                list.Insert(index, item);
+                if (index <= owner.selectionIndex)
+                    owner.selectionIndex = owner.selectionIndex + 1;
             }
 
             public void RemoveAt(int index)
             {
-                throw new NotImplementedException();
+                if (index < 0 || index >= list.Count)
+                    throw new ArgumentOutOfRangeException("index");
+
+                T item = list[index];
+                Remove(item);
             }
 
             public T this[int index]
@@ -222,7 +244,23 @@ namespace MoonifyControls
                 get { return list[index]; }
                 set
                 {
-                    throw new NotImplementedException();
+                    if (index == list.Count)
+                    {
+                        Add(value);
+                        return;
+                    }
+                    else if (index < 0 || index > list.Count)
+                        throw new ArgumentOutOfRangeException("index");
+                    else if (list.Contains(value))
+                        throw new InvalidOperationException(this.GetType().Name + " cannot contain multiples of the same instance.");
+                    else
+                    {
+                        printedValue.Remove(list[index]);
+                        list[index] = value;
+
+                        if (index == owner.selectionIndex)
+                            owner.selectionIndex = -1;
+                    }
                 }
             }
 
@@ -232,6 +270,9 @@ namespace MoonifyControls
 
             public void Add(T item)
             {
+                if (list.Contains(item))
+                    throw new InvalidOperationException(this.GetType().Name + " cannot contain multiples of the same instance.");
+                
                 list.Add(item);
             }
 
@@ -239,16 +280,17 @@ namespace MoonifyControls
             {
                 owner.selectionIndex = -1;
                 this.list.Clear();
+                this.printedValue.Clear();
             }
 
             public bool Contains(T item)
             {
-                throw new NotImplementedException();
+                return list.Contains(item);
             }
 
             public void CopyTo(T[] array, int arrayIndex)
             {
-                throw new NotImplementedException();
+                list.CopyTo(array, arrayIndex);
             }
 
             public int Count
@@ -258,12 +300,24 @@ namespace MoonifyControls
 
             public bool IsReadOnly
             {
-                get { throw new NotImplementedException(); }
+                get { return false; }
             }
 
             public bool Remove(T item)
             {
-                throw new NotImplementedException();
+                int index = list.IndexOf(item);
+                if (index == -1)
+                    return false;
+
+                list.Remove(item);
+                printedValue.Remove(item);
+
+                if (index == owner.selectionIndex)
+                    owner.selectionIndex = -1;
+                else if (index < owner.selectionIndex)
+                    owner.selectionIndex = owner.selectionIndex - 1;
+
+                return true;
             }
 
             #endregion
@@ -272,7 +326,7 @@ namespace MoonifyControls
 
             public IEnumerator<T> GetEnumerator()
             {
-                throw new NotImplementedException();
+                return list.GetEnumerator();
             }
 
             #endregion
@@ -281,7 +335,7 @@ namespace MoonifyControls
 
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
             {
-                throw new NotImplementedException();
+                return list.GetEnumerator();
             }
 
             #endregion
