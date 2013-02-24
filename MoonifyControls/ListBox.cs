@@ -28,13 +28,13 @@ namespace MoonifyControls
             get { return _selectionIndex; }
             set
             {
+                if (value < 0)
+                    value = -1;
+                else if (value >= items.Count)
+                    throw new ArgumentOutOfRangeException("value");
+
                 if (_selectionIndex != value)
                 {
-                    if (value < 0)
-                        value = -1;
-                    else if (value >= items.Count)
-                        throw new ArgumentOutOfRangeException("value");
-
                     _selectionIndex = value;
 
                     if (SelectedIndexChanged != null)
