@@ -60,19 +60,21 @@ namespace MoonifyControls
         private ObjectCollection items;
 
         public ListBox()
-            : base(200, 200)
+            : base(200, 120)
         {
             this.items = new ObjectCollection(this);
 
             font = new CharacterRenderer("HelveticaNeueLT Com 65 Md", 9f, System.Drawing.FontStyle.Regular, System.Drawing.Text.TextRenderingHint.AntiAlias);
         }
-        public ListBox(IEnumerable<T> collection)
-            : this()
-        {
-        }
         public ListBox(params T[] collection)
             : this(collection as IEnumerable<T>)
         {
+        }
+        public ListBox(IEnumerable<T> collection)
+            : this()
+        {
+            foreach (T t in collection)
+                this.items.Add(t);
         }
 
         public override void LoadResources(ContentManager content)
@@ -272,7 +274,7 @@ namespace MoonifyControls
             {
                 if (list.Contains(item))
                     throw new InvalidOperationException(this.GetType().Name + " cannot contain multiples of the same instance.");
-                
+
                 list.Add(item);
             }
 
