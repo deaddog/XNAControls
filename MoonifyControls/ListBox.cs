@@ -75,15 +75,6 @@ namespace MoonifyControls
         {
         }
 
-        protected override void _KeyDown(KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.PageDown)
-                selectionIndex++;
-            else if (e.KeyCode == Keys.PageUp)
-                selectionIndex--;
-            base._KeyDown(e);
-        }
-
         public override void LoadResources(ContentManager content)
         {
             frameBox = MoonifyBoxes.EmptyBoxFrame;
