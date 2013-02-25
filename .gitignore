@@ -1,3 +1,14 @@
+############################
+## Setup for test-project ##
+############################
+
+XNAControls_test.sln
+TestGame/
+
+########################
+## Visual Studio 2010 ##
+########################
+
 *.cache
 *.tlog
 *.pdb
