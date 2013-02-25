@@ -29,11 +29,11 @@ namespace XNAControls
             };
             KeyboardInput.KeyDown += (s, e) =>
             {
-                keyboardControl.Message(Control.KEYBOARD_KEYDOWN, 0 + (e.Shift ? 1 : 0) + (e.Control ? 2 : 0));
+                keyboardControl.Message(Control.KEYBOARD_KEYDOWN, (int)e.KeyCode, 0 + (e.Shift ? 1 : 0) + (e.Control ? 2 : 0));
             };
             KeyboardInput.KeyUp += (s, e) =>
             {
-                keyboardControl.Message(Control.KEYBOARD_KEYUP, 0 + (e.Shift ? 1 : 0) + (e.Control ? 2 : 0));
+                keyboardControl.Message(Control.KEYBOARD_KEYUP, (int)e.KeyCode, 0 + (e.Shift ? 1 : 0) + (e.Control ? 2 : 0));
             };
         }
 
