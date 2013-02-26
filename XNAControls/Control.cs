@@ -10,7 +10,10 @@ namespace XNAControls
         internal const uint KEYBOARD_CHARACTER = 0x00000001;
         internal const uint KEYBOARD_KEYDOWN = 0x00000002;
         internal const uint KEYBOARD_KEYUP = 0x00000003;
+        internal const uint CONTROL_GOTFOCUS = 0x00000009;
+        internal const uint CONTROL_LOSTFOCUS = 0x00000010;
 
+        private bool focused;
         private bool enabled;
         private Vector2 position;
         private Vector2 size;
@@ -22,6 +25,10 @@ namespace XNAControls
             this.InnerSizeChange(initialwidth, initialheight);
         }
 
+        public bool Focused
+        {
+            get { return focused; }
+        }
         public bool Enabled
         {
             get { return enabled; }
@@ -70,8 +77,27 @@ namespace XNAControls
                 case Control.KEYBOARD_KEYUP:
                     OnKeyUp(new KeyEventArgs((Microsoft.Xna.Framework.Input.Keys)par[0], (par[1] & 1) != 0, (par[1] & 2) != 0));
                     break;
+                case Control.CONTROL_GOTFOCUS:
+                    OnGotFocus(EventArgs.Empty);
+                    break;
+                case Control.CONTROL_LOSTFOCUS:
+                    OnLostFocus(EventArgs.Empty);
+                    break;
             }
         }
+
+        protected virtual void OnGotFocus(EventArgs e)
+        {
+            if (GotFocus != null)
+                GotFocus(this, e);
+        }
+        public event EventHandler GotFocus;
+        protected virtual void OnLostFocus(EventArgs e)
+        {
+            if (LostFocus != null)
+                LostFocus(this, e);
+        }
+        public event EventHandler LostFocus;
 
         protected virtual void OnCharacterEntered(CharacterEventArgs e)
         {
