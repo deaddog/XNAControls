@@ -104,6 +104,8 @@
     <Compile Include="KeyboardInput.cs" />
     <Compile Include="KeyEventArgs.cs" />
     <Compile Include="KeyEventHandler.cs" />
+    <Compile Include="MouseEventArgs.cs" />
+    <Compile Include="MouseEventHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextRenderer.cs" />
   </ItemGroup>
