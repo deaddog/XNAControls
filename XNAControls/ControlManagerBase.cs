@@ -47,6 +47,9 @@ namespace XNAControls
             get { return this.keyboardControl; }
             set
             {
+                if (!controls.Contains(value))
+                    throw new InvalidOperationException("Control \"" + value.GetType().Name + "\" is not contained by this " + this.GetType().Name);
+
                 if (this.keyboardControl != null)
                     this.keyboardControl.Message(Control.CONTROL_LOSTFOCUS);
 
@@ -104,6 +107,11 @@ namespace XNAControls
             public void Add(Control control)
             {
                 list.Add(control);
+            }
+
+            public bool Contains(Control control)
+            {
+                return list.Contains(control);
             }
 
             #region IEnumerable<Control> Members
