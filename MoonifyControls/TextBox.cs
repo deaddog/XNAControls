@@ -66,15 +66,13 @@ namespace MoonifyControls
                 OnTextChanged(EventArgs.Empty);
             }
         }
-        public string BacgroundText
+        public string BackgroundText
         {
             get { return backgroundText; }
             set
             {
                 if (value == null)
                     throw new ArgumentNullException("value");
-                if (this.backgroundBox == null)
-                    return;
 
                 this.backgroundText = value;
 
@@ -112,6 +110,12 @@ namespace MoonifyControls
                 case 0x00000002:
                     handleKeyDown((Keys)par[0]);
                     base.Message(msg, par);
+                    break;
+
+                case 0x00000009:
+                    base.Message(msg, par);
+                    lastCaretSwap = DateTime.Now;
+                    showCaret = true;
                     break;
 
                 default: base.Message(msg, par); break;
@@ -182,7 +186,7 @@ namespace MoonifyControls
                 showCaret = !showCaret;
                 lastCaretSwap = dt;
             }
-            if (showCaret)
+            if (showCaret && this.Focused)
             {
                 int wid = font.TextWidth(text.Substring(0, caretIndex)) ?? 0;
                 spriteBatch.Draw(caret, this.Location + new Vector2(9 + wid, 6), Color.White);
