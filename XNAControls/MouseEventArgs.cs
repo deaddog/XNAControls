@@ -6,41 +6,20 @@ namespace XNAControls
     public class MouseEventArgs : EventArgs
     {
         private int x, y;
-        private ButtonState left, middle, right;
+        private MouseButtons buttons;
         private int scroll;
 
-        public MouseEventArgs(int x, int y, bool leftDown, bool middleDown, bool rightDown, int scroll)
+        public MouseEventArgs(int x, int y, MouseButtons buttons, int scroll)
         {
             this.x = x;
             this.y = y;
-            this.left = leftDown ? ButtonState.Pressed : ButtonState.Released;
-            this.middle = middleDown ? ButtonState.Pressed : ButtonState.Released;
-            this.right = rightDown ? ButtonState.Pressed : ButtonState.Released;
+            this.buttons = buttons;
             this.scroll = scroll;
         }
 
-        /// <summary>
-        /// Gets the state of the left mouse button.
-        /// </summary>
-        public ButtonState LeftButton
+        public MouseButtons Buttons
         {
-            get { return left; }
-        }
-
-        /// <summary>
-        /// Gets the state of the middle mouse button.
-        /// </summary>
-        public ButtonState MiddleButton
-        {
-            get { return middle; }
-        }
-
-        /// <summary>
-        /// Gets the state of the right mouse button.
-        /// </summary>
-        public ButtonState RightButton
-        {
-            get { return right; }
+            get { return buttons; }
         }
 
         /// <summary>

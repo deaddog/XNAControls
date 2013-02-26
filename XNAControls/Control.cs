@@ -77,10 +77,7 @@ namespace XNAControls
                     break;
 
                 case Control.MOUSE_MOVE:
-                    bool left = (par[2] & 1) > 0;
-                    bool middle = (par[2] & 2) > 0;
-                    bool right = (par[2] & 4) > 0;
-                    OnMouseMove(new MouseEventArgs(par[0], par[1], left, middle, right, par[3]));
+                    OnMouseMove(new MouseEventArgs(par[0], par[1], (MouseButtons)par[2], par[3]));
                     break;
             }
         }
