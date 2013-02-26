@@ -76,7 +76,15 @@ namespace XNAControls
                 (ms.MiddleButton == ButtonState.Pressed ? 2 : 0) +
                 (ms.RightButton == ButtonState.Pressed ? 4 : 0);
         }
+        private int buttonState(bool left, bool middle, bool right)
+        {
+            return
+                (left ? 1 : 0) +
+                (middle ? 2 : 0) +
+                (right ? 4 : 0);
+        }
 
+        private Control[] downControls = new Control[3];
         private MouseState oldMouseState;
         public override void Update(GameTime gameTime)
         {
@@ -89,12 +97,47 @@ namespace XNAControls
             {
                 if (ms.X != oldMouseState.X || ms.Y != oldMouseState.Y)
                     c.Message(Control.MOUSE_MOVE, ms.X, ms.Y, buttonState(ms), 0);
+
+                if (ms.LeftButton != oldMouseState.LeftButton)
+                    sendMouseMessages(0, ms.LeftButton == ButtonState.Pressed, c, ms.X, ms.Y, buttonState(true, false, false), 0);
+
+                if (ms.LeftButton != oldMouseState.LeftButton)
+                    sendMouseMessages(1, ms.MiddleButton == ButtonState.Pressed, c, ms.X, ms.Y, buttonState(false, true, false), 0);
+
+                if (ms.LeftButton != oldMouseState.LeftButton)
+                    sendMouseMessages(2, ms.RightButton == ButtonState.Pressed, c, ms.X, ms.Y, buttonState(false, false, true), 0);
+            }
+            else
+            {
+                if (ms.LeftButton != oldMouseState.LeftButton)
+                    downControls[0] = null;
+
+                if (ms.MiddleButton != oldMouseState.MiddleButton)
+                    downControls[1] = null;
+
+                if (ms.RightButton != oldMouseState.RightButton)
+                    downControls[2] = null;
             }
 
             for (int i = 0; i < controls.Count; i++)
                 controls[i].Update(gameTime);
 
             oldMouseState = ms;
+        }
+        private void sendMouseMessages(int button, bool down, Control c, params int[] parameters)
+        {
+            if (down)
+            {
+                c.Message(Control.MOUSE_DOWN, parameters);
+                downControls[button] = c;
+            }
+            else
+            {
+                c.Message(Control.MOUSE_UP, parameters);
+                if (c == downControls[button])
+                    c.Message(Control.MOUSE_CLICK, parameters);
+                downControls[button] = null;
+            }
         }
 
         public class ControlCollection : IEnumerable<Control>
