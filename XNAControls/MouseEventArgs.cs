@@ -5,11 +5,18 @@ namespace XNAControls
 {
     public class MouseEventArgs : EventArgs
     {
-        private MouseState state;
+        private int x, y;
+        private ButtonState left, middle, right;
+        private int scroll;
 
-        public MouseEventArgs(MouseState state)
+        public MouseEventArgs(int x, int y, bool leftDown, bool middleDown, bool rightDown, int scroll)
         {
-            this.state = state;
+            this.x = x;
+            this.y = y;
+            this.left = leftDown ? ButtonState.Pressed : ButtonState.Released;
+            this.middle = middleDown ? ButtonState.Pressed : ButtonState.Released;
+            this.right = rightDown ? ButtonState.Pressed : ButtonState.Released;
+            this.scroll = scroll;
         }
 
         /// <summary>
@@ -17,7 +24,7 @@ namespace XNAControls
         /// </summary>
         public ButtonState LeftButton
         {
-            get { return state.LeftButton; }
+            get { return left; }
         }
 
         /// <summary>
@@ -25,7 +32,7 @@ namespace XNAControls
         /// </summary>
         public ButtonState MiddleButton
         {
-            get { return state.MiddleButton; }
+            get { return middle; }
         }
 
         /// <summary>
@@ -33,7 +40,7 @@ namespace XNAControls
         /// </summary>
         public ButtonState RightButton
         {
-            get { return state.RightButton; }
+            get { return right; }
         }
 
         /// <summary>
@@ -41,7 +48,7 @@ namespace XNAControls
         /// </summary>
         public int ScrollWheelValue
         {
-            get { return state.ScrollWheelValue; }
+            get { return scroll; }
         }
 
         /// <summary>
@@ -49,7 +56,7 @@ namespace XNAControls
         /// </summary>
         public int X
         {
-            get { return state.X; }
+            get { return x; }
         }
 
         /// <summary>
@@ -57,7 +64,7 @@ namespace XNAControls
         /// </summary>
         public int Y
         {
-            get { return state.Y; }
+            get { return y; }
         }
     }
 }
