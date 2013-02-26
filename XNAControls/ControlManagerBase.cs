@@ -44,8 +44,15 @@ namespace XNAControls
 
         public Control KeyboardControl
         {
-            get { return keyboardControl; }
-            set { keyboardControl = value; }
+            get { return this.keyboardControl; }
+            set
+            {
+                if (this.keyboardControl != null)
+                    this.keyboardControl.Message(Control.CONTROL_LOSTFOCUS);
+
+                this.keyboardControl = value;
+                this.keyboardControl.Message(Control.CONTROL_GOTFOCUS);
+            }
         }
 
         protected override void LoadContent()
