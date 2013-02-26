@@ -97,6 +97,13 @@ namespace XNAControls
         }
         public event KeyEventHandler KeyUp;
 
+        protected virtual void OnMouseMove(MouseEventArgs e)
+        {
+            if (MouseMove != null)
+                MouseMove(this, e);
+        }
+        public event MouseEventHandler MouseMove;
+
         public virtual void Update(GameTime gameTime)
         {
         }
