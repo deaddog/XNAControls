@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace XNAControls
 {
@@ -67,10 +69,32 @@ namespace XNAControls
                 controls[i].Draw(spriteBatch, gameTime);
         }
 
+        private int buttonState(MouseState ms)
+        {
+            return
+                (ms.LeftButton == ButtonState.Pressed ? 1 : 0) +
+                (ms.MiddleButton == ButtonState.Pressed ? 2 : 0) +
+                (ms.RightButton == ButtonState.Pressed ? 4 : 0);
+        }
+
+        private MouseState oldMouseState;
         public override void Update(GameTime gameTime)
         {
+            MouseState ms = Mouse.GetState();
+            Vector2 point = new Vector2(ms.X, ms.Y);
+
+            Control c = (from control in controls.Reverse() where control.IsInside(point) select control).FirstOrDefault();
+
+            if (c != null)
+            {
+                if (ms.X != oldMouseState.X || ms.Y != oldMouseState.Y)
+                    c.Message(Control.MOUSE_MOVE, ms.X, ms.Y, buttonState(ms), 0);
+            }
+
             for (int i = 0; i < controls.Count; i++)
                 controls[i].Update(gameTime);
+
+            oldMouseState = ms;
         }
 
         public class ControlCollection : IEnumerable<Control>
