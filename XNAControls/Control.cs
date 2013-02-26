@@ -13,7 +13,7 @@ namespace XNAControls
         internal const uint CONTROL_GOTFOCUS = 0x00000009;
         internal const uint CONTROL_LOSTFOCUS = 0x00000010;
 
-        private bool focused;
+        private bool focused = false;
         private bool enabled;
         private Vector2 position;
         private Vector2 size;
@@ -78,9 +78,11 @@ namespace XNAControls
                     OnKeyUp(new KeyEventArgs((Microsoft.Xna.Framework.Input.Keys)par[0], (par[1] & 1) != 0, (par[1] & 2) != 0));
                     break;
                 case Control.CONTROL_GOTFOCUS:
+                    focused = true;
                     OnGotFocus(EventArgs.Empty);
                     break;
                 case Control.CONTROL_LOSTFOCUS:
+                    focused = false;
                     OnLostFocus(EventArgs.Empty);
                     break;
             }
