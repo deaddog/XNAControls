@@ -10,6 +10,11 @@ namespace XNAControls
         internal const uint KEYBOARD_CHARACTER = 0x00000001;
         internal const uint KEYBOARD_KEYDOWN = 0x00000002;
         internal const uint KEYBOARD_KEYUP = 0x00000003;
+        internal const uint MOUSE_MOVE = 0x00000004;
+        internal const uint MOUSE_DOWN = 0x00000005;
+        internal const uint MOUSE_UP = 0x00000006;
+        internal const uint MOUSE_CLICK = 0x00000007;
+        internal const uint MOUSE_WHEEL = 0x00000008;
 
         private bool enabled;
         private Vector2 position;
