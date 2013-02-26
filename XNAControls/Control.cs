@@ -75,6 +75,13 @@ namespace XNAControls
                 case Control.KEYBOARD_KEYUP:
                     OnKeyUp(new KeyEventArgs((Microsoft.Xna.Framework.Input.Keys)par[0], (par[1] & 1) != 0, (par[1] & 2) != 0));
                     break;
+
+                case Control.MOUSE_MOVE:
+                    bool left = (par[2] & 1) > 0;
+                    bool middle = (par[2] & 2) > 0;
+                    bool right = (par[2] & 4) > 0;
+                    OnMouseMove(new MouseEventArgs(par[0], par[1], left, middle, right, par[3]));
+                    break;
             }
         }
 
