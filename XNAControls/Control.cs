@@ -10,6 +10,11 @@ namespace XNAControls
         internal const uint KEYBOARD_CHARACTER = 0x00000001;
         internal const uint KEYBOARD_KEYDOWN = 0x00000002;
         internal const uint KEYBOARD_KEYUP = 0x00000003;
+        internal const uint MOUSE_MOVE = 0x00000004;
+        internal const uint MOUSE_DOWN = 0x00000005;
+        internal const uint MOUSE_UP = 0x00000006;
+        internal const uint MOUSE_CLICK = 0x00000007;
+        internal const uint MOUSE_WHEEL = 0x00000008;
         internal const uint CONTROL_GOTFOCUS = 0x00000009;
         internal const uint CONTROL_LOSTFOCUS = 0x00000010;
 
@@ -77,6 +82,15 @@ namespace XNAControls
                 case Control.KEYBOARD_KEYUP:
                     OnKeyUp(new KeyEventArgs((Microsoft.Xna.Framework.Input.Keys)par[0], (par[1] & 1) != 0, (par[1] & 2) != 0));
                     break;
+
+                case Control.MOUSE_MOVE:
+                case Control.MOUSE_DOWN:
+                case Control.MOUSE_UP:
+                case Control.MOUSE_CLICK:
+                case Control.MOUSE_WHEEL:
+                    handleMouseMessage(msg, new MouseEventArgs(par[0], par[1], (MouseButtons)par[2], par[3]));
+                    break;
+
                 case Control.CONTROL_GOTFOCUS:
                     focused = true;
                     OnGotFocus(EventArgs.Empty);
@@ -101,6 +115,18 @@ namespace XNAControls
         }
         public event EventHandler LostFocus;
 
+        private void handleMouseMessage(uint msg, MouseEventArgs e)
+        {
+            switch (msg)
+            {
+                case Control.MOUSE_MOVE: OnMouseMove(e); break;
+                case Control.MOUSE_DOWN: OnMouseDown(e); break;
+                case Control.MOUSE_UP: OnMouseUp(e); break;
+                case Control.MOUSE_CLICK: OnMouseClick(e); break;
+                case Control.MOUSE_WHEEL: OnMouseWheel(e); break;
+            }
+        }
+
         protected virtual void OnCharacterEntered(CharacterEventArgs e)
         {
             if (CharacterEntered != null)
@@ -119,6 +145,37 @@ namespace XNAControls
                 KeyUp(this, e);
         }
         public event KeyEventHandler KeyUp;
+
+        protected virtual void OnMouseMove(MouseEventArgs e)
+        {
+            if (MouseMove != null)
+                MouseMove(this, e);
+        }
+        public event MouseEventHandler MouseMove;
+        protected virtual void OnMouseDown(MouseEventArgs e)
+        {
+            if (MouseDown != null)
+                MouseDown(this, e);
+        }
+        public event MouseEventHandler MouseDown;
+        protected virtual void OnMouseUp(MouseEventArgs e)
+        {
+            if (MouseUp != null)
+                MouseUp(this, e);
+        }
+        public event MouseEventHandler MouseUp;
+        protected virtual void OnMouseClick(MouseEventArgs e)
+        {
+            if (MouseClick != null)
+                MouseClick(this, e);
+        }
+        public event MouseEventHandler MouseClick;
+        protected virtual void OnMouseWheel(MouseEventArgs e)
+        {
+            if (MouseWheel != null)
+                MouseWheel(this, e);
+        }
+        public event MouseEventHandler MouseWheel;
 
         public virtual void Update(GameTime gameTime)
         {

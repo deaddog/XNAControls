@@ -146,7 +146,8 @@ namespace MoonifyControls
                 return -1;
 
             point -= (this.Location + Vector2.One);
-            return (int)point.Y / 25;
+            int index = (int)point.Y / 25;
+            return index < items.Count ? index : -1;
         }
 
         protected sealed override void InnerSizeChange(float width, float height)
