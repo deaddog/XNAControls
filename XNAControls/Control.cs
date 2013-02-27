@@ -77,8 +77,22 @@ namespace XNAControls
                     break;
 
                 case Control.MOUSE_MOVE:
-                    OnMouseMove(new MouseEventArgs(par[0], par[1], (MouseButtons)par[2], par[3]));
+                case Control.MOUSE_DOWN:
+                case Control.MOUSE_UP:
+                case Control.MOUSE_CLICK:
+                    handleMouseMessage(msg, new MouseEventArgs(par[0], par[1], (MouseButtons)par[2], par[3]));
                     break;
+            }
+        }
+
+        private void handleMouseMessage(uint msg, MouseEventArgs e)
+        {
+            switch (msg)
+            {
+                case Control.MOUSE_MOVE: OnMouseMove(e); break;
+                case Control.MOUSE_DOWN: OnMouseDown(e); break;
+                case Control.MOUSE_UP: OnMouseUp(e); break;
+                case Control.MOUSE_CLICK: OnMouseClick(e); break;
             }
         }
 
@@ -107,6 +121,24 @@ namespace XNAControls
                 MouseMove(this, e);
         }
         public event MouseEventHandler MouseMove;
+        protected virtual void OnMouseDown(MouseEventArgs e)
+        {
+            if (MouseDown != null)
+                MouseDown(this, e);
+        }
+        public event MouseEventHandler MouseDown;
+        protected virtual void OnMouseUp(MouseEventArgs e)
+        {
+            if (MouseUp != null)
+                MouseUp(this, e);
+        }
+        public event MouseEventHandler MouseUp;
+        protected virtual void OnMouseClick(MouseEventArgs e)
+        {
+            if (MouseClick != null)
+                MouseClick(this, e);
+        }
+        public event MouseEventHandler MouseClick;
 
         public virtual void Update(GameTime gameTime)
         {
