@@ -23,7 +23,7 @@ namespace XNAControls
         }
 
         /// <summary>
-        /// Get the cumulative mouse scroll wheel value since the game was started.
+        /// Get the mouse scroll wheel value difference since the wheel was last used.
         /// </summary>
         public int ScrollWheelValue
         {
