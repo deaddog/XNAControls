@@ -111,10 +111,10 @@ namespace XNAControls
                 if (ms.LeftButton != oldMouseState.LeftButton)
                     sendMouseMessages(0, ms.LeftButton == ButtonState.Pressed, c, ms.X, ms.Y, buttonState(true, false, false), 0);
 
-                if (ms.LeftButton != oldMouseState.LeftButton)
+                if (ms.MiddleButton != oldMouseState.MiddleButton)
                     sendMouseMessages(1, ms.MiddleButton == ButtonState.Pressed, c, ms.X, ms.Y, buttonState(false, true, false), 0);
 
-                if (ms.LeftButton != oldMouseState.LeftButton)
+                if (ms.RightButton != oldMouseState.RightButton)
                     sendMouseMessages(2, ms.RightButton == ButtonState.Pressed, c, ms.X, ms.Y, buttonState(false, false, true), 0);
 
                 if (ms.ScrollWheelValue != oldMouseState.ScrollWheelValue)
