@@ -2,6 +2,7 @@
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using DeadDog.GUI;
 using XNAControls;
 
 namespace MoonifyControls
@@ -14,7 +15,10 @@ namespace MoonifyControls
 
         private Rectangle handleRectangle;
         private Texture2D handleTexture;
-        private Vector2 handleOffset;
+
+        private float yOffset;
+        private xfloat xOffset;
+        private IMoveMethods xMoveMethod = new MoveSineLine(0.5f, 3000f);
 
         private bool left;
 
@@ -25,7 +29,8 @@ namespace MoonifyControls
 
             this.type = type;
             this.handleRectangle = handleRectangleFromType(type);
-            this.handleOffset = new Vector2(handleXOffsetFromType(type, left), handleYOffsetFromType(type));
+            this.yOffset = handleYOffsetFromType(type);
+            this.xOffset = new xfloat(handleXOffsetFromType(type, this.left), xMoveMethod);
         }
 
         public bool Left
@@ -34,7 +39,7 @@ namespace MoonifyControls
             set
             {
                 left = value;
-                this.handleOffset = new Vector2(handleXOffsetFromType(type, left), handleYOffsetFromType(type));
+                this.xOffset.TargetValue = handleXOffsetFromType(type, left);
             }
         }
 
@@ -147,11 +152,15 @@ namespace MoonifyControls
             this.handleTexture = content.Load<Texture2D>("SwitchBoxHandles");
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            xOffset.Update();
+        }
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             spriteBatch.Begin();
             box.Draw(spriteBatch, boxTexture, this.Location, this.Size, Color.White);
-            spriteBatch.Draw(handleTexture, this.Location + handleOffset, handleRectangle, Color.White);
+            spriteBatch.Draw(handleTexture, this.Location + new Vector2(xOffset, yOffset), handleRectangle, Color.White);
             spriteBatch.End();
         }
     }
