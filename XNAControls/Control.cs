@@ -23,6 +23,10 @@ namespace XNAControls
         private Vector2 position;
         private Vector2 size;
 
+        public Control(Vector2 initialSize)
+            : this(initialSize.X, initialSize.Y)
+        {
+        }
         public Control(float initialwidth, float initialheight)
         {
             this.enabled = true;

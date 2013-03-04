@@ -99,6 +99,8 @@
     <Compile Include="ListBox.cs" />
     <Compile Include="MoonifyBoxes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SwitchBox.cs" />
+    <Compile Include="SwitchBoxTypes.cs" />
     <Compile Include="TextBox.cs" />
   </ItemGroup>
   <ItemGroup>
