@@ -1,0 +1,814 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DeadDog.GUI</name>
+    </assembly>
+    <members>
+        <member name="T:DeadDog.GUI.MoveSine">
+            <summary>
+            Obsolete - Use <see cref="T:DeadDog.GUI.MoveSineLine"/> instead.
+            </summary>
+        </member>
+        <member name="T:DeadDog.GUI.IMoveMethods">
+            <summary>
+            Expresses position and speed as a function of time when moving from A to B.
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.IMoveMethods.Position(System.Single)">
+            <summary>
+            Calculates the position according to the time parameter and the current <see cref="T:DeadDog.GUI.MovementInfo"/>.
+            </summary>
+            <param name="time">A float representing the time passed since beginning the current move.</param>
+            <returns>The calculated position.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.IMoveMethods.Speed(System.Single)">
+            <summary>
+            Calculates the speed according to the time parameter and the current <see cref="T:DeadDog.GUI.MovementInfo"/>.
+            </summary>
+            <param name="time">A float representing the time passed since beginning the current move.</param>
+            <returns>The calculated speed.</returns>
+        </member>
+        <member name="P:DeadDog.GUI.IMoveMethods.Time">
+            <summary>
+            Gets the time required for moving from A to B.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.IMoveMethods.Info">
+            <summary>
+            Gets or sets a <see cref="T:DeadDog.GUI.MovementInfo"/> describing the current move.
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.MoveSine.#ctor(System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DeadDog.GUI.MoveSine"/> class.
+            </summary>
+            <param name="mintime">The minimum time used for a move.</param>
+            <param name="maxspeed">The maximum speed used in a move.</param>
+        </member>
+        <member name="M:DeadDog.GUI.MoveSine.Position(System.Single)">
+            <summary>
+            Calculates the position according to the time parameter and the current <see cref="T:DeadDog.GUI.MovementInfo"/>.
+            </summary>
+            <param name="time">A float representing the time passed since beginning the current move.</param>
+            <returns>The calculated position.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.MoveSine.Speed(System.Single)">
+            <summary>
+            Calculates the speed according to the time parameter and the current <see cref="T:DeadDog.GUI.MovementInfo"/>.
+            </summary>
+            <param name="time">A float representing the time passed since beginning the current move.</param>
+            <returns>The calculated speed.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.MoveSine.Clone">
+            <summary>
+            Creates a <see cref="T:DeadDog.GUI.MoveSine"/> that is copy of this instance.
+            </summary>
+            <returns>A <see cref="T:DeadDog.GUI.MoveSine"/> that is copy of this instance.</returns>
+        </member>
+        <member name="P:DeadDog.GUI.MoveSine.Time">
+            <summary>
+            Gets the time required for moving from A to B.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.MoveSine.Info">
+            <summary>
+            Gets or sets a <see cref="T:DeadDog.GUI.MovementInfo"/> describing the current move.
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.mPointF.OnElapsed(DeadDog.GUI.MoveTimerEventArgs)">
+            <summary>
+            Raises the <see cref="E:DeadDog.GUI.mPointF.Elapsed"/> event.
+            </summary>
+            <param name="e">A <see cref="T:DeadDog.GUI.MoveTimerEventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="E:DeadDog.GUI.mPointF.Elapsed">
+            <summary>
+            Occurs when TargetValue == CurrentValue.
+            </summary>
+        </member>
+        <member name="T:DeadDog.GUI.MoveSineLine">
+            <summary>
+            Implements a type of movement that uses a sine function for starting and stopping, and a linear inbetween.
+            </summary>
+        </member>
+        <member name="F:DeadDog.GUI.MoveSineLine.t1">
+            <summary>
+            First splitting point
+            </summary>
+        </member>
+        <member name="F:DeadDog.GUI.MoveSineLine.t2">
+            <summary>
+            Second splitting point - when decreasing t1=t2
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.MoveSineLine.#ctor(System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DeadDog.GUI.MoveSineLine"/> class.
+            </summary>
+            <param name="accelerationTime">The time in seconds required for reaching the maximum speed. The same time is used for stopping.</param>
+            <param name="maximumSpeed">The maximum speed of this <see cref="T:DeadDog.GUI.MoveSineLine"/> (value pr. second).</param>
+        </member>
+        <member name="M:DeadDog.GUI.MoveSineLine.Position(System.Single)">
+            <summary>
+            Calculates the position according to the time parameter and the current <see cref="T:DeadDog.GUI.MovementInfo"/>.
+            </summary>
+            <param name="time">A float representing the time passed since beginning the current move.</param>
+            <returns>The calculated position.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.MoveSineLine.Speed(System.Single)">
+            <summary>
+            Calculates the speed according to the time parameter and the current <see cref="T:DeadDog.GUI.MovementInfo"/>.
+            </summary>
+            <param name="time">A float representing the time passed since beginning the current move.</param>
+            <returns>The calculated speed - can be no greater than the maximum speed of this <see cref="T:DeadDog.GUI.MoveSineLine"/>.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.MoveSineLine.Clone">
+            <summary>
+            Creates a <see cref="T:DeadDog.GUI.MoveSineLine"/> that is copy of this instance.
+            </summary>
+            <returns>A <see cref="T:DeadDog.GUI.MoveSineLine"/> that is copy of this instance.</returns>
+        </member>
+        <member name="P:DeadDog.GUI.MoveSineLine.Time">
+            <summary>
+            Gets the time required for moving from A to B.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.MoveSineLine.Info">
+            <summary>
+            Gets or sets a <see cref="T:DeadDog.GUI.MovementInfo"/> describing the current move.
+            </summary>
+        </member>
+        <member name="T:DeadDog.GUI.mfloat">
+            <summary>
+            Represents a "moveable" floating point value, through a simple interface.
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.mfloat.#ctor(System.Single,DeadDog.GUI.IMoveMethods)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DeadDog.GUI.mfloat"/> class with a specific starting point and method for further movement.
+            </summary>
+            <param name="value">The initial value of this <see cref="T:DeadDog.GUI.mfloat"/> instance.</param>
+            <param name="method">The method used for calculating the movement of this <see cref="T:DeadDog.GUI.mfloat"/>.</param>
+        </member>
+        <member name="M:DeadDog.GUI.mfloat.Update">
+            <summary>
+            Updates the state of the <see cref="T:DeadDog.GUI.mfloat"/> object.
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.mfloat.op_Implicit(DeadDog.GUI.mfloat)~System.Single">
+            <summary>
+            Implicitly converts an <see cref="T:DeadDog.GUI.mfloat"/> object to a float by returning it's CurrentValue property.
+            </summary>
+            <param name="item">The <see cref="T:DeadDog.GUI.mfloat"/> to be converted.</param>
+            <returns>The CurrentValue property of the <see cref="T:DeadDog.GUI.mfloat"/> object.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.mfloat.OnElapsed(DeadDog.GUI.MoveTimerEventArgs)">
+            <summary>
+            Raises the <see cref="E:DeadDog.GUI.mfloat.Elapsed"/> event.
+            </summary>
+            <param name="e">A <see cref="T:DeadDog.GUI.MoveTimerEventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:DeadDog.GUI.mfloat.OnTick(DeadDog.GUI.MoveTimerEventArgs)">
+            <summary>
+            Raises the <see cref="E:DeadDog.GUI.mfloat.Tick"/> event.
+            </summary>
+            <param name="e">A <see cref="T:DeadDog.GUI.MoveTimerEventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:DeadDog.GUI.mfloat.op_Implicit(DeadDog.GUI.mfloat)~DeadDog.GUI.mReg">
+            <summary>
+            Implicitly converts an <see cref="T:DeadDog.GUI.mfloat"/> object to an <see cref="T:DeadDog.GUI.mReg"/> object by returning it's <see cref="T:DeadDog.GUI.mReg"/>.
+            </summary>
+            <param name="item">The <see cref="T:DeadDog.GUI.mfloat"/> to be converted.</param>
+            <returns>The <see cref="T:DeadDog.GUI.mReg"/> associated with the <see cref="T:DeadDog.GUI.mfloat"/> object.</returns>
+        </member>
+        <member name="P:DeadDog.GUI.mfloat.TargetValue">
+            <summary>
+            Gets or sets the target value of this <see cref="T:DeadDog.GUI.mfloat"/>.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.mfloat.CurrentValue">
+            <summary>
+            Gets or sets the current value of this <see cref="T:DeadDog.GUI.mfloat"/>. Setting this will also set the targetvalue.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.mfloat.Method">
+            <summary>
+            Gets or sets the <see cref="T:DeadDog.GUI.IMoveMethods"/> object to use for succeeding transitions.
+            </summary>
+            <remarks>
+            If a move is in progress when this is set, the move is stopped at <see cref="P:DeadDog.GUI.mfloat.CurrentValue"/> and restarted towards <see cref="P:DeadDog.GUI.mfloat.TargetValue"/>.
+            </remarks>
+        </member>
+        <member name="E:DeadDog.GUI.mfloat.Elapsed">
+            <summary>
+            Occurs when TargetValue == CurrentValue.
+            </summary>
+        </member>
+        <member name="E:DeadDog.GUI.mfloat.Tick">
+            <summary>
+            Occurs when this <see cref="T:DeadDog.GUI.mfloat"/> is updated. Occurs very often - use with care.
+            </summary>
+        </member>
+        <member name="T:DeadDog.GUI.MoveTimerEventHandler">
+            <summary>
+            Represents the method that will handle the <see cref="E:DeadDog.GUI.mfloat.Elapsed"/> and the <see cref="E:DeadDog.GUI.mfloat.Tick"/> event of an <see cref="T:DeadDog.GUI.mfloat"/> object.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">A <see cref="T:DeadDog.GUI.MoveTimerEventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="T:DeadDog.GUI.MoveTimerEventArgs">
+            <summary>
+            Provides data for the <see cref="E:DeadDog.GUI.mfloat.Elapsed"/> and the <see cref="E:DeadDog.GUI.mfloat.Tick"/> event.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.MoveTimerEventArgs.SignalTime">
+            <summary>
+            Gets the time the <see cref="E:DeadDog.GUI.mfloat.Elapsed"/> or the <see cref="E:DeadDog.GUI.mfloat.Tick"/> event was raised.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.MoveTimerEventArgs.Value">
+            <summary>
+            Gets the <see cref="T:DeadDog.GUI.mfloat"/> associated with the event.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.MoveTimerEventArgs.Location">
+            <summary>
+            Gets the <see cref="T:DeadDog.GUI.mPointF"/> associated with the event.
+            </summary>
+        </member>
+        <member name="T:DeadDog.GUI.MoveInstant">
+            <summary>
+            Implements a type of movement that changes value instantly.
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.MoveInstant.Position(System.Single)">
+            <summary>
+            Returns the position of this <see cref="T:DeadDog.GUI.MoveInstant"/>, which is always the end position.
+            </summary>
+            <param name="time">A float representing the time passed since beginning the current move.</param>
+            <returns>The end position for this move.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.MoveInstant.Speed(System.Single)">
+            <summary>
+            Returns the speed of this <see cref="T:DeadDog.GUI.MoveInstant"/>, which is always zero.
+            </summary>
+            <param name="time">A float representing the time passed since beginning the current move.</param>
+            <returns>zero.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.MoveInstant.Clone">
+            <summary>
+            Creates a <see cref="T:DeadDog.GUI.MoveInstant"/> that is copy of this instance.
+            </summary>
+            <returns>A <see cref="T:DeadDog.GUI.MoveInstant"/> that is copy of this instance.</returns>
+        </member>
+        <member name="P:DeadDog.GUI.MoveInstant.Move">
+            <summary>
+            Gets a static instance of the <see cref="T:DeadDog.GUI.MoveInstant"/> mover.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.MoveInstant.Time">
+            <summary>
+            Gets the time required for moving from A to B, which is always zero for a <see cref="T:DeadDog.GUI.MoveInstant"/>.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.MoveInstant.Info">
+            <summary>
+            Gets or sets a <see cref="T:DeadDog.GUI.MovementInfo"/> describing the current move.
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.mObject.OnElapsed(DeadDog.GUI.MoveTimerEventArgs)">
+            <summary>
+            Raises the <see cref="E:DeadDog.GUI.mObject.Elapsed"/> event.
+            </summary>
+            <param name="e">A <see cref="T:DeadDog.GUI.MoveTimerEventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="E:DeadDog.GUI.mObject.Elapsed">
+            <summary>
+            Occurs when TargetValue == CurrentValue.
+            </summary>
+        </member>
+        <member name="T:DeadDog.GUI.ImageResize">
+            <summary>
+            Contains methods for resizing images.
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.ImageResize.CreateThumbnails(System.IO.DirectoryInfo,DeadDog.GUI.IImageSizeInfo)">
+            <summary>
+            Creates thumbnails from images and places them in a folder named "thumb".
+            </summary>
+            <param name="di">The directory from which to extract *.jpg and *.jpeg images.</param>
+            <param name="info">Describes the rules for resizing the images.</param>
+        </member>
+        <member name="M:DeadDog.GUI.ImageResize.CreateThumbnails(System.IO.DirectoryInfo,System.String,DeadDog.GUI.IImageSizeInfo)">
+            <summary>
+            Creates thumbnails from images and places them in a folder.
+            </summary>
+            <param name="di">The directory from which to extract *.jpg and *.jpeg images.</param>
+            <param name="foldername">The foldername in which to place the thumbnails.</param>
+            <param name="info">Describes the rules for resizing the images.</param>
+        </member>
+        <member name="M:DeadDog.GUI.ImageResize.CreateThumbnails(System.IO.DirectoryInfo,System.String,DeadDog.GUI.IImageSizeInfo,DeadDog.GUI.ImageResize.ImageResizeMethod)">
+            <summary>
+            Creates thumbnails from images and places them in a folder.
+            </summary>
+            <param name="di">The directory from which to extract *.jpg and *.jpeg images.</param>
+            <param name="foldername">The foldername in which to place the thumbnails.</param>
+            <param name="info">Describes the rules for resizing the images.</param>
+            <param name="method">The method used for resizing the images.</param>
+        </member>
+        <member name="M:DeadDog.GUI.ImageResize.Resize(System.Drawing.Image,DeadDog.GUI.IImageSizeInfo)">
+            <summary>
+            Resizes a System.Drawing.Image object using Bicubic interpolation mode.
+            </summary>
+            <param name="img">The image to resize.</param>
+            <param name="info">Describes the rules for resizing the image.</param>
+            <returns>A new System.Drawing.Image that has been resized.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.ImageResize.Resize(System.Drawing.Image,DeadDog.GUI.IImageSizeInfo,System.Drawing.Drawing2D.InterpolationMode)">
+            <summary>
+            Resizes a System.Drawing.Image object.
+            </summary>
+            <param name="img">The image to resize.</param>
+            <param name="info">Describes the rules for resizing the image.</param>
+            <param name="mode">The interpolation mode used for resizing.</param>
+            <returns>A new System.Drawing.Image that has been resized.</returns>
+        </member>
+        <member name="T:DeadDog.GUI.ImageResize.ImageResizeMethod">
+            <summary>
+            Resizes a System.Drawing.Image object.
+            </summary>
+            <param name="img">The image to resize.</param>
+            <param name="info">Describes the rules for resizing the image.</param>
+            <returns>A new System.Drawing.Image that has been resized.</returns>
+        </member>
+        <member name="T:DeadDog.GUI.IImageSizeInfo">
+            <summary>
+            Describes rules for resizing an image.
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.IImageSizeInfo.Height(System.Drawing.Size)">
+            <summary>
+            This method calculates the Height of a resized image.
+            </summary>
+            <param name="img">The image that is resized.</param>
+            <returns>An int describing the height of <code>img</code> after it has been resized.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.IImageSizeInfo.Width(System.Drawing.Size)">
+            <summary>
+            This method calculates the Width of a resized image.
+            </summary>
+            <param name="img">The image that is resized.</param>
+            <returns>An int describing the width of <code>img</code> after it has been resized.</returns>
+        </member>
+        <member name="P:DeadDog.GUI.IImageSizeInfo.SetDpi">
+            <summary>
+            Gets a bool indicating whether the images dpi should be set upon resize.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.IImageSizeInfo.Dpi">
+            <summary>
+            Gets a float describing the dpi of a resized image.
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.FixedSizeInfo.#ctor(System.Int32,DeadDog.GUI.FixedSizeInfo.SizeType)">
+            <summary>
+            Initializes a new instance of the DeadDog.Function.ImageSizeInfo with relative height and width.
+            </summary>
+            <param name="size">Describes a size (height or width) of resized images.</param>
+            <param name="type">Defines how to interpret <paramref name="size"/>.</param>
+        </member>
+        <member name="M:DeadDog.GUI.FixedSizeInfo.#ctor(System.Int32,DeadDog.GUI.FixedSizeInfo.SizeType,System.Single)">
+            <summary>
+            Initializes a new instance of the DeadDog.Function.ImageSizeInfo with relative height and width.
+            </summary>
+            <param name="size">Describes a size (height or width) of resized images.</param>
+            <param name="type">Defines how to interpret <paramref name="size"/>.</param>
+            <param name="dpi">Describes the dpi (dots per inch) of resized images.</param>
+        </member>
+        <member name="P:DeadDog.GUI.FixedSizeInfo.SetDpi">
+            <summary>
+            Gets a bool indicating whether the images dpi should be set upon resize.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.FixedSizeInfo.Dpi">
+            <summary>
+            Gets a float describing the dpi of a resized image.
+            </summary>
+        </member>
+        <member name="T:DeadDog.GUI.ImageSizeInfo">
+            <summary>
+            Used to describe rules for resizing an image.
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.ImageSizeInfo.#ctor(System.Int32,DeadDog.GUI.ImageSizeInfo.SizeTypeIn)">
+            <summary>
+            Initializes a new instance of the DeadDog.Function.ImageSizeInfo with relative height and width.
+            </summary>
+            <param name="size">Describes a size (height or width) of resized images.</param>
+            <param name="type">Defines how to interpret the parameter size.</param>
+        </member>
+        <member name="M:DeadDog.GUI.ImageSizeInfo.#ctor(System.Int32,DeadDog.GUI.ImageSizeInfo.SizeTypeIn,System.Single)">
+            <summary>
+            Initializes a new instance of the DeadDog.Function.ImageSizeInfo with relative height and width.
+            </summary>
+            <param name="size">Describes a size (height or width) of resized images.</param>
+            <param name="type">Defines how to interpret the parameter size.</param>
+            <param name="dpi">Describes the dpi (dots per inch) of resized images.</param>
+        </member>
+        <member name="M:DeadDog.GUI.ImageSizeInfo.#ctor(System.Drawing.Size)">
+            <summary>
+            Initializes a new instance of the DeadDog.Function.ImageSizeInfo with fixed height and width.
+            </summary>
+            <param name="size">Describes the size of resized images.</param>0
+        </member>
+        <member name="M:DeadDog.GUI.ImageSizeInfo.#ctor(System.Drawing.Size,System.Single)">
+            <summary>
+            Initializes a new instance of the DeadDog.Function.ImageSizeInfo with fixed height and width.
+            </summary>
+            <param name="size">Describes the size of resized images.</param>
+            <param name="dpi">Describes the dpi (dots per inch) of resized images.</param>
+        </member>
+        <member name="M:DeadDog.GUI.ImageSizeInfo.Width(System.Drawing.Image)">
+            <summary>
+            This method calculates the Width of a resized image.
+            </summary>
+            <param name="img">The image that is resized.</param>
+            <returns>An int describing the width of <code>img</code> after it has been resized.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.ImageSizeInfo.Height(System.Drawing.Image)">
+            <summary>
+            This method calculates the Height of a resized image.
+            </summary>
+            <param name="img">The image that is resized.</param>
+            <returns>An int describing the height of <code>img</code> after it has been resized.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.ImageSizeInfo.Size(System.Drawing.Image)">
+            <summary>
+            This method calculates the Size of a resized image.
+            </summary>
+            <param name="img">The image that is resized.</param>
+            <returns>A System.Drawing.Size object describing the size of <code>img</code> after it has been resized.</returns>
+        </member>
+        <member name="P:DeadDog.GUI.ImageSizeInfo.SetDpi">
+            <summary>
+            Gets a bool indicating whether the images dpi should be set upon resize.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.ImageSizeInfo.Dpi">
+            <summary>
+            Gets a float describing the dpi of a resized image.
+            </summary>
+        </member>
+        <member name="T:DeadDog.GUI.ImageSizeInfo.SizeTypeIn">
+            <summary>
+            Describes whether the supplied size describes the height, width or a combination of both.
+            </summary>
+        </member>
+        <member name="F:DeadDog.GUI.ImageSizeInfo.SizeTypeIn.FixedWidth">
+            <summary>
+            <code>size</code> defines a fixed width.
+            </summary>
+        </member>
+        <member name="F:DeadDog.GUI.ImageSizeInfo.SizeTypeIn.FixedHeight">
+            <summary>
+            <code>size</code> defines a fixed height.
+            </summary>
+        </member>
+        <member name="F:DeadDog.GUI.ImageSizeInfo.SizeTypeIn.MaxWidthorHeight">
+            <summary>
+            <code>size</code> defines a maximum for both height and width.
+            </summary>
+        </member>
+        <member name="F:DeadDog.GUI.ImageSizeInfo.SizeTypeIn.MinWidthorHeight">
+            <summary>
+            <code>size</code> defines a minimum for both height and width.
+            </summary>
+        </member>
+        <member name="T:DeadDog.GUI.GraphicsExtension">
+            <summary>
+            Provides methods that extends the capabilities of <see cref="T:System.Drawing.Graphics"/>.
+            </summary>
+        </member>
+        <member name="T:DeadDog.GUI.MovementInfo">
+            <summary>
+            Represents data required to perform a move in one dimension (start position, end position and start speed).
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.MovementInfo.#ctor(System.Single,System.Single,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DeadDog.GUI.MovementInfo"/> structure with the specified values.
+            </summary>
+            <param name="pointStart">The starting point of the move.</param>
+            <param name="pointEnd">The end (resulting) point of the move.</param>
+            <param name="speedStart">The speed when the move is initialized.</param>
+        </member>
+        <member name="M:DeadDog.GUI.MovementInfo.op_Equality(DeadDog.GUI.MovementInfo,DeadDog.GUI.MovementInfo)">
+            <summary>
+            Determines whether two <see cref="T:DeadDog.GUI.MovementInfo"/> structures are equal.
+            </summary>
+            <param name="left">A <see cref="P:DeadDog.GUI.MovementInfo.PointEnd"/> to compare.</param>
+            <param name="right">A <see cref="P:DeadDog.GUI.MovementInfo.PointEnd"/> to compare.</param>
+            <returns>true if the values of the <see cref="P:DeadDog.GUI.MovementInfo.PointStart"/>, 
+            <see cref="P:DeadDog.GUI.MovementInfo.PointEnd"/> and <see cref="P:DeadDog.GUI.MovementInfo.SpeedStart"/> properties 
+            of the left and right <see cref="T:DeadDog.GUI.MovementInfo"/> structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.MovementInfo.op_Inequality(DeadDog.GUI.MovementInfo,DeadDog.GUI.MovementInfo)">
+            <summary>
+            Determines whether two <see cref="T:DeadDog.GUI.MovementInfo"/> structures are not equal.
+            </summary>
+            <param name="left">A <see cref="P:DeadDog.GUI.MovementInfo.PointEnd"/> to compare.</param>
+            <param name="right">A <see cref="P:DeadDog.GUI.MovementInfo.PointEnd"/> to compare.</param>
+            <returns>true if either of the values of the <see cref="P:DeadDog.GUI.MovementInfo.PointStart"/>, 
+            <see cref="P:DeadDog.GUI.MovementInfo.PointEnd"/> and <see cref="P:DeadDog.GUI.MovementInfo.SpeedStart"/> properties 
+            of the left and right <see cref="T:DeadDog.GUI.MovementInfo"/> structures are not equal; otherwise, false.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.MovementInfo.GetHashCode">
+            <summary>
+            Returns a hash code for this <see cref="T:DeadDog.GUI.MovementInfo"/> structure.
+            </summary>
+            <returns>An integer value that specifies a hash value for this <see cref="T:DeadDog.GUI.MovementInfo"/> structure.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.MovementInfo.Equals(System.Object)">
+            <summary>
+            Specifies whether this <see cref="T:DeadDog.GUI.MovementInfo"/> contains the same values as the specified System.Object.
+            </summary>
+            <param name="obj">The System.Object to test.</param>
+            <returns>This method returns true if obj is a <see cref="T:DeadDog.GUI.MovementInfo"/> and has the same values as this <see cref="T:DeadDog.GUI.MovementInfo"/>.</returns>
+        </member>
+        <member name="P:DeadDog.GUI.MovementInfo.PointStart">
+            <summary>
+            Gets the one dimension point at which the movement should be started.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.MovementInfo.PointEnd">
+            <summary>
+            Gets the one dimension point at which the movement should end.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.MovementInfo.SpeedStart">
+            <summary>
+            Gets the initial speed (value pr. second) of the movement.
+            </summary>
+        </member>
+        <member name="T:DeadDog.GUI.DrawMover">
+            <summary>
+            Handles one dimensional moves using an implementation of the <see cref="T:DeadDog.GUI.IMoveMethods"/> interface.
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.DrawMover.#ctor(System.Single,DeadDog.GUI.IMoveMethods)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DeadDog.GUI.DrawMover"/> class.
+            </summary>
+            <param name="position">The starting position of the mover.</param>
+            <param name="method">An <see cref="T:DeadDog.GUI.IMoveMethods"/> used to describe how this <see cref="T:DeadDog.GUI.DrawMover"/> moves from one point to another.</param>
+        </member>
+        <member name="M:DeadDog.GUI.DrawMover.#ctor(System.Single,System.Int32,DeadDog.GUI.IMoveMethods)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DeadDog.GUI.DrawMover"/> class.
+            </summary>
+            <param name="position">The starting position of the mover.</param>
+            <param name="interval">The interval, in milliseconds, between <see cref="E:DeadDog.GUI.DrawMover.Tick"/> events.</param>
+            <param name="method">An <see cref="T:DeadDog.GUI.IMoveMethods"/> used to describe how this <see cref="T:DeadDog.GUI.DrawMover"/> moves from one point to another.</param>
+        </member>
+        <member name="M:DeadDog.GUI.DrawMover.CheckMethod(DeadDog.GUI.IMoveMethods,DeadDog.GUI.MovementInfo)">
+            <summary>
+            Provides a method for testing implementations of <see cref="T:DeadDog.GUI.IMoveMethods"/>.
+            </summary>
+            <param name="method">The <see cref="T:DeadDog.GUI.IMoveMethods"/> to test.</param>
+            <param name="info">The <see cref="T:DeadDog.GUI.MovementInfo"/> to compare to.</param>
+            <returns>true if <paramref name="method"/> starts and stop at the predefined points, starts with the predefined speed and stops with speed == 0; otherwise, false.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.DrawMover.Start(System.Single,DeadDog.GUI.IMoveMethods)">
+            <summary>
+            Starts a new move towards a given target using a new <see cref="T:DeadDog.GUI.IMoveMethods"/>.
+            </summary>
+            <param name="targetPosition">The target position.</param>
+            <param name="newMethod">An <see cref="T:DeadDog.GUI.IMoveMethods"/> used to describe how this <see cref="T:DeadDog.GUI.DrawMover"/> moves from to the targetposition.</param>
+            <remarks>Using this method will set a new <see cref="T:DeadDog.GUI.IMoveMethods"/>, which will also be used for future moves.</remarks>
+        </member>
+        <member name="M:DeadDog.GUI.DrawMover.Start(System.Single)">
+            <summary>
+            Starts a new move towards a given target.
+            </summary>
+            <param name="targetPosition">The target position.</param>
+        </member>
+        <member name="M:DeadDog.GUI.DrawMover.OnTick(DeadDog.GUI.DrawMoveEventArgs)">
+            <summary>
+            Raises the <see cref="E:DeadDog.GUI.DrawMover.Tick"/> event.
+            </summary>
+            <param name="e">A <see cref="T:DeadDog.GUI.DrawMoveEventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:DeadDog.GUI.DrawMover.OnElapsed(DeadDog.GUI.DrawMoveEventArgs)">
+            <summary>
+            Raises the <see cref="E:DeadDog.GUI.DrawMover.Elapsed"/> event.
+            </summary>
+            <param name="e">A <see cref="T:DeadDog.GUI.DrawMoveEventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="M:DeadDog.GUI.DrawMover.Dispose">
+            <summary>
+            Releases all resources used by the <see cref="T:DeadDog.GUI.DrawMover"/>.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.DrawMover.Interval">
+            <summary>
+            Gets or sets the time, in milliseconds, before the <see cref="E:DeadDog.GUI.DrawMover.Tick"/>
+            event is raised relative to the last occurrence of the <see cref="E:DeadDog.GUI.DrawMover.Tick"/> event.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.DrawMover.Position">
+            <summary>
+            Gets or sets the current position as described by the associated <see cref="T:DeadDog.GUI.IMoveMethods"/>. When setting this <see cref="T:DeadDog.GUI.DrawMover"/> is stopped.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.DrawMover.Speed">
+            <summary>
+            Gets the current speed as described by the associated <see cref="T:DeadDog.GUI.IMoveMethods"/>.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.DrawMover.Info">
+            <summary>
+            Gets a <see cref="T:DeadDog.GUI.MovementInfo"/> describing the current move.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.DrawMover.Running">
+            <summary>
+            Gets a boolean representing whether or not this <see cref="T:DeadDog.GUI.DrawMover"/> is moving.
+            </summary>
+        </member>
+        <member name="E:DeadDog.GUI.DrawMover.Tick">
+            <summary>
+            Occurs when the specified interval has elapsed and the <see cref="T:DeadDog.GUI.DrawMover"/> is running.
+            </summary>
+        </member>
+        <member name="E:DeadDog.GUI.DrawMover.Elapsed">
+            <summary>
+            Occurs after a <see cref="E:DeadDog.GUI.DrawMover.Tick"/> event if the mover has reached its target destination.
+            </summary>
+        </member>
+        <member name="T:DeadDog.GUI.DrawMoveEventHandler">
+            <summary>
+            Represents the method that will handle the <see cref="E:DeadDog.GUI.DrawMover.Tick"/> or 
+            <see cref="E:DeadDog.GUI.DrawMover.Elapsed"/> event of a <see cref="T:DeadDog.GUI.DrawMover"/>.
+            </summary>
+            <param name="sender">The source of the event.</param>
+            <param name="e">A <see cref="T:DeadDog.GUI.DrawMoveEventArgs"/> that contains the event data.</param>
+        </member>
+        <member name="T:DeadDog.GUI.DrawMoveEventArgs">
+            <summary>
+            Provides data for the <see cref="E:DeadDog.GUI.DrawMover.Tick"/> or <see cref="E:DeadDog.GUI.DrawMover.Elapsed"/> event.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.DrawMoveEventArgs.SignalTime">
+            <summary>
+            Gets the time the <see cref="E:DeadDog.GUI.DrawMover.Tick"/> or 
+            <see cref="E:DeadDog.GUI.DrawMover.Elapsed"/> event was raised.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.DrawMoveEventArgs.Position">
+            <summary>
+            Gets the position associated with the event.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.DrawMoveEventArgs.TimeLapsed">
+            <summary>
+            Gets the time passed when the event was raised.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.DrawMoveEventArgs.TimeTotal">
+            <summary>
+            Gets the total time required to perform the current move.
+            </summary>
+        </member>
+        <member name="T:DeadDog.GUI.MoveLinear">
+            <summary>
+            Implements a linear move.
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.MoveLinear.#ctor(System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:DeadDog.GUI.MoveLinear"/> class.
+            </summary>
+            <param name="speed">The speed (value pr. sec) of the <see cref="T:DeadDog.GUI.MoveLinear"/></param>
+        </member>
+        <member name="M:DeadDog.GUI.MoveLinear.Position(System.Single)">
+            <summary>
+            Calculates the position according to the time parameter and the current <see cref="T:DeadDog.GUI.MovementInfo"/>.
+            </summary>
+            <param name="time">A float representing the time passed since beginning the current move.</param>
+            <returns>The calculated position.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.MoveLinear.Speed(System.Single)">
+            <summary>
+            Calculates the speed according to the time parameter and the current <see cref="T:DeadDog.GUI.MovementInfo"/>.
+            </summary>
+            <param name="time">A float representing the time passed since beginning the current move.</param>
+            <returns>The initial speed if time == 0; 0 if time == Time; otherwise, the linear speed.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.MoveLinear.Clone">
+            <summary>
+            Creates a <see cref="T:DeadDog.GUI.MoveLinear"/> that is copy of this instance.
+            </summary>
+            <returns>A <see cref="T:DeadDog.GUI.MoveLinear"/> that is copy of this instance.</returns>
+        </member>
+        <member name="P:DeadDog.GUI.MoveLinear.Time">
+            <summary>
+            Gets the time required for moving from A to B - the distance moved divided by the linear speed.
+            </summary>
+        </member>
+        <member name="P:DeadDog.GUI.MoveLinear.Info">
+            <summary>
+            Gets or sets a <see cref="T:DeadDog.GUI.MovementInfo"/> describing the current move.
+            </summary>
+        </member>
+        <member name="T:DeadDog.GUI.ImageCrop">
+            <summary>
+            Contains methods for resizing images.
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.ImageCrop.CreateThumbnails(System.IO.DirectoryInfo,DeadDog.GUI.IImageSizeInfo)">
+            <summary>
+            Creates thumbnails from images and places them in a folder named "thumb".
+            </summary>
+            <param name="di">The directory from which to extract *.jpg and *.jpeg images.</param>
+            <param name="info">Describes the rules for resizing the images.</param>
+        </member>
+        <member name="M:DeadDog.GUI.ImageCrop.CreateThumbnails(System.IO.DirectoryInfo,System.String,DeadDog.GUI.IImageSizeInfo)">
+            <summary>
+            Creates thumbnails from images and places them in a folder.
+            </summary>
+            <param name="di">The directory from which to extract *.jpg and *.jpeg images.</param>
+            <param name="foldername">The foldername in which to place the thumbnails.</param>
+            <param name="info">Describes the rules for resizing the images.</param>
+        </member>
+        <member name="M:DeadDog.GUI.ImageCrop.CreateThumbnails(System.IO.DirectoryInfo,System.String,DeadDog.GUI.IImageSizeInfo,DeadDog.GUI.ImageCrop.ImageCropMethod)">
+            <summary>
+            Creates thumbnails from images and places them in a folder.
+            </summary>
+            <param name="di">The directory from which to extract *.jpg and *.jpeg images.</param>
+            <param name="foldername">The foldername in which to place the thumbnails.</param>
+            <param name="info">Describes the rules for resizing the images.</param>
+            <param name="method">The method used for resizing the images.</param>
+        </member>
+        <member name="M:DeadDog.GUI.ImageCrop.Crop(System.Drawing.Image,DeadDog.GUI.IImageSizeInfo)">
+            <summary>
+            Resizes a System.Drawing.Image object using Bicubic interpolation mode.
+            </summary>
+            <param name="img">The image to resize.</param>
+            <param name="info">Describes the rules for resizing the image.</param>
+            <returns>A new System.Drawing.Image that has been resized.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.ImageCrop.Crop(System.Drawing.Image,DeadDog.GUI.IImageSizeInfo,System.Drawing.Drawing2D.InterpolationMode)">
+            <summary>
+            Resizes a System.Drawing.Image object.
+            </summary>
+            <param name="img">The image to resize.</param>
+            <param name="info">Describes the rules for resizing the image.</param>
+            <param name="mode">The interpolation mode used for resizing.</param>
+            <returns>A new System.Drawing.Image that has been resized.</returns>
+        </member>
+        <member name="T:DeadDog.GUI.ImageCrop.ImageCropMethod">
+            <summary>
+            Resizes a System.Drawing.Image object.
+            </summary>
+            <param name="img">The image to resize.</param>
+            <param name="info">Describes the rules for resizing the image.</param>
+            <returns>A new System.Drawing.Image that has been resized.</returns>
+        </member>
+        <member name="T:DeadDog.GUI.ColorFactory">
+            <summary>
+            Provides methods for creating and editing <see cref="T:System.Drawing.Color"/> values.
+            </summary>
+        </member>
+        <member name="M:DeadDog.GUI.ColorFactory.GetHue(System.Drawing.Color)">
+            <summary>
+            Calculates the hue of a given <see cref="T:System.Drawing.Color"/>.
+            </summary>
+            <param name="color">The color from which hue should be calculated.</param>
+            <returns>The hue of <paramref name="color"/> in the interval 0-360.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.ColorFactory.GetSaturation(System.Drawing.Color)">
+            <summary>
+            Calculates the saturation of a given <see cref="T:System.Drawing.Color"/>.
+            </summary>
+            <param name="color">The color from which saturation should be calculated.</param>
+            <returns>The saturation of <paramref name="color"/> in the interval 0-1.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.ColorFactory.GetBrigthness(System.Drawing.Color)">
+            <summary>
+            Calculates the brigthness of a given <see cref="T:System.Drawing.Color"/>.
+            </summary>
+            <param name="color">The color from which brigthness should be calculated.</param>
+            <returns>The brigthness of <paramref name="color"/> in the interval 0-1.</returns>
+        </member>
+        <member name="M:DeadDog.GUI.ColorFactory.FromHSB(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Converts HSB-values to a <see cref="T:System.Drawing.Color"/>.
+            </summary>
+            <param name="alpha">The alpha value of the resulting <see cref="T:System.Drawing.Color"/>.</param>
+            <param name="hue">The hue of the resulting <see cref="T:System.Drawing.Color"/>.</param>
+            <param name="saturation">The saturation of the resulting <see cref="T:System.Drawing.Color"/>.</param>
+            <param name="brightness">The brightness of the resulting <see cref="T:System.Drawing.Color"/>.</param>
+            <returns>A new instance of <see cref="T:System.Drawing.Color"/> that has the proper HSB-values.</returns>
+        </member>
+    </members>
+</doc>
