@@ -17,6 +17,8 @@ namespace XNAControls
         internal const uint MOUSE_WHEEL = 0x00000008;
         internal const uint CONTROL_GOTFOCUS = 0x00000009;
         internal const uint CONTROL_LOSTFOCUS = 0x00000010;
+        internal const uint MOUSE_ENTER = 0x00000011;
+        internal const uint MOUSE_LEAVE = 0x00000012;
 
         private bool focused = false;
         private bool enabled;
@@ -95,6 +97,13 @@ namespace XNAControls
                     handleMouseMessage(msg, new MouseEventArgs(par[0], par[1], (MouseButtons)par[2], par[3]));
                     break;
 
+                case Control.MOUSE_ENTER:
+                    OnMouseEnter(EventArgs.Empty);
+                    break;
+                case Control.MOUSE_LEAVE:
+                    OnMouseLeave(EventArgs.Empty);
+                    break;
+
                 case Control.CONTROL_GOTFOCUS:
                     focused = true;
                     OnGotFocus(EventArgs.Empty);
@@ -150,6 +159,18 @@ namespace XNAControls
         }
         public event KeyEventHandler KeyUp;
 
+        protected virtual void OnMouseEnter(EventArgs e)
+        {
+            if (MouseEnter != null)
+                MouseEnter(this, e);
+        }
+        public event EventHandler MouseEnter;
+        protected virtual void OnMouseLeave(EventArgs e)
+        {
+            if (MouseLeave != null)
+                MouseLeave(this, e);
+        }
+        public event EventHandler MouseLeave;
         protected virtual void OnMouseMove(MouseEventArgs e)
         {
             if (MouseMove != null)

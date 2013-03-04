@@ -94,6 +94,7 @@ namespace XNAControls
                 (right ? 4 : 0);
         }
 
+        private Control lastHoveredControl = null;
         private Control[] downControls = new Control[3];
         private MouseState oldMouseState;
         public override void Update(GameTime gameTime)
@@ -102,6 +103,13 @@ namespace XNAControls
             Vector2 point = new Vector2(ms.X, ms.Y);
 
             Control c = (from control in controls.Reverse() where control.IsInside(point) select control).FirstOrDefault();
+            if (c != lastHoveredControl)
+            {
+                if (lastHoveredControl != null)
+                    lastHoveredControl.Message(Control.MOUSE_LEAVE);
+                if (c != null)
+                    c.Message(Control.MOUSE_ENTER);
+            }
 
             if (c != null)
             {
@@ -131,6 +139,8 @@ namespace XNAControls
                 if (ms.RightButton != oldMouseState.RightButton)
                     downControls[2] = null;
             }
+
+            lastHoveredControl = c;
 
             for (int i = 0; i < controls.Count; i++)
                 controls[i].Update(gameTime);
