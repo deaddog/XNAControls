@@ -112,11 +112,27 @@ namespace MoonifyControls
             {
                 case SwitchBoxTypes.Smaller: return left ? -8 : 11;
                 case SwitchBoxTypes.Small: return left ? -7 : 10;
-                case SwitchBoxTypes.Big: return left ? -17 + 16 : 25 - 16;
+                case SwitchBoxTypes.Big: return left ? -17 : 25;
                 case SwitchBoxTypes.Bigger: return left ? 0 : 35;
                 default:
                     throw new NotImplementedException();
             }
+        }
+
+        protected override void Message(uint msg, params int[] par)
+        {
+            switch (msg)
+            {
+                case 0x00000005: break;//DOWN
+                case 0x00000006:
+                    if ((MouseButtons)par[2] == MouseButtons.LeftButton)
+                    {
+                        float x = par[0] - this.Location.X, y = par[1] - this.Location.Y;
+                        this.Left = !this.Left;
+                    }
+                    break;//UP
+            }
+            base.Message(msg, par);
         }
 
         public override void LoadResources(Microsoft.Xna.Framework.Content.ContentManager content)
