@@ -24,7 +24,7 @@ namespace MoonifyControls
 
         public static Box SwitchBoxSmall
         {
-            get { return new Box(1, 11, 12, 11, 0, 0, 7, 2, 7, 2); }
+            get { return new Box(1, 11, 12, 11, 0, 0, 7, 1, 7, 1); }
         }
         public static Box SwitchBoxBig
         {
