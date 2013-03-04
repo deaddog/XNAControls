@@ -17,6 +17,7 @@ namespace MoonifyControls
         private Texture2D handleTexture;
 
         private float yOffset;
+        private float xMin, xMax;
         private xfloat xOffset;
         private IMoveMethods xMoveMethod = new MoveSineLine(0.5f, 3000f);
 
@@ -30,7 +31,9 @@ namespace MoonifyControls
             this.type = type;
             this.handleRectangle = handleRectangleFromType(type);
             this.yOffset = handleYOffsetFromType(type);
-            this.xOffset = new xfloat(handleXOffsetFromType(type, this.left), xMoveMethod);
+            this.xMin = handleXOffsetFromType(type, true);
+            this.xMax = handleXOffsetFromType(type, false);
+            this.xOffset = new xfloat(left ? xMin : xMax, xMoveMethod);
         }
 
         public bool Left
@@ -39,7 +42,7 @@ namespace MoonifyControls
             set
             {
                 left = value;
-                this.xOffset.TargetValue = handleXOffsetFromType(type, left);
+                this.xOffset.TargetValue = left ? xMin : xMax;
             }
         }
 
@@ -49,7 +52,7 @@ namespace MoonifyControls
             {
                 case SwitchBoxTypes.Smaller: return new Vector2(34, 15);
                 case SwitchBoxTypes.Small: return new Vector2(34, 15);
-                case SwitchBoxTypes.Big: return new Vector2(39, 17);
+                case SwitchBoxTypes.Big: return new Vector2(39 + 32, 17);
                 case SwitchBoxTypes.Bigger: return new Vector2(66, 24);
                 default:
                     throw new NotImplementedException();
@@ -117,31 +120,101 @@ namespace MoonifyControls
             {
                 case SwitchBoxTypes.Smaller: return left ? -8 : 11;
                 case SwitchBoxTypes.Small: return left ? -7 : 10;
-                case SwitchBoxTypes.Big: return left ? -17 : 25;
+                case SwitchBoxTypes.Big: return left ? -17 + 16 : 25 - 16+32;
                 case SwitchBoxTypes.Bigger: return left ? 0 : 35;
                 default:
                     throw new NotImplementedException();
             }
         }
 
+        private bool isInsideHandle(Vector2 point)
+        {
+            float handlePos = xOffset.CurrentValue;
+
+            Vector2 posOffset, sizeofHandle;
+
+            switch (type)
+            {
+                case SwitchBoxTypes.Smaller:
+                    posOffset = new Vector2(9, 4);
+                    sizeofHandle = new Vector2(13, 13);
+                    break;
+                case SwitchBoxTypes.Small:
+                    posOffset = new Vector2(7, 2);
+                    sizeofHandle = new Vector2(17, 17);
+                    break;
+                case SwitchBoxTypes.Big:
+                    posOffset = new Vector2(1, 1);
+                    sizeofHandle = new Vector2(29, 19);
+                    break;
+                case SwitchBoxTypes.Bigger:
+                    posOffset = new Vector2(1, 0);
+                    sizeofHandle = new Vector2(29, 22);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            point -= this.Location + new Vector2(handlePos, yOffset) + posOffset;
+            return point.X >= 0 && point.X < sizeofHandle.X && point.Y >= 0 && point.Y < sizeofHandle.Y;
+        }
+
         protected override void Message(uint msg, params int[] par)
         {
             switch (msg)
             {
-                case 0x00000005: break;//DOWN
+                case 0x00000004:
+                    if (mouseDown)
+                        moveCurrent = par[0];
+                    break;
+                case 0x00000005:
+                    if ((MouseButtons)par[2] == MouseButtons.LeftButton)
+                        handleMouseDown(new Vector2(par[0], par[1]));
+                    break;
                 case 0x00000006:
                     if ((MouseButtons)par[2] == MouseButtons.LeftButton)
-                    {
-                        float x = par[0] - this.Location.X;
-
-                        if (x < Math.Abs(this.Size.X - x))
-                            this.Left = true;
-                        else
-                            this.Left = false;
-                    }
-                    break;//UP
+                        handleMouseUp(new Vector2(par[0], par[1]));
+                    break;
+                case 0x00000012:
+                    if (mouseDown)
+                        handleMouseUp(new Vector2(moveCurrent, 0));
+                    break;
             }
             base.Message(msg, par);
+        }
+
+        private float moveOrigin = 0, moveCurrent = 0;
+        private bool mouseDown = false;
+        private void handleMouseDown(Vector2 pos)
+        {
+            if (isInsideHandle(pos))
+            {
+                mouseDown = true;
+                moveOrigin = moveCurrent = pos.X;
+            }
+            else
+            {
+                float x = pos.X - this.Location.X;
+
+                if (x < Math.Abs(this.Size.X - x))
+                    this.Left = true;
+                else
+                    this.Left = false;
+            }
+        }
+        private void handleMouseUp(Vector2 pos)
+        {
+            if (!mouseDown)
+                return;
+
+            mouseDown = false;
+            this.xOffset.CurrentValue = this.xOffset.CurrentValue + moveCurrent - moveOrigin;
+            moveOrigin = moveCurrent = 0;
+            float x = pos.X - this.Location.X;
+
+            if (x < Math.Abs(this.Size.X - x))
+                this.Left = true;
+            else
+                this.Left = false;
         }
 
         public override void LoadResources(Microsoft.Xna.Framework.Content.ContentManager content)
@@ -160,7 +233,13 @@ namespace MoonifyControls
         {
             spriteBatch.Begin();
             box.Draw(spriteBatch, boxTexture, this.Location, this.Size, Color.White);
-            spriteBatch.Draw(handleTexture, this.Location + new Vector2(xOffset, yOffset), handleRectangle, Color.White);
+
+            float handleX = xOffset + moveCurrent - moveOrigin;
+            if (handleX < xMin)
+                handleX = xMin;
+            else if (handleX > xMax)
+                handleX = xMax;
+            spriteBatch.Draw(handleTexture, this.Location + new Vector2(handleX, yOffset), handleRectangle, Color.White);
             spriteBatch.End();
         }
     }
