@@ -127,8 +127,12 @@ namespace MoonifyControls
                 case 0x00000006:
                     if ((MouseButtons)par[2] == MouseButtons.LeftButton)
                     {
-                        float x = par[0] - this.Location.X, y = par[1] - this.Location.Y;
-                        this.Left = !this.Left;
+                        float x = par[0] - this.Location.X;
+
+                        if (x < Math.Abs(this.Size.X - x))
+                            this.Left = true;
+                        else
+                            this.Left = false;
                     }
                     break;//UP
             }
