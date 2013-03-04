@@ -24,7 +24,7 @@ namespace MoonifyControls
         private bool left;
 
         public SwitchBox(SwitchBoxTypes type)
-            : base(sizeFromType(type))
+            : base(50, 10)
         {
             this.left = true;
 
@@ -34,6 +34,8 @@ namespace MoonifyControls
             this.xMin = handleXOffsetFromType(type, true);
             this.xMax = handleXOffsetFromType(type, false);
             this.xOffset = new xfloat(left ? xMin : xMax, xMoveMethod);
+
+            this.Size = sizeFromType(this.type);
         }
 
         public bool Left
@@ -44,6 +46,16 @@ namespace MoonifyControls
                 left = value;
                 this.xOffset.TargetValue = left ? xMin : xMax;
             }
+        }
+
+        protected override void InnerSizeChange(float width, float height)
+        {
+            Vector2 size = sizeFromType(type);
+            if (width != size.X)
+                width = size.X;
+            if (height != size.Y)
+                height = size.Y;
+            base.InnerSizeChange(width, height);
         }
 
         private static Vector2 sizeFromType(SwitchBoxTypes type)
@@ -120,7 +132,7 @@ namespace MoonifyControls
             {
                 case SwitchBoxTypes.Smaller: return left ? -8 : 11;
                 case SwitchBoxTypes.Small: return left ? -7 : 10;
-                case SwitchBoxTypes.Big: return left ? -17 + 16 : 25 - 16+32;
+                case SwitchBoxTypes.Big: return left ? -17 + 16 : 25 - 16 + 32;
                 case SwitchBoxTypes.Bigger: return left ? 0 : 35;
                 default:
                     throw new NotImplementedException();
