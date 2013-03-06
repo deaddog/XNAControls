@@ -62,17 +62,31 @@ namespace XNAControls
             set { InnerSizeChange(value.X, value.Y); }
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:LocationChanged"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnLocationChanged(EventArgs e)
         {
             if (LocationChanged != null)
                 LocationChanged(this, e);
         }
+        /// <summary>
+        /// Occurs when the <see cref="Location"/> property value has changed.
+        /// </summary>
         public event EventHandler LocationChanged;
+        /// <summary>
+        /// Raises the <see cref="E:SizeChanged"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnSizeChanged(EventArgs e)
         {
             if (SizeChanged != null)
                 SizeChanged(this, e);
         }
+        /// <summary>
+        /// Occurs when the <see cref="Size"/> property value has changed.
+        /// </summary>
         public event EventHandler SizeChanged;
 
         protected internal virtual void Message(uint msg, params int[] par)
@@ -115,17 +129,31 @@ namespace XNAControls
             }
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:GotFocus"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnGotFocus(EventArgs e)
         {
             if (GotFocus != null)
                 GotFocus(this, e);
         }
+        /// <summary>
+        /// Occurs when the control gets focus and can receive keyboard input.
+        /// </summary>
         public event EventHandler GotFocus;
+        /// <summary>
+        /// Raises the <see cref="E:LostFocus"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnLostFocus(EventArgs e)
         {
             if (LostFocus != null)
                 LostFocus(this, e);
         }
+        /// <summary>
+        /// Occurs when the control loses focus and can not receive keyboard input.
+        /// </summary>
         public event EventHandler LostFocus;
 
         private void handleMouseMessage(uint msg, MouseEventArgs e)
@@ -140,66 +168,136 @@ namespace XNAControls
             }
         }
 
+        /// <summary>
+        /// Raises the <see cref="E:CharacterEntered"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="CharacterEventArgs"/> instance containing the event data.</param>
         protected virtual void OnCharacterEntered(CharacterEventArgs e)
         {
             if (CharacterEntered != null)
                 CharacterEntered(this, e);
         }
+        /// <summary>
+        /// Occurs when a character is entered while the control has focus.
+        /// </summary>
         public event CharEnteredHandler CharacterEntered;
+        /// <summary>
+        /// Raises the <see cref="E:KeyDown"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         protected virtual void OnKeyDown(KeyEventArgs e)
         {
             if (KeyDown != null)
                 KeyDown(this, e);
         }
+        /// <summary>
+        /// Occurs when a key is pressed while the control has focus.
+        /// </summary>
         public event KeyEventHandler KeyDown;
+        /// <summary>
+        /// Raises the <see cref="E:KeyUp"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="KeyEventArgs"/> instance containing the event data.</param>
         protected virtual void OnKeyUp(KeyEventArgs e)
         {
             if (KeyUp != null)
                 KeyUp(this, e);
         }
+        /// <summary>
+        /// Occurs when a key is released while the control has focus.
+        /// </summary>
         public event KeyEventHandler KeyUp;
 
+        /// <summary>
+        /// Raises the <see cref="E:MouseEnter"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnMouseEnter(EventArgs e)
         {
             if (MouseEnter != null)
                 MouseEnter(this, e);
         }
+        /// <summary>
+        /// Occurs when the mouse pointer enters the control.
+        /// </summary>
         public event EventHandler MouseEnter;
+        /// <summary>
+        /// Raises the <see cref="E:MouseLeave"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected virtual void OnMouseLeave(EventArgs e)
         {
             if (MouseLeave != null)
                 MouseLeave(this, e);
         }
+        /// <summary>
+        /// Occurs when the mouse pointer leaves the control.
+        /// </summary>
         public event EventHandler MouseLeave;
+        /// <summary>
+        /// Raises the <see cref="E:MouseMove"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
         protected virtual void OnMouseMove(MouseEventArgs e)
         {
             if (MouseMove != null)
                 MouseMove(this, e);
         }
+        /// <summary>
+        /// Occurs when the mouse pointer is over the control and the mouse is moved.
+        /// </summary>
         public event MouseEventHandler MouseMove;
+        /// <summary>
+        /// Raises the <see cref="E:MouseDown"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
         protected virtual void OnMouseDown(MouseEventArgs e)
         {
             if (MouseDown != null)
                 MouseDown(this, e);
         }
+        /// <summary>
+        /// Occurs when the mouse pointer is over the control and a mouse button is pressed.
+        /// </summary>
         public event MouseEventHandler MouseDown;
+        /// <summary>
+        /// Raises the <see cref="E:MouseUp"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
         protected virtual void OnMouseUp(MouseEventArgs e)
         {
             if (MouseUp != null)
                 MouseUp(this, e);
         }
+        /// <summary>
+        /// Occurs when the mouse pointer is over the control and a mouse button is released.
+        /// </summary>
         public event MouseEventHandler MouseUp;
+        /// <summary>
+        /// Raises the <see cref="E:MouseClick"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
         protected virtual void OnMouseClick(MouseEventArgs e)
         {
             if (MouseClick != null)
                 MouseClick(this, e);
         }
+        /// <summary>
+        /// Occurs when the control is clicked by the mouse.
+        /// </summary>
         public event MouseEventHandler MouseClick;
+        /// <summary>
+        /// Raises the <see cref="E:MouseWheel"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="MouseEventArgs"/> instance containing the event data.</param>
         protected virtual void OnMouseWheel(MouseEventArgs e)
         {
             if (MouseWheel != null)
                 MouseWheel(this, e);
         }
+        /// <summary>
+        /// Occurs when the mouse pointer is over the control and the mouse wheel moves.
+        /// </summary>
         public event MouseEventHandler MouseWheel;
 
         public virtual void Update(GameTime gameTime)
