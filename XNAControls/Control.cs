@@ -22,7 +22,7 @@ namespace XNAControls
 
         private bool focused = false;
         private bool enabled;
-        private Vector2 position;
+        private Vector2 location;
         private Vector2 size;
 
         public Control(Vector2 initialSize)
@@ -32,7 +32,7 @@ namespace XNAControls
         public Control(float initialwidth, float initialheight)
         {
             this.enabled = true;
-            this.position = Vector2.Zero;
+            this.location = Vector2.Zero;
             this.InnerSizeChange(initialwidth, initialheight);
         }
 
@@ -45,21 +45,44 @@ namespace XNAControls
             get { return enabled; }
             set { enabled = value; }
         }
+
         public Vector2 Location
         {
-            get { return position; }
+            get { return location; }
             set
             {
-                var temp = position;
-                position = value;
-                if (temp != position)
+                if (value != location)
+                {
+                    location = value;
                     OnLocationChanged(EventArgs.Empty);
+                }
             }
         }
+        public float X
+        {
+            get { return location.X; }
+            set { Location = new Vector2(value, location.Y); }
+        }
+        public float Y
+        {
+            get { return location.Y; }
+            set { Location = new Vector2(location.X, value); }
+        }
+
         public Vector2 Size
         {
             get { return size; }
             set { InnerSizeChange(value.X, value.Y); }
+        }
+        public float Width
+        {
+            get { return size.X; }
+            set { Size = new Vector2(value, size.Y); }
+        }
+        public float Height
+        {
+            get { return size.Y; }
+            set { Size = new Vector2(size.X, value); }
         }
 
         /// <summary>
@@ -321,7 +344,7 @@ namespace XNAControls
         }
         public bool IsInside(Vector2 point)
         {
-            point -= this.position;
+            point -= this.location;
             return point.X >= 0 && point.X < this.size.X && point.Y >= 0 && point.Y < this.size.Y;
         }
 
