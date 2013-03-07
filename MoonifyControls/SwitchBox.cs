@@ -204,14 +204,7 @@ namespace MoonifyControls
                 moveOrigin = moveCurrent = pos.X;
             }
             else
-            {
-                float x = pos.X - this.Location.X;
-
-                if (x < Math.Abs(this.Size.X - x))
-                    this.Left = true;
-                else
-                    this.Left = false;
-            }
+                this.Left = !this.Left;
         }
         private void handleMouseUp(Vector2 pos)
         {
