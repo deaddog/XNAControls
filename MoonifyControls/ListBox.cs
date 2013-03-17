@@ -157,7 +157,7 @@ namespace MoonifyControls
             if (height < 27)
                 height = 27;
 
-            height = ((int)(height - 2) / 25) * 25 + 2;
+            //height = ((int)(height - 2) / 25) * 25 + 2;
 
             base.InnerSizeChange(width, height);
         }

@@ -76,7 +76,12 @@ namespace XNAControls
         public override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
-            spriteBatch.Draw(background, Vector2.Zero, Color.White);
+            Rectangle rectangle = new Rectangle(0, 0, background.Width, background.Height);
+            if (Game.Window.ClientBounds.Width > rectangle.Width)
+                rectangle.Width = Game.Window.ClientBounds.Width;
+            if (Game.Window.ClientBounds.Height > rectangle.Height)
+                rectangle.Height = Game.Window.ClientBounds.Height;
+            spriteBatch.Draw(background, rectangle, Color.White);
             spriteBatch.End();
 
             for (int i = 0; i < controls.Count; i++)
