@@ -49,14 +49,18 @@ namespace XNAControls
             get { return this.keyboardControl; }
             set
             {
-                if (!controls.Contains(value))
+                if (value != null && !controls.Contains(value))
                     throw new InvalidOperationException("Control \"" + value.GetType().Name + "\" is not contained by this " + this.GetType().Name);
 
-                if (this.keyboardControl != null)
-                    this.keyboardControl.Message(Control.CONTROL_LOSTFOCUS);
+                if (this.keyboardControl != value)
+                {
+                    if (this.keyboardControl != null)
+                        this.keyboardControl.Message(Control.CONTROL_LOSTFOCUS);
 
-                this.keyboardControl = value;
-                this.keyboardControl.Message(Control.CONTROL_GOTFOCUS);
+                    this.keyboardControl = value;
+                    if (this.keyboardControl != null)
+                        this.keyboardControl.Message(Control.CONTROL_GOTFOCUS);
+                }
             }
         }
 
