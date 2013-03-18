@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using DeadDog.GUI;
 using XNAControls;
 
 namespace MoonifyControls
@@ -24,6 +25,7 @@ namespace MoonifyControls
 
         #region Index management
 
+        private xfloat sliderPosition = new xfloat(1-25, new MoveSineLine(0.5f, 3000f));
         private int _selectionIndex = -1;
         private int selectionIndex
         {
@@ -37,6 +39,12 @@ namespace MoonifyControls
 
                 if (_selectionIndex != value)
                 {
+                    int diff = Math.Abs(value - _selectionIndex);
+                    float newPosition = 1 + value * 25;
+                    if (diff > 1 || value < 0 || _selectionIndex < 0)
+                        sliderPosition.CurrentValue = newPosition;
+                    else
+                        sliderPosition.TargetValue = newPosition;
                     _selectionIndex = value;
                     OnSelectedIndexChanged(EventArgs.Empty);
                 }
@@ -98,8 +106,12 @@ namespace MoonifyControls
             RasterizerState temp = spriteBatch.GraphicsDevice.RasterizerState;
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, new RasterizerState() { ScissorTestEnable = true });
             spriteBatch.GraphicsDevice.ScissorRectangle = clip;
-            selectionBox.Draw(spriteBatch, selectionTexture,
-                this.Location + new Vector2(1, 1 + (float)selectionIndex * 25f), new Vector2(this.Size.X - 2, 25), Color.White);
+            if (selectionIndex >= 0)
+            {
+                sliderPosition.Update();
+                selectionBox.Draw(spriteBatch, selectionTexture,
+                    this.Location + new Vector2(1, sliderPosition), new Vector2(this.Size.X - 2, 25), Color.White);
+            }
 
             for (int i = 0; i < items.Count; i++)
                 DrawLine(spriteBatch, items.GetText(i), i);
