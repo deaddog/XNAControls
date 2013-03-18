@@ -98,21 +98,21 @@ namespace MoonifyControls
         }
         public event EventHandler BackgroundTextChanged;
 
-        protected override void Message(uint msg, params int[] par)
+        protected override void Message(ControlMessages msg, params int[] par)
         {
             switch (msg)
             {
-                case 0x00000001:
+                case ControlMessages.KEYBOARD_CHARACTER:
                     handleCharacter(Convert.ToChar(par[0]));
                     base.Message(msg, par);
                     break;
 
-                case 0x00000002:
+                case ControlMessages.KEYBOARD_KEYDOWN:
                     handleKeyDown((Keys)par[0]);
                     base.Message(msg, par);
                     break;
 
-                case 0x00000009:
+                case ControlMessages.CONTROL_GOTFOCUS:
                     base.Message(msg, par);
                     lastCaretSwap = DateTime.Now;
                     showCaret = true;

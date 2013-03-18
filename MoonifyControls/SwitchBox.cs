@@ -170,23 +170,23 @@ namespace MoonifyControls
             return point.X >= 0 && point.X < sizeofHandle.X && point.Y >= 0 && point.Y < sizeofHandle.Y;
         }
 
-        protected override void Message(uint msg, params int[] par)
+        protected override void Message(ControlMessages msg, params int[] par)
         {
             switch (msg)
             {
-                case 0x00000004:
+                case ControlMessages.MOUSE_MOVE:
                     if (mouseDown)
                         moveCurrent = par[0];
                     break;
-                case 0x00000005:
+                case ControlMessages.MOUSE_DOWN:
                     if ((MouseButtons)par[2] == MouseButtons.LeftButton)
                         handleMouseDown(new Vector2(par[0], par[1]));
                     break;
-                case 0x00000006:
+                case ControlMessages.MOUSE_UP:
                     if ((MouseButtons)par[2] == MouseButtons.LeftButton)
                         handleMouseUp(new Vector2(par[0], par[1]));
                     break;
-                case 0x00000012:
+                case ControlMessages.MOUSE_LEAVE:
                     if (mouseDown)
                         handleMouseUp(new Vector2(moveCurrent, 0));
                     break;

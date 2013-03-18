@@ -7,19 +7,6 @@ namespace XNAControls
 {
     public class Control
     {
-        internal const uint KEYBOARD_CHARACTER = 0x00000001;
-        internal const uint KEYBOARD_KEYDOWN = 0x00000002;
-        internal const uint KEYBOARD_KEYUP = 0x00000003;
-        internal const uint MOUSE_MOVE = 0x00000004;
-        internal const uint MOUSE_DOWN = 0x00000005;
-        internal const uint MOUSE_UP = 0x00000006;
-        internal const uint MOUSE_CLICK = 0x00000007;
-        internal const uint MOUSE_WHEEL = 0x00000008;
-        internal const uint CONTROL_GOTFOCUS = 0x00000009;
-        internal const uint CONTROL_LOSTFOCUS = 0x00000010;
-        internal const uint MOUSE_ENTER = 0x00000011;
-        internal const uint MOUSE_LEAVE = 0x00000012;
-
         private bool focused = false;
         private bool enabled;
         private Vector2 location;
@@ -112,40 +99,40 @@ namespace XNAControls
         /// </summary>
         public event EventHandler SizeChanged;
 
-        protected internal virtual void Message(uint msg, params int[] par)
+        protected internal virtual void Message(ControlMessages msg, params int[] par)
         {
             switch (msg)
             {
-                case Control.KEYBOARD_CHARACTER:
+                case ControlMessages.KEYBOARD_CHARACTER:
                     OnCharacterEntered(new CharacterEventArgs(Convert.ToChar(par[0]), par[1]));
                     break;
-                case Control.KEYBOARD_KEYDOWN:
+                case ControlMessages.KEYBOARD_KEYDOWN:
                     OnKeyDown(new KeyEventArgs((Microsoft.Xna.Framework.Input.Keys)par[0], (par[1] & 1) != 0, (par[1] & 2) != 0));
                     break;
-                case Control.KEYBOARD_KEYUP:
+                case ControlMessages.KEYBOARD_KEYUP:
                     OnKeyUp(new KeyEventArgs((Microsoft.Xna.Framework.Input.Keys)par[0], (par[1] & 1) != 0, (par[1] & 2) != 0));
                     break;
 
-                case Control.MOUSE_MOVE:
-                case Control.MOUSE_DOWN:
-                case Control.MOUSE_UP:
-                case Control.MOUSE_CLICK:
-                case Control.MOUSE_WHEEL:
+                case ControlMessages.MOUSE_MOVE:
+                case ControlMessages.MOUSE_DOWN:
+                case ControlMessages.MOUSE_UP:
+                case ControlMessages.MOUSE_CLICK:
+                case ControlMessages.MOUSE_WHEEL:
                     handleMouseMessage(msg, new MouseEventArgs(par[0], par[1], (MouseButtons)par[2], par[3]));
                     break;
 
-                case Control.MOUSE_ENTER:
+                case ControlMessages.MOUSE_ENTER:
                     OnMouseEnter(EventArgs.Empty);
                     break;
-                case Control.MOUSE_LEAVE:
+                case ControlMessages.MOUSE_LEAVE:
                     OnMouseLeave(EventArgs.Empty);
                     break;
 
-                case Control.CONTROL_GOTFOCUS:
+                case ControlMessages.CONTROL_GOTFOCUS:
                     focused = true;
                     OnGotFocus(EventArgs.Empty);
                     break;
-                case Control.CONTROL_LOSTFOCUS:
+                case ControlMessages.CONTROL_LOSTFOCUS:
                     focused = false;
                     OnLostFocus(EventArgs.Empty);
                     break;
@@ -179,15 +166,15 @@ namespace XNAControls
         /// </summary>
         public event EventHandler LostFocus;
 
-        private void handleMouseMessage(uint msg, MouseEventArgs e)
+        private void handleMouseMessage(ControlMessages msg, MouseEventArgs e)
         {
             switch (msg)
             {
-                case Control.MOUSE_MOVE: OnMouseMove(e); break;
-                case Control.MOUSE_DOWN: OnMouseDown(e); break;
-                case Control.MOUSE_UP: OnMouseUp(e); break;
-                case Control.MOUSE_CLICK: OnMouseClick(e); break;
-                case Control.MOUSE_WHEEL: OnMouseWheel(e); break;
+                case ControlMessages.MOUSE_MOVE: OnMouseMove(e); break;
+                case ControlMessages.MOUSE_DOWN: OnMouseDown(e); break;
+                case ControlMessages.MOUSE_UP: OnMouseUp(e); break;
+                case ControlMessages.MOUSE_CLICK: OnMouseClick(e); break;
+                case ControlMessages.MOUSE_WHEEL: OnMouseWheel(e); break;
             }
         }
 

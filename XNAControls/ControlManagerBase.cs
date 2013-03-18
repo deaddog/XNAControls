@@ -27,15 +27,15 @@ namespace XNAControls
             KeyboardInput.Initialize(game.Window);
             KeyboardInput.CharacterEntered += (s, e) =>
             {
-                keyboardControl.Message(Control.KEYBOARD_CHARACTER, e.Character, e.Param);
+                keyboardControl.Message(ControlMessages.KEYBOARD_CHARACTER, e.Character, e.Param);
             };
             KeyboardInput.KeyDown += (s, e) =>
             {
-                keyboardControl.Message(Control.KEYBOARD_KEYDOWN, (int)e.KeyCode, 0 + (e.Shift ? 1 : 0) + (e.Control ? 2 : 0));
+                keyboardControl.Message(ControlMessages.KEYBOARD_KEYDOWN, (int)e.KeyCode, 0 + (e.Shift ? 1 : 0) + (e.Control ? 2 : 0));
             };
             KeyboardInput.KeyUp += (s, e) =>
             {
-                keyboardControl.Message(Control.KEYBOARD_KEYUP, (int)e.KeyCode, 0 + (e.Shift ? 1 : 0) + (e.Control ? 2 : 0));
+                keyboardControl.Message(ControlMessages.KEYBOARD_KEYUP, (int)e.KeyCode, 0 + (e.Shift ? 1 : 0) + (e.Control ? 2 : 0));
             };
         }
 
@@ -55,11 +55,11 @@ namespace XNAControls
                 if (this.keyboardControl != value)
                 {
                     if (this.keyboardControl != null)
-                        this.keyboardControl.Message(Control.CONTROL_LOSTFOCUS);
+                        this.keyboardControl.Message(ControlMessages.CONTROL_LOSTFOCUS);
 
                     this.keyboardControl = value;
                     if (this.keyboardControl != null)
-                        this.keyboardControl.Message(Control.CONTROL_GOTFOCUS);
+                        this.keyboardControl.Message(ControlMessages.CONTROL_GOTFOCUS);
                 }
             }
         }
@@ -115,15 +115,15 @@ namespace XNAControls
             if (c != lastHoveredControl)
             {
                 if (lastHoveredControl != null)
-                    lastHoveredControl.Message(Control.MOUSE_LEAVE);
+                    lastHoveredControl.Message(ControlMessages.MOUSE_LEAVE);
                 if (c != null)
-                    c.Message(Control.MOUSE_ENTER);
+                    c.Message(ControlMessages.MOUSE_ENTER);
             }
 
             if (c != null)
             {
                 if (ms.X != oldMouseState.X || ms.Y != oldMouseState.Y)
-                    c.Message(Control.MOUSE_MOVE, ms.X, ms.Y, buttonState(ms), 0);
+                    c.Message(ControlMessages.MOUSE_MOVE, ms.X, ms.Y, buttonState(ms), 0);
 
                 if (ms.LeftButton != oldMouseState.LeftButton)
                     sendMouseMessages(0, ms.LeftButton == ButtonState.Pressed, c, ms.X, ms.Y, buttonState(true, false, false), 0);
@@ -135,7 +135,7 @@ namespace XNAControls
                     sendMouseMessages(2, ms.RightButton == ButtonState.Pressed, c, ms.X, ms.Y, buttonState(false, false, true), 0);
 
                 if (ms.ScrollWheelValue != oldMouseState.ScrollWheelValue)
-                    c.Message(Control.MOUSE_WHEEL, ms.X, ms.Y, buttonState(false, false, false), oldMouseState.ScrollWheelValue - ms.ScrollWheelValue);
+                    c.Message(ControlMessages.MOUSE_WHEEL, ms.X, ms.Y, buttonState(false, false, false), oldMouseState.ScrollWheelValue - ms.ScrollWheelValue);
             }
             else
             {
@@ -160,14 +160,14 @@ namespace XNAControls
         {
             if (down)
             {
-                c.Message(Control.MOUSE_DOWN, parameters);
+                c.Message(ControlMessages.MOUSE_DOWN, parameters);
                 downControls[button] = c;
             }
             else
             {
-                c.Message(Control.MOUSE_UP, parameters);
+                c.Message(ControlMessages.MOUSE_UP, parameters);
                 if (c == downControls[button])
-                    c.Message(Control.MOUSE_CLICK, parameters);
+                    c.Message(ControlMessages.MOUSE_CLICK, parameters);
                 downControls[button] = null;
             }
         }

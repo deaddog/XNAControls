@@ -104,6 +104,7 @@
     <Compile Include="CharacterRenderer.cs" />
     <Compile Include="Control.cs" />
     <Compile Include="ControlManagerBase.cs" />
+    <Compile Include="ControlMessages.cs" />
     <Compile Include="FloatMoveEventArgs.cs" />
     <Compile Include="FloatMoveEventHandler.cs" />
     <Compile Include="KeyboardInput.cs" />
