@@ -15,11 +15,19 @@ namespace MoonifyControls
         private static readonly Color inactiveColor = new Color(172, 179, 191);
 
         private Box frameBox;
-        private Box fillBox;
-        private Box selectionBox;
         private Texture2D frameTexture;
+
+        private Box fillBox;
         private Texture2D fillTexture;
+
+        private Box selectionBox;
         private Texture2D selectionTexture;
+
+        private Box scrollBarBox;
+        private Texture2D scrollBarTexture;
+
+        private Box scrollSliderBox;
+        private Texture2D scrollSliderTexture;
 
         private CharacterRenderer font;
 
@@ -89,10 +97,18 @@ namespace MoonifyControls
         {
             frameBox = MoonifyBoxes.EmptyBoxFrame;
             frameTexture = content.Load<Texture2D>("EmptyBoxFrame");
+
             fillBox = MoonifyBoxes.EmptyBoxFill;
             fillTexture = content.Load<Texture2D>("EmptyBoxFill");
+
             selectionBox = new Box(1, 0, 208, 0, 1, 0, 0, 25, 0, 2);
             selectionTexture = content.Load<Texture2D>("ListBoxHighlight");
+
+            scrollBarBox = MoonifyBoxes.ScrollbarBar;
+            scrollBarTexture = content.Load<Texture2D>("ScrollbarBar");
+
+            scrollSliderBox = MoonifyBoxes.ScrollbarSlider;
+            scrollBarTexture = content.Load<Texture2D>("ScrollbarSlider");
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
