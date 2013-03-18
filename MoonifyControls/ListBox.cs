@@ -108,7 +108,7 @@ namespace MoonifyControls
             scrollBarTexture = content.Load<Texture2D>("ScrollbarBar");
 
             scrollSliderBox = MoonifyBoxes.ScrollbarSlider;
-            scrollBarTexture = content.Load<Texture2D>("ScrollbarSlider");
+            scrollSliderTexture = content.Load<Texture2D>("ScrollbarSlider");
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
