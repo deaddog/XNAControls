@@ -33,7 +33,7 @@ namespace MoonifyControls
 
         public static Box ScrollbarBar
         {
-            get { return new Box(1, 0, 16, 0, 1, 0, 25, 10, 25, 0); }
+            get { return new Box(1, 0, 16, 0, 1, 0, 25, 10, 25, 2); }
         }
         public static Box ScrollbarSlider
         {
