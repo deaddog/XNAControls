@@ -110,14 +110,48 @@ namespace MoonifyControls
             scrollSliderBox = MoonifyBoxes.ScrollbarSlider;
             scrollSliderTexture = content.Load<Texture2D>("ScrollbarSlider");
         }
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            y = e.Y;
+        }
+        float y = 0;
+        int offset = 0;
+        private float CalculateOffset(float sliderPosition)
+        {
+            Vector2 barSliderSize = new Vector2(14, this.Height - 44);
+
+            float allItemsSize = 25f * items.Count;
+            float shownItemsSize = this.Height - 2; //This IS accurate
+
+            float sliderHeight = shownItemsSize > allItemsSize 
+                ? barSliderSize.Y 
+                : barSliderSize.Y * (shownItemsSize / allItemsSize);
+
+            float sliderTopPosition = 22;
+            float sliderBotPosition = sliderTopPosition + (barSliderSize.Y - sliderHeight);
+
+            if (sliderPosition < sliderTopPosition) sliderPosition = sliderTopPosition;
+            if (sliderPosition > sliderBotPosition) sliderPosition = sliderBotPosition;
+
+            float from = barSliderSize.Y - sliderHeight;
+            float to = allItemsSize - shownItemsSize;
+
+            return from == 0 ? 0 : -(int)((to / from) * (sliderPosition - sliderTopPosition));
+        }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             Rectangle fillClip = new Rectangle((int)this.Location.X + 1, (int)this.Location.Y + 1, (int)this.Size.X - 2 - 7, (int)this.Size.Y - 2);
 
+            Matrix offsetMatrix = Matrix.CreateTranslation(0, offset, 0);
+
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, new RasterizerState() { ScissorTestEnable = true });
             spriteBatch.GraphicsDevice.ScissorRectangle = fillClip;
             fillBox.Draw(spriteBatch, fillTexture, this.Location, this.Size, Color.White);
+            spriteBatch.End();
+
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, new RasterizerState() { ScissorTestEnable = true }, null, offsetMatrix);
 
             if (selectionIndex >= 0)
             {
@@ -142,6 +176,27 @@ namespace MoonifyControls
             Vector2 barBarSize = new Vector2(16, this.Size.Y);
             Vector2 barSliderPosition = this.Location + new Vector2(this.Width - 15, 22);
             Vector2 barSliderSize = new Vector2(14, this.Height - 44);
+
+
+            float allItemsSize = 25f * items.Count;
+            float shownItemsSize = this.Height - 2; //This IS accurate
+
+            float partShown = shownItemsSize > allItemsSize ? 1 : shownItemsSize / allItemsSize;
+            float sliderHeight = barSliderSize.Y * partShown;
+
+            float sliderTopPosition = barSliderPosition.Y;
+            float sliderBotPosition = sliderTopPosition + (barSliderSize.Y - sliderHeight);
+
+            if (y < sliderTopPosition) y = sliderTopPosition;
+            if (y > sliderBotPosition) y = sliderBotPosition;
+
+            float from = barSliderSize.Y - sliderHeight;
+            float to = allItemsSize - shownItemsSize;
+
+            offset = from == 0 ? 0 : -(int)((to / from) * (y - sliderTopPosition));
+
+            barSliderSize.Y = sliderHeight;
+            barSliderPosition.Y = y;
 
             scrollBarBox.Draw(spriteBatch, scrollBarTexture, barBarPosition, barBarSize, Color.White);
             scrollSliderBox.Draw(spriteBatch, scrollSliderTexture, barSliderPosition, barSliderSize, Color.White);
@@ -182,7 +237,7 @@ namespace MoonifyControls
                 return -1;
 
             point -= (this.Location + Vector2.One);
-            int index = (int)point.Y / 25;
+            int index = (int)(point.Y - offset) / 25;
             return index < items.Count ? index : -1;
         }
 

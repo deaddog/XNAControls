@@ -136,6 +136,12 @@ namespace XNAControls
                     focused = false;
                     OnLostFocus(EventArgs.Empty);
                     break;
+
+                case ControlMessages.CONTROL_SIZECHANGED:
+                    {
+                        float h = BitConverter.ToSingle(BitConverter.GetBytes(par[1]), 0);
+                        float w = BitConverter.ToSingle(BitConverter.GetBytes(par[2]), 0);
+                    }
             }
         }
 
