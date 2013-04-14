@@ -138,10 +138,8 @@ namespace XNAControls
                     break;
 
                 case ControlMessages.CONTROL_SIZECHANGED:
-                    {
-                        float h = BitConverter.ToSingle(BitConverter.GetBytes(par[1]), 0);
-                        float w = BitConverter.ToSingle(BitConverter.GetBytes(par[2]), 0);
-                    }
+                    OnSizeChanged(EventArgs.Empty);
+                    break;
             }
         }
 
@@ -347,7 +345,7 @@ namespace XNAControls
             this.size = new Vector2(width, height);
 
             if (temp != this.size)
-                OnSizeChanged(EventArgs.Empty);
+                Message(ControlMessages.CONTROL_SIZECHANGED);
         }
     }
 }
