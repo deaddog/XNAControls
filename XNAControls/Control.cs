@@ -41,7 +41,7 @@ namespace XNAControls
                 if (value != location)
                 {
                     location = value;
-                    OnLocationChanged(EventArgs.Empty);
+                    Message(ControlMessages.CONTROL_LOCATIONCHANGED);
                 }
             }
         }
@@ -139,6 +139,10 @@ namespace XNAControls
 
                 case ControlMessages.CONTROL_SIZECHANGED:
                     OnSizeChanged(EventArgs.Empty);
+                    break;
+
+                case ControlMessages.CONTROL_LOCATIONCHANGED:
+                    OnLocationChanged(EventArgs.Empty);
                     break;
             }
         }
