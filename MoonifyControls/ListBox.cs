@@ -79,8 +79,10 @@ namespace MoonifyControls
             : base(200, 120)
         {
             this.items = new ObjectCollection(this);
+            this.font = new CharacterRenderer("HelveticaNeueLT Com 65 Md", 9f,
+                System.Drawing.FontStyle.Regular, System.Drawing.Text.TextRenderingHint.AntiAlias);
 
-            font = new CharacterRenderer("HelveticaNeueLT Com 65 Md", 9f, System.Drawing.FontStyle.Regular, System.Drawing.Text.TextRenderingHint.AntiAlias);
+            this.updateSliderPosition();
         }
         public ListBox(params T[] collection)
             : this(collection as IEnumerable<T>)
@@ -110,41 +112,117 @@ namespace MoonifyControls
             scrollSliderBox = MoonifyBoxes.ScrollbarSlider;
             scrollSliderTexture = content.Load<Texture2D>("ScrollbarSlider");
         }
-        protected override void OnMouseMove(MouseEventArgs e)
+
+        protected override void Message(ControlMessages msg, params int[] par)
         {
-            base.OnMouseMove(e);
-            y = e.Y;
+            switch (msg)
+            {
+                case ControlMessages.CONTROL_SIZECHANGED:
+                    updateSliderPosition();
+                    break;
+                case ControlMessages.MOUSE_WHEEL:
+                    contentOffset -= (par[3] / 120) * 25;
+                    break;
+                case ControlMessages.MOUSE_MOVE:
+                    //this.sliderOffset = par[1] - this.Location.Y;
+                    break;
+                case ControlMessages.KEYBOARD_KEYDOWN:
+                    if (par[0] == 38) contentOffset += 25;
+                    if (par[0] == 40) contentOffset -= 25;
+                    break;
+            }
+            base.Message(msg, par);
         }
-        float y = 0;
-        int offset = 0;
-        private float CalculateOffset(float sliderPosition)
+
+        private Vector2 barBarPosition;
+        private Vector2 barBarSize;
+        private Vector2 barSliderPosition;
+        private Vector2 barSliderSize;
+
+        private float _sliderOffset = 0;
+        private float sliderOffset
         {
-            Vector2 barSliderSize = new Vector2(14, this.Height - 44);
+            get { return _sliderOffset; }
+            set
+            {
+                _sliderOffset = value;
+
+                if (items == null)
+                    return;
+
+                this.barBarPosition = new Vector2(this.Width - 16, 0);
+                this.barBarSize = new Vector2(16, this.Height);
+                this.barSliderPosition = new Vector2(this.Width - 15, 22);
+                this.barSliderSize = new Vector2(14, this.Height - 44);
+
+                float allItemsSize = 25f * items.Count;
+                float shownItemsSize = this.Height - 2; //This IS accurate
+
+                float partShown = shownItemsSize > allItemsSize ? 1 : shownItemsSize / allItemsSize;
+                float sliderHeight = barSliderSize.Y * partShown;
+
+                float sliderTopPosition = barSliderPosition.Y;
+                float sliderBotPosition = sliderTopPosition + (barSliderSize.Y - sliderHeight);
+
+                if (_sliderOffset < sliderTopPosition) _sliderOffset = sliderTopPosition;
+                if (_sliderOffset > sliderBotPosition) _sliderOffset = sliderBotPosition;
+
+                float from = barSliderSize.Y - sliderHeight;
+                float to = allItemsSize - shownItemsSize;
+
+                _contentOffset = from == 0 ? 0 : -(to / from) * (_sliderOffset - sliderTopPosition);
+
+                barSliderSize.Y = sliderHeight;
+                barSliderPosition.Y = _sliderOffset;
+            }
+        }
+        private float _contentOffset = 0;
+        private float contentOffset
+        {
+            get { return _contentOffset; }
+            set
+            {
+                _contentOffset = value;
+                updateSliderPosition();
+            }
+        }
+
+        private void updateSliderPosition()
+        {
+            if (items == null)
+                return;
+
+            this.barBarPosition = new Vector2(this.Width - 16, 0);
+            this.barBarSize = new Vector2(16, this.Height);
+            this.barSliderPosition = new Vector2(this.Width - 15, 22);
+            this.barSliderSize = new Vector2(14, this.Height - 44);
 
             float allItemsSize = 25f * items.Count;
             float shownItemsSize = this.Height - 2; //This IS accurate
 
-            float sliderHeight = shownItemsSize > allItemsSize 
-                ? barSliderSize.Y 
-                : barSliderSize.Y * (shownItemsSize / allItemsSize);
+            float partShown = shownItemsSize > allItemsSize ? 1 : shownItemsSize / allItemsSize;
+            float sliderHeight = barSliderSize.Y * partShown;
 
-            float sliderTopPosition = 22;
-            float sliderBotPosition = sliderTopPosition + (barSliderSize.Y - sliderHeight);
+            float contentTopPosition = 0;
+            float contentBotPosition = -(allItemsSize - shownItemsSize);
 
-            if (sliderPosition < sliderTopPosition) sliderPosition = sliderTopPosition;
-            if (sliderPosition > sliderBotPosition) sliderPosition = sliderBotPosition;
+            if (_contentOffset < contentBotPosition) _contentOffset = contentBotPosition;
+            if (_contentOffset > contentTopPosition) _contentOffset = contentTopPosition;
 
-            float from = barSliderSize.Y - sliderHeight;
-            float to = allItemsSize - shownItemsSize;
+            float from = allItemsSize - shownItemsSize;
+            float to = barSliderSize.Y - sliderHeight;
 
-            return from == 0 ? 0 : -(int)((to / from) * (sliderPosition - sliderTopPosition));
+            _sliderOffset = from == 0 ? 0 : -(to / from) * (_contentOffset - contentTopPosition) + barSliderPosition.Y;
+
+            barSliderSize.Y = sliderHeight;
+            barSliderPosition.Y = _sliderOffset;
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             Rectangle fillClip = new Rectangle((int)this.Location.X + 1, (int)this.Location.Y + 1, (int)this.Size.X - 2 - 7, (int)this.Size.Y - 2);
 
-            Matrix offsetMatrix = Matrix.CreateTranslation(0, offset, 0);
+            Matrix offsetMatrix = Matrix.CreateTranslation(0, _contentOffset, 0);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, new RasterizerState() { ScissorTestEnable = true });
             spriteBatch.GraphicsDevice.ScissorRectangle = fillClip;
@@ -172,34 +250,9 @@ namespace MoonifyControls
             spriteBatch.End();
 
             spriteBatch.Begin();
-            Vector2 barBarPosition = this.Location + new Vector2(this.Width - 16, 0);
-            Vector2 barBarSize = new Vector2(16, this.Size.Y);
-            Vector2 barSliderPosition = this.Location + new Vector2(this.Width - 15, 22);
-            Vector2 barSliderSize = new Vector2(14, this.Height - 44);
 
-
-            float allItemsSize = 25f * items.Count;
-            float shownItemsSize = this.Height - 2; //This IS accurate
-
-            float partShown = shownItemsSize > allItemsSize ? 1 : shownItemsSize / allItemsSize;
-            float sliderHeight = barSliderSize.Y * partShown;
-
-            float sliderTopPosition = barSliderPosition.Y;
-            float sliderBotPosition = sliderTopPosition + (barSliderSize.Y - sliderHeight);
-
-            if (y < sliderTopPosition) y = sliderTopPosition;
-            if (y > sliderBotPosition) y = sliderBotPosition;
-
-            float from = barSliderSize.Y - sliderHeight;
-            float to = allItemsSize - shownItemsSize;
-
-            offset = from == 0 ? 0 : -(int)((to / from) * (y - sliderTopPosition));
-
-            barSliderSize.Y = sliderHeight;
-            barSliderPosition.Y = y;
-
-            scrollBarBox.Draw(spriteBatch, scrollBarTexture, barBarPosition, barBarSize, Color.White);
-            scrollSliderBox.Draw(spriteBatch, scrollSliderTexture, barSliderPosition, barSliderSize, Color.White);
+            scrollBarBox.Draw(spriteBatch, scrollBarTexture, this.Location + barBarPosition, barBarSize, Color.White);
+            scrollSliderBox.Draw(spriteBatch, scrollSliderTexture, this.Location + barSliderPosition, barSliderSize, Color.White);
             spriteBatch.End();
         }
 
@@ -237,7 +290,7 @@ namespace MoonifyControls
                 return -1;
 
             point -= (this.Location + Vector2.One);
-            int index = (int)(point.Y - offset) / 25;
+            int index = (int)(point.Y - _contentOffset) / 25;
             return index < items.Count ? index : -1;
         }
 
@@ -252,6 +305,8 @@ namespace MoonifyControls
 
             base.InnerSizeChange(width, height);
         }
+
+        #region Collection List
 
         public class ObjectCollection : IList<T>
         {
@@ -434,5 +489,7 @@ namespace MoonifyControls
 
             #endregion
         }
+
+        #endregion
     }
 }
