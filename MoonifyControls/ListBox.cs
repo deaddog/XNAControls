@@ -119,19 +119,43 @@ namespace MoonifyControls
             {
                 case ControlMessages.CONTROL_SIZECHANGED:
                     updateSliderPosition();
+                    base.Message(msg, par);
                     break;
+
                 case ControlMessages.MOUSE_WHEEL:
                     contentOffset -= (par[3] / 120) * 25;
+                    base.Message(msg, par);
                     break;
-                case ControlMessages.MOUSE_MOVE:
-                    //this.sliderOffset = par[1] - this.Location.Y;
+
+                case ControlMessages.MOUSE_CLICK:
+                    {
+                        int xG = par[0], yG = par[1];
+                        int xL = xG - (int)this.X, yL = yG - (int)this.Y;
+
+                        if (xL < this.Width - 16)
+                        {
+                            int index = this.IndexFromPoint(xG, yG);
+                            if (index >= 0)
+                                this.SelectedIndex = index;
+                            base.Message(msg, par);
+                        }
+                        else if (yL < 22)
+                            contentOffset += 25;
+                        else if (yL > this.Height - 22)
+                            contentOffset -= 25;
+                    }
                     break;
+
                 case ControlMessages.KEYBOARD_KEYDOWN:
                     if (par[0] == 38) contentOffset += 25;
                     if (par[0] == 40) contentOffset -= 25;
+                    base.Message(msg, par);
+                    break;
+
+                default:
+                    base.Message(msg, par);
                     break;
             }
-            base.Message(msg, par);
         }
 
         private Vector2 barBarPosition;
