@@ -113,6 +113,8 @@ namespace MoonifyControls
             scrollSliderTexture = content.Load<Texture2D>("ScrollbarSlider");
         }
 
+        private int mouseDownIndex = -1;
+        private int mouseDownY = -1;
         protected override void Message(ControlMessages msg, params int[] par)
         {
             switch (msg)
@@ -127,7 +129,28 @@ namespace MoonifyControls
                     base.Message(msg, par);
                     break;
 
-                case ControlMessages.MOUSE_CLICK:
+                case ControlMessages.MOUSE_MOVE:
+                    {
+                        int xG = par[0], yG = par[1];
+                        int xL = xG - (int)this.X, yL = yG - (int)this.Y;
+                        if (mouseDownY >= 0 && yL >= 22 && yL <= this.Height - 22)
+                        {
+                            int diff = yG - mouseDownY;
+                            mouseDownY = yG;
+                            sliderOffset += diff;
+                        }
+                        else
+                            base.Message(msg, par);
+                    }
+                    break;
+
+                case ControlMessages.MOUSE_LEAVE:
+                    mouseDownIndex = -1;
+                    mouseDownY = -1;
+                    base.Message(msg, par);
+                    break;
+
+                case ControlMessages.MOUSE_UP:
                     {
                         int xG = par[0], yG = par[1];
                         int xL = xG - (int)this.X, yL = yG - (int)this.Y;
@@ -135,14 +158,35 @@ namespace MoonifyControls
                         if (xL < this.Width - 16)
                         {
                             int index = this.IndexFromPoint(xG, yG);
-                            if (index >= 0)
+                            if (index >= 0 && index == mouseDownIndex)
                                 this.SelectedIndex = index;
+                            base.Message(msg, par);
+                        }
+
+                        mouseDownIndex = -1;
+                        mouseDownY = -1;
+                    }
+                    break;
+                case ControlMessages.MOUSE_DOWN:
+                    {
+                        int xG = par[0], yG = par[1];
+                        int xL = xG - (int)this.X, yL = yG - (int)this.Y;
+                        mouseDownIndex = -1;
+                        mouseDownY = -1;
+
+                        if (xL < this.Width - 16)
+                        {
+                            int index = this.IndexFromPoint(xG, yG);
+                            if (index >= 0)
+                                mouseDownIndex = index;
                             base.Message(msg, par);
                         }
                         else if (yL < 22)
                             contentOffset += 25;
                         else if (yL > this.Height - 22)
                             contentOffset -= 25;
+                        else
+                            mouseDownY = par[1];
                     }
                     break;
 
