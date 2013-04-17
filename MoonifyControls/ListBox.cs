@@ -445,6 +445,8 @@ namespace MoonifyControls
                 list.Insert(index, item);
                 if (index <= owner.selectionIndex)
                     owner.selectionIndex = owner.selectionIndex + 1;
+
+                owner.updateSliderPosition();
             }
 
             public void RemoveAt(int index)
@@ -453,7 +455,17 @@ namespace MoonifyControls
                     throw new ArgumentOutOfRangeException("index");
 
                 T item = list[index];
-                Remove(item);
+
+                list.RemoveAt(index);
+                if (!list.Contains(item))
+                    printedValue.Remove(item);
+
+                if (index == owner.selectionIndex)
+                    owner.selectionIndex = -1;
+                else if (index < owner.selectionIndex)
+                    owner.selectionIndex = owner.selectionIndex - 1;
+
+                owner.updateSliderPosition();
             }
 
             public T this[int index]
@@ -462,10 +474,7 @@ namespace MoonifyControls
                 set
                 {
                     if (index == list.Count)
-                    {
                         Add(value);
-                        return;
-                    }
                     else if (index < 0 || index > list.Count)
                         throw new ArgumentOutOfRangeException("index");
                     else if (list.Contains(value))
@@ -487,10 +496,7 @@ namespace MoonifyControls
 
             public void Add(T item)
             {
-                if (list.Contains(item))
-                    throw new InvalidOperationException(this.GetType().Name + " cannot contain multiples of the same instance.");
-
-                list.Add(item);
+                Insert(list.Count, item);
             }
 
             public void Clear()
@@ -498,6 +504,8 @@ namespace MoonifyControls
                 owner.selectionIndex = -1;
                 this.list.Clear();
                 this.printedValue.Clear();
+
+                owner.updateSliderPosition();
             }
 
             public bool Contains(T item)
@@ -526,13 +534,7 @@ namespace MoonifyControls
                 if (index == -1)
                     return false;
 
-                list.Remove(item);
-                printedValue.Remove(item);
-
-                if (index == owner.selectionIndex)
-                    owner.selectionIndex = -1;
-                else if (index < owner.selectionIndex)
-                    owner.selectionIndex = owner.selectionIndex - 1;
+                RemoveAt(index);
 
                 return true;
             }
