@@ -416,7 +416,7 @@ namespace MoonifyControls
             public Func<T, string> ItemToString
             {
                 get { return toString == itemToString ? null : toString; }
-                set { toString = (value ?? toString); printedValue.Clear(); }
+                set { toString = (value ?? itemToString); printedValue.Clear(); }
             }
 
             public void Refresh(T item)
