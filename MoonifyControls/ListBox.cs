@@ -157,9 +157,12 @@ namespace MoonifyControls
 
                         if (xL < this.Width - 16)
                         {
-                            int index = this.IndexFromPoint(xG, yG);
-                            if (index >= 0 && index == mouseDownIndex)
-                                this.SelectedIndex = index;
+                            if (par[2] == 1)
+                            {
+                                int index = this.IndexFromPoint(xG, yG);
+                                if (index >= 0 && index == mouseDownIndex)
+                                    this.SelectedIndex = index;
+                            }
                             base.Message(msg, par);
                         }
 
@@ -176,9 +179,12 @@ namespace MoonifyControls
 
                         if (xL < this.Width - 16)
                         {
-                            int index = this.IndexFromPoint(xG, yG);
-                            if (index >= 0)
-                                mouseDownIndex = index;
+                            if (par[2] == 1)
+                            {
+                                int index = this.IndexFromPoint(xG, yG);
+                                if (index >= 0)
+                                    mouseDownIndex = index;
+                            }
                             base.Message(msg, par);
                         }
                         else if (yL < 22)
