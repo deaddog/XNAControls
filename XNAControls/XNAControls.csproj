@@ -107,7 +107,7 @@
     <Compile Include="ControlMessages.cs" />
     <Compile Include="FloatMoveEventArgs.cs" />
     <Compile Include="FloatMoveEventHandler.cs" />
-    <Compile Include="ImageLoadManager.cs" />
+    <Compile Include="DataLoadManager.cs" />
     <Compile Include="KeyboardInput.cs" />
     <Compile Include="KeyEventArgs.cs" />
     <Compile Include="KeyEventHandler.cs" />

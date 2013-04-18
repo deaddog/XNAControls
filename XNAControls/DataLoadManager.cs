@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XNAControls
 {
-    public class ImageLoadManager<T>
+    public class DataLoadManager<T>
     {
         private object loaderCountObj = new object();
         private int loaderCount = 0;
@@ -38,7 +38,7 @@ namespace XNAControls
             get { return states; }
         }
 
-        public ImageLoadManager(GraphicsDevice device, Func<T, System.Drawing.Image> loaderMethod)
+        public DataLoadManager(GraphicsDevice device, Func<T, System.Drawing.Image> loaderMethod)
         {
             this.device = device;
 
@@ -124,8 +124,8 @@ namespace XNAControls
 
         public class TextureCollection
         {
-            private ImageLoadManager<T> owner;
-            public TextureCollection(ImageLoadManager<T> owner)
+            private DataLoadManager<T> owner;
+            public TextureCollection(DataLoadManager<T> owner)
             {
                 this.owner = owner;
             }
@@ -146,8 +146,8 @@ namespace XNAControls
         }
         public class StateCollection
         {
-            private ImageLoadManager<T> owner;
-            public StateCollection(ImageLoadManager<T> owner)
+            private DataLoadManager<T> owner;
+            public StateCollection(DataLoadManager<T> owner)
             {
                 this.owner = owner;
             }
