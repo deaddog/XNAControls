@@ -4,91 +4,78 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XNAControls
 {
-    public class DataLoadManager<T>
+    public abstract class DataLoadManager<TKey, TValue>
     {
-        private object loaderCountObj = new object();
+        /// <summary>
+        /// The number of threads currently running. This should only be modified when <see cref="loadlist"/> is locked.
+        /// </summary>
         private int loaderCount = 0;
-        private int imagesPerThread = 3;
-        public int ImagesPerThread
+
+        private int itemsPerThread = 3;
+        public int ItemsPerThread
         {
-            get { return imagesPerThread; }
+            get { return itemsPerThread; }
             set
             {
                 if (value < 1)
                     throw new ArgumentOutOfRangeException("value");
-                imagesPerThread = value;
+                itemsPerThread = value;
             }
         }
 
-        private GraphicsDevice device;
-        private Dictionary<T, ImageState> stateDict;
-        private Dictionary<T, Texture2D> textureDict;
+        private Dictionary<TKey, DataLoader> dictionary;
 
-        private Queue<T> loadList;
+        private Queue<TKey> loadList;
 
-        private TextureCollection textures;
-        private StateCollection states;
-
-        public TextureCollection Textures
+        private LoaderCollection loaders;
+        public LoaderCollection Loaders
         {
-            get { return textures; }
-        }
-        public StateCollection States
-        {
-            get { return states; }
+            get { return loaders; }
         }
 
-        public DataLoadManager(GraphicsDevice device, Func<T, System.Drawing.Image> loaderMethod)
+        public DataLoadManager()
         {
-            this.device = device;
+            this.dictionary = new Dictionary<TKey, DataLoader>();
 
-            stateDict = new Dictionary<T, ImageState>();
-            textureDict = new Dictionary<T, Texture2D>();
-
-            this.textures = new TextureCollection(this);
-            this.states = new StateCollection(this);
-            this.loadList = new Queue<T>();
+            this.loaders = new LoaderCollection(this);
+            this.loadList = new Queue<TKey>();
 
             this.allowKeyMethod = defaultAllowKeyMethod;
-            this.loaderMethod = loaderMethod;
         }
 
-        private void LoadImageAsync()
+        private void DataLoadMethod()
         {
-            T key = default(T);
-            bool noKey;
+            TKey key = default(TKey);
 
             do
             {
-                noKey = false;
                 lock (loadList)
                 {
                     if (loadList.Count == 0)
-                        noKey = true;
+                    {
+                        loaderCount--;
+                        return;
+                    }
                     else
                         key = loadList.Dequeue();
                 }
-                if (noKey)
-                    break;
 
-                using (System.Drawing.Image image = loaderMethod(key))
-                using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+                DataLoader loader = dictionary[key];
+                loader.State = LoadState.Loading;
+                try
                 {
-                    image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-#if XNA3
-                        Texture2D texture = Texture2D.FromFile(device, ms);
-#else
-                    Texture2D texture = Texture2D.FromStream(device, ms);
-#endif
-                    lock (textureDict)
-                        textureDict.Add(key, texture);
-                    stateDict[key] = ImageState.LoadSuccess;
+                    TValue value = Load(key);
+                    loader.Value = value;
+                    loader.State = LoadState.Success;
+                }
+                catch
+                {
+                    loader.State = LoadState.Error;
                 }
             }
             while (loadList.Count > 0);
-            lock (loaderCountObj) loaderCount--;
         }
-        private void LoadImage(T key)
+        private void StartDataLoad(TKey key)
         {
             int count;
             lock (loadList)
@@ -96,87 +83,132 @@ namespace XNAControls
                 if (!loadList.Contains(key))
                     loadList.Enqueue(key);
                 count = loadList.Count;
-            }
 
-            int neededThreads = (int)Math.Ceiling((double)count / (double)imagesPerThread);
+                int neededThreads = (int)Math.Ceiling((double)count / (double)itemsPerThread);
 
-            lock (loaderCountObj)
                 while (loaderCount < neededThreads)
                 {
                     loaderCount++;
-                    System.Threading.Thread loadThread = new System.Threading.Thread(LoadImageAsync);
+                    System.Threading.Thread loadThread = new System.Threading.Thread(DataLoadMethod);
                     loadThread.Start();
                 }
+            }
         }
 
-        private Func<T, bool> allowKeyMethod;
-        private bool defaultAllowKeyMethod(T key)
+        public DataLoader this[TKey key]
+        {
+            get { return loaders[key]; }
+        }
+
+        private Func<TKey, bool> allowKeyMethod;
+        private bool defaultAllowKeyMethod(TKey key)
         {
             return true;
         }
-        public Func<T, bool> AllowKeyMethod
+        public Func<TKey, bool> AllowKeyMethod
         {
             get { return allowKeyMethod == defaultAllowKeyMethod ? null : allowKeyMethod; }
             set { allowKeyMethod = (value ?? allowKeyMethod); }
         }
 
-        private Func<T, System.Drawing.Image> loaderMethod;
+        protected abstract TValue Load(TKey key);
 
-        public class TextureCollection
+        protected Texture2D ConvertToTexture(System.Drawing.Image image, GraphicsDevice device)
         {
-            private DataLoadManager<T> owner;
-            public TextureCollection(DataLoadManager<T> owner)
+            return ConvertToTexture(image, device, System.Drawing.Imaging.ImageFormat.Jpeg);
+        }
+        protected Texture2D ConvertToTexture(System.Drawing.Image image, GraphicsDevice device, System.Drawing.Imaging.ImageFormat imageformat)
+        {
+            if (image == null)
+                return null;
+
+            if (device == null)
+                throw new ArgumentNullException("device");
+
+            if (imageformat == null)
+                throw new ArgumentNullException("imageformat");
+
+            Texture2D texture;
+            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+            {
+                image.Save(ms, imageformat);
+                ms.Seek(0, System.IO.SeekOrigin.Begin);
+                texture = Texture2D.FromStream(device, ms);
+            }
+            return texture;
+        }
+
+        protected virtual bool AllowKey(TKey key)
+        {
+            return true;
+        }
+
+        public class DataLoader
+        {
+            private LoadState state;
+
+            private TKey key;
+            private TValue value;
+
+            internal DataLoader(LoadState state, TKey key, TValue value = default(TValue))
+            {
+                this.state = state;
+                this.key = key;
+                this.value = value;
+            }
+
+            public LoadState State
+            {
+                get { return state; }
+                internal set { state = value; }
+            }
+            public TValue Value
+            {
+                get { return value; }
+                internal set { this.value = value; }
+            }
+        }
+
+        public class LoaderCollection
+        {
+            private DataLoadManager<TKey, TValue> owner;
+            public LoaderCollection(DataLoadManager<TKey, TValue> owner)
             {
                 this.owner = owner;
             }
-            public Texture2D this[T key]
+            public DataLoader this[TKey key]
             {
                 get
                 {
-                    if (!owner.allowKeyMethod(key))
-                        return null;
+                    DataLoader loader;
+                    lock (owner.dictionary)
+                        if (!owner.dictionary.TryGetValue(key, out loader))
+                            if (owner.allowKeyMethod(key))
+                            {
+                                loader = new DataLoader(LoadState.Initialized, key);
+                                owner.dictionary.Add(key, loader);
 
-                    Texture2D texture;
-                    lock (owner.textureDict)
-                        if (!owner.textureDict.TryGetValue(key, out texture))
-                            texture = null;
-                    return texture;
-                }
-            }
-        }
-        public class StateCollection
-        {
-            private DataLoadManager<T> owner;
-            public StateCollection(DataLoadManager<T> owner)
-            {
-                this.owner = owner;
-            }
-            public ImageState this[T key]
-            {
-                get
-                {
-                    if (!owner.allowKeyMethod(key))
-                        return ImageState.Unknown;
+                                owner.StartDataLoad(key);
+                            }
+                            else
+                            {
+                                loader = new DataLoader(LoadState.Error, key);
+                                owner.dictionary.Add(key, loader);
+                            }
 
-                    ImageState state;
-                    if (!owner.stateDict.TryGetValue(key, out state))
-                    {
-                        state = ImageState.Loading;
-                        owner.stateDict.Add(key, state);
-                        owner.LoadImage(key);
-                    }
-                    return state;
+                    return loader;
                 }
             }
         }
 
-        public enum ImageState
+        public enum LoadState
         {
             Unknown = 0,
-            Loading = 1,
-            LoadedComplete = 2,
-            LoadSuccess = 6,
-            LoadError = 10
+            Initialized = 1,
+            Loading = 2,
+            Complete = 4,
+            Success = 8 + 4,
+            Error = 16 + 4
         }
     }
 }
