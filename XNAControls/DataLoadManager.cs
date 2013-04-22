@@ -23,21 +23,14 @@ namespace XNAControls
             }
         }
 
-        private Dictionary<TKey, DataLoader> dictionary;
+        private Dictionary<TKey, DataLoader<TValue>> dictionary;
 
         private Queue<TKey> loadList;
 
-        private LoaderCollection loaders;
-        public LoaderCollection Loaders
-        {
-            get { return loaders; }
-        }
-
         public DataLoadManager()
         {
-            this.dictionary = new Dictionary<TKey, DataLoader>();
+            this.dictionary = new Dictionary<TKey, DataLoader<TValue>>();
 
-            this.loaders = new LoaderCollection(this);
             this.loadList = new Queue<TKey>();
 
             this.allowKeyMethod = defaultAllowKeyMethod;
@@ -60,17 +53,17 @@ namespace XNAControls
                         key = loadList.Dequeue();
                 }
 
-                DataLoader loader = dictionary[key];
-                loader.State = LoadState.Loading;
+                DataLoader<TValue> loader = dictionary[key];
+                loader.State = DataLoadState.Loading;
                 try
                 {
                     TValue value = Load(key);
                     loader.Value = value;
-                    loader.State = LoadState.Success;
+                    loader.State = DataLoadState.Success;
                 }
                 catch
                 {
-                    loader.State = LoadState.Error;
+                    loader.State = DataLoadState.Error;
                 }
             }
             while (loadList.Count > 0);
@@ -95,9 +88,28 @@ namespace XNAControls
             }
         }
 
-        public DataLoader this[TKey key]
+        public DataLoader<TValue> this[TKey key]
         {
-            get { return loaders[key]; }
+            get
+            {
+                DataLoader<TValue> loader;
+                lock (dictionary)
+                    if (!dictionary.TryGetValue(key, out loader))
+                        if (allowKeyMethod(key))
+                        {
+                            loader = new DataLoader<TValue>(DataLoadState.Initialized);
+                            dictionary.Add(key, loader);
+
+                            StartDataLoad(key);
+                        }
+                        else
+                        {
+                            loader = new DataLoader<TValue>(DataLoadState.Error);
+                            dictionary.Add(key, loader);
+                        }
+
+                return loader;
+            }
         }
 
         private Func<TKey, bool> allowKeyMethod;
@@ -141,74 +153,6 @@ namespace XNAControls
         protected virtual bool AllowKey(TKey key)
         {
             return true;
-        }
-
-        public class DataLoader
-        {
-            private LoadState state;
-
-            private TKey key;
-            private TValue value;
-
-            internal DataLoader(LoadState state, TKey key, TValue value = default(TValue))
-            {
-                this.state = state;
-                this.key = key;
-                this.value = value;
-            }
-
-            public LoadState State
-            {
-                get { return state; }
-                internal set { state = value; }
-            }
-            public TValue Value
-            {
-                get { return value; }
-                internal set { this.value = value; }
-            }
-        }
-
-        public class LoaderCollection
-        {
-            private DataLoadManager<TKey, TValue> owner;
-            public LoaderCollection(DataLoadManager<TKey, TValue> owner)
-            {
-                this.owner = owner;
-            }
-            public DataLoader this[TKey key]
-            {
-                get
-                {
-                    DataLoader loader;
-                    lock (owner.dictionary)
-                        if (!owner.dictionary.TryGetValue(key, out loader))
-                            if (owner.allowKeyMethod(key))
-                            {
-                                loader = new DataLoader(LoadState.Initialized, key);
-                                owner.dictionary.Add(key, loader);
-
-                                owner.StartDataLoad(key);
-                            }
-                            else
-                            {
-                                loader = new DataLoader(LoadState.Error, key);
-                                owner.dictionary.Add(key, loader);
-                            }
-
-                    return loader;
-                }
-            }
-        }
-
-        public enum LoadState
-        {
-            Unknown = 0,
-            Initialized = 1,
-            Loading = 2,
-            Complete = 4,
-            Success = 8 + 4,
-            Error = 16 + 4
         }
     }
 }
