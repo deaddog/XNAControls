@@ -66,7 +66,7 @@ namespace XNAControls
                     loader.State = DataLoadState.Error;
                 }
             }
-            while (loadList.Count > 0);
+            while (true);
         }
         private void StartDataLoad(TKey key)
         {
