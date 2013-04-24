@@ -32,8 +32,6 @@ namespace XNAControls
             this.dictionary = new Dictionary<TKey, DataLoader<TValue>>();
 
             this.loadList = new Queue<TKey>();
-
-            this.allowKeyMethod = defaultAllowKeyMethod;
         }
 
         private void DataLoadMethod()
@@ -64,6 +62,7 @@ namespace XNAControls
                 catch
                 {
                     loader.State = DataLoadState.Error;
+                    loader.Value = default(TValue);
                 }
             }
             while (true);
@@ -95,7 +94,7 @@ namespace XNAControls
                 DataLoader<TValue> loader;
                 lock (dictionary)
                     if (!dictionary.TryGetValue(key, out loader))
-                        if (allowKeyMethod(key))
+                        if (AllowKey(key))
                         {
                             loader = new DataLoader<TValue>(DataLoadState.Initialized);
                             dictionary.Add(key, loader);
@@ -110,17 +109,6 @@ namespace XNAControls
 
                 return loader;
             }
-        }
-
-        private Func<TKey, bool> allowKeyMethod;
-        private bool defaultAllowKeyMethod(TKey key)
-        {
-            return true;
-        }
-        public Func<TKey, bool> AllowKeyMethod
-        {
-            get { return allowKeyMethod == defaultAllowKeyMethod ? null : allowKeyMethod; }
-            set { allowKeyMethod = (value ?? allowKeyMethod); }
         }
 
         protected abstract TValue Load(TKey key);

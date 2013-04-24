@@ -9,16 +9,18 @@ namespace MoonifyControls
 {
     public class ImageBox : Control
     {
-        private List<AlphaImage> oldTextures;
         private AlphaImage texture;
+        private LinkedList<AlphaImage> textures;
 
         private Texture2D backgroundTexture;
         private Box backgroundBox;
 
+        private DataLoader<Texture2D> pending;
+
         public ImageBox(float width, float height)
             : base(width, height)
         {
-            this.oldTextures = new List<AlphaImage>();
+            this.textures = new LinkedList<AlphaImage>();
             this.texture = null;
         }
 
@@ -27,16 +29,40 @@ namespace MoonifyControls
             get { return texture == null ? null : texture.Texture; }
             set
             {
-                if (texture != null)
-                {
-                    oldTextures.Add(texture);
-                    texture.Hide();
-                }
                 if (value != null)
                 {
                     texture = new AlphaImage(this, value, 0);
-                    texture.Show();
+                    textures.AddLast(texture);
+                    texture.FadeTo(1);
                 }
+                else
+                {
+                    foreach (var img in textures)
+                        img.FadeTo(0);
+                }
+            }
+        }
+
+        public void LoadTexture(DataLoader<Texture2D> loader, bool asynchronous = true)
+        {
+            if (!asynchronous)
+            {
+                while (!loader.State.HasFlag(DataLoadState.Complete)) { }
+                this.Texture = loader.Value;
+                return;
+            }
+
+            this.pending = loader;
+            if (pending == null)
+                this.Texture = null;
+            else
+            {
+                foreach (var img in textures)
+                    img.FadeTo(0);
+                if (texture != null)
+                    texture.FadeTo(.2f);
+
+                texture = null;
             }
         }
 
@@ -52,13 +78,25 @@ namespace MoonifyControls
 
             backgroundBox.Draw(spriteBatch, backgroundTexture, this.Location, this.Size, Color.White);
 
-            if (texture != null)
-                texture.Draw(spriteBatch, this.Location, this.Size, Color.White);
-
-            for (int i = 0; i < oldTextures.Count; i++)
-                oldTextures[i].Draw(spriteBatch, this.Location, this.Size, Color.White);
+            foreach (var img in textures)
+                img.Draw(spriteBatch, this.Location, this.Size, Color.White);
 
             spriteBatch.End();
+        }
+        public override void Update(GameTime gameTime)
+        {
+            if (pending != null && pending.State.HasFlag(DataLoadState.Complete))
+            {
+                this.Texture = pending.Value;
+                this.pending = null;
+            }
+
+            while (textures.Count > 0 && textures.First.Value.Done)
+                textures.RemoveFirst();
+
+            if (textures.Count > 0 && textures.Last.Value.Full)
+                while (textures.Count > 1)
+                    textures.RemoveFirst();
         }
 
         private class AlphaImage
@@ -75,17 +113,22 @@ namespace MoonifyControls
 
                 this.texture = texture;
                 this.alpha = new xfloat(opacity, method);
-
-                alpha.Elapsed += (s, e) => { if (alpha == 0) owner.oldTextures.Remove(this); };
             }
 
-            public void Show()
+            public void FadeTo(float opacity)
             {
-                alpha.TargetValue = 1;
+                if (opacity < 0) opacity = 0;
+                if (opacity > 1) opacity = 1;
+                alpha.TargetValue = opacity;
             }
-            public void Hide()
+
+            public bool Done
             {
-                alpha.TargetValue = 0;
+                get { return alpha.CurrentValue == alpha.TargetValue && alpha.TargetValue == 0; }
+            }
+            public bool Full
+            {
+                get { return alpha.CurrentValue == alpha.TargetValue && alpha.TargetValue == 1; }
             }
 
             public Texture2D Texture
