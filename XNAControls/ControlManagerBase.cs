@@ -25,18 +25,25 @@ namespace XNAControls
             this.controls = new ControlCollection(this);
 
             KeyboardInput.Initialize(game.Window);
-            KeyboardInput.CharacterEntered += (s, e) =>
-            {
+            KeyboardInput.CharacterEntered += characterEntered;
+            KeyboardInput.KeyDown += keyDown;
+            KeyboardInput.KeyUp += keyUp;
+        }
+
+        private void characterEntered(object sender, CharacterEventArgs e)
+        {
+            if (keyboardControl != null)
                 keyboardControl.Message(ControlMessages.KEYBOARD_CHARACTER, e.Character, e.Param);
-            };
-            KeyboardInput.KeyDown += (s, e) =>
-            {
+        }
+        private void keyDown(object sender, KeyEventArgs e)
+        {
+            if (keyboardControl != null)
                 keyboardControl.Message(ControlMessages.KEYBOARD_KEYDOWN, (int)e.KeyCode, 0 + (e.Shift ? 1 : 0) + (e.Control ? 2 : 0));
-            };
-            KeyboardInput.KeyUp += (s, e) =>
-            {
+        }
+        private void keyUp(object sender, KeyEventArgs e)
+        {
+            if (keyboardControl != null)
                 keyboardControl.Message(ControlMessages.KEYBOARD_KEYUP, (int)e.KeyCode, 0 + (e.Shift ? 1 : 0) + (e.Control ? 2 : 0));
-            };
         }
 
         public ControlCollection Controls
