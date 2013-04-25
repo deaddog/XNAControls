@@ -9,6 +9,9 @@ namespace MoonifyControls
 {
     public class ImageBox : Control
     {
+        private static DeadDog.GUI.IMoveMethods showMethod = new DeadDog.GUI.MoveSineLine(1, 1);
+        private static DeadDog.GUI.IMoveMethods hideMethod = new DeadDog.GUI.MoveSineLine(1, 5);
+
         private AlphaImage texture;
         private LinkedList<AlphaImage> textures;
 
@@ -16,12 +19,16 @@ namespace MoonifyControls
         private Box backgroundBox;
 
         private DataLoader<Texture2D> pending;
+        private LoadingIcon loadingIcon;
+        private xfloat loadAlpha;
 
         public ImageBox(float width, float height)
             : base(width, height)
         {
             this.textures = new LinkedList<AlphaImage>();
             this.texture = null;
+
+            loadAlpha = new xfloat(0, showMethod);
         }
 
         public Texture2D Texture
@@ -40,6 +47,8 @@ namespace MoonifyControls
                     foreach (var img in textures)
                         img.FadeTo(0);
                 }
+                loadAlpha.SetMethod(hideMethod);
+                loadAlpha.TargetValue = 0;
             }
         }
 
@@ -55,6 +64,11 @@ namespace MoonifyControls
             this.pending = loader;
             if (pending == null)
                 this.Texture = null;
+            else if (pending.State.HasFlag(DataLoadState.Complete))
+            {
+                this.Texture = pending.Value;
+                this.pending = null;
+            }
             else
             {
                 foreach (var img in textures)
@@ -63,6 +77,8 @@ namespace MoonifyControls
                     texture.FadeTo(.2f);
 
                 texture = null;
+                loadAlpha.SetMethod(showMethod);
+                loadAlpha.TargetValue = 1;
             }
         }
 
@@ -70,6 +86,7 @@ namespace MoonifyControls
         {
             backgroundTexture = content.Load<Texture2D>("ImageBox");
             backgroundBox = MoonifyBoxes.ImageBox;
+            loadingIcon = new LoadingIcon(content, LoadingIconTypes.Type1);
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -81,6 +98,9 @@ namespace MoonifyControls
             foreach (var img in textures)
                 img.Draw(spriteBatch, this.Location, this.Size, Color.White);
 
+            if (loadAlpha > 0)
+                loadingIcon.Draw(spriteBatch, gameTime, this.Location + (this.Size / 2), new Vector2(60, 60), Color.White * loadAlpha);
+
             spriteBatch.End();
         }
         public override void Update(GameTime gameTime)
@@ -90,6 +110,8 @@ namespace MoonifyControls
                 this.Texture = pending.Value;
                 this.pending = null;
             }
+
+            loadAlpha.Update();
 
             while (textures.Count > 0 && textures.First.Value.Done)
                 textures.RemoveFirst();
@@ -103,7 +125,7 @@ namespace MoonifyControls
         {
             private ImageBox owner;
 
-            private static DeadDog.GUI.IMoveMethods method = new DeadDog.GUI.MoveSineLine(1, 1);
+            private static DeadDog.GUI.IMoveMethods method = new DeadDog.GUI.MoveSineLine(1, 10);
             private xfloat alpha;
             private Texture2D texture;
 
