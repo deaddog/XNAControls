@@ -12,6 +12,7 @@ namespace XNAControls
     {
         private ControlCollection controls;
 
+        private bool contentLoaded;
         private ContentManager content;
         private SpriteBatch spriteBatch;
         private Texture2D background;
@@ -21,7 +22,8 @@ namespace XNAControls
         public ControlManagerBase(Game game, string contentRoot)
             : base(game)
         {
-            content = new ContentManager(game.Services, contentRoot);
+            this.contentLoaded = false;
+            this.content = new ContentManager(game.Services, contentRoot);
             this.controls = new ControlCollection(this);
 
             KeyboardInput.Initialize(game.Window);
@@ -73,6 +75,8 @@ namespace XNAControls
 
         protected override void LoadContent()
         {
+            this.contentLoaded = true;
+
             this.spriteBatch = new SpriteBatch(Game.GraphicsDevice);
             this.background = content.Load<Texture2D>("Background");
 
@@ -81,6 +85,8 @@ namespace XNAControls
         }
         protected override void UnloadContent()
         {
+            this.contentLoaded = false;
+
             this.spriteBatch.Dispose();
             this.background = null;
 
@@ -211,6 +217,8 @@ namespace XNAControls
             public void Add(Control control)
             {
                 list.Add(control);
+                if (manager.contentLoaded)
+                    control.LoadResources(manager.content, manager.Game.Content);
             }
 
             public bool Contains(Control control)
