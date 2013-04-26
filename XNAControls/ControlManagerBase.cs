@@ -220,6 +220,18 @@ namespace XNAControls
                 if (manager.contentLoaded)
                     control.LoadResources(manager.content, manager.Game.Content);
             }
+            public bool Remove(Control control)
+            {
+                if (list.Contains(control))
+                {
+                    if (manager.contentLoaded)
+                        control.UnloadResources(manager.content, manager.Game.Content);
+                    list.Remove(control);
+                    return true;
+                }
+                else
+                    return false;
+            }
 
             public bool Contains(Control control)
             {
