@@ -79,6 +79,14 @@ namespace XNAControls
             for (int i = 0; i < controls.Count; i++)
                 controls[i].LoadResources(content, Game.Content);
         }
+        protected override void UnloadContent()
+        {
+            this.spriteBatch.Dispose();
+            this.background = null;
+
+            for (int i = 0; i < controls.Count; i++)
+                controls[i].UnloadResources(content, Game.Content);
+        }
 
         public override void Draw(GameTime gameTime)
         {
