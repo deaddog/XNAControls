@@ -325,7 +325,28 @@ namespace XNAControls
         {
         }
 
-        public virtual void LoadResources(ContentManager content)
+        internal void LoadResources(ContentManager styleContent, ContentManager gameContent)
+        {
+            LoadResources(styleContent);
+            LoadContent(gameContent);
+        }
+        internal void UnloadResources(ContentManager styleContent, ContentManager gameContent)
+        {
+            UnloadResources(styleContent);
+            UnloadContent(gameContent);
+        }
+
+        internal virtual void LoadResources(ContentManager content)
+        {
+        }
+        internal virtual void UnloadResources(ContentManager content)
+        {
+        }
+
+        protected virtual void LoadContent(ContentManager content)
+        {
+        }
+        protected virtual void UnloadContent(ContentManager content)
         {
         }
 

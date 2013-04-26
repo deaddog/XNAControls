@@ -77,7 +77,7 @@ namespace XNAControls
             this.background = content.Load<Texture2D>("Background");
 
             for (int i = 0; i < controls.Count; i++)
-                controls[i].LoadResources(content);
+                controls[i].LoadResources(content, Game.Content);
         }
 
         public override void Draw(GameTime gameTime)
