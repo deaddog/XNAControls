@@ -82,7 +82,7 @@ namespace MoonifyControls
             }
         }
 
-        public override void LoadResources(ContentManager content)
+        protected override void LoadLocalContent(ContentManager content)
         {
             backgroundTexture = content.Load<Texture2D>("ImageBox");
             backgroundBox = MoonifyBoxes.ImageBox;

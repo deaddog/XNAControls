@@ -327,19 +327,19 @@ namespace XNAControls
 
         internal void LoadResources(ContentManager styleContent, ContentManager gameContent)
         {
-            LoadResources(styleContent);
+            LoadLocalContent(styleContent);
             LoadContent(gameContent);
         }
         internal void UnloadResources(ContentManager styleContent, ContentManager gameContent)
         {
-            UnloadResources(styleContent);
+            UnloadLocalContent(styleContent);
             UnloadContent(gameContent);
         }
 
-        internal virtual void LoadResources(ContentManager content)
+        protected virtual void LoadLocalContent(ContentManager content)
         {
         }
-        internal virtual void UnloadResources(ContentManager content)
+        protected virtual void UnloadLocalContent(ContentManager content)
         {
         }
 

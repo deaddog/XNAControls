@@ -95,7 +95,7 @@ namespace MoonifyControls
                 this.items.Add(t);
         }
 
-        public override void LoadResources(ContentManager content)
+        protected sealed override void LoadLocalContent(ContentManager content)
         {
             frameBox = MoonifyBoxes.EmptyBoxFrame;
             frameTexture = content.Load<Texture2D>("EmptyBoxFrame");

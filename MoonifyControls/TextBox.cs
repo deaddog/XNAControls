@@ -164,7 +164,7 @@ namespace MoonifyControls
             }
         }
 
-        public override void LoadResources(ContentManager content)
+        protected sealed override void LoadLocalContent(ContentManager content)
         {
             backgroundBox = content.Load<Texture2D>("EmptyBox");
             caret = content.Load<Texture2D>("Caret");

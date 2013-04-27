@@ -222,7 +222,7 @@ namespace MoonifyControls
                 this.Left = false;
         }
 
-        public override void LoadResources(Microsoft.Xna.Framework.Content.ContentManager content)
+        protected sealed override void LoadLocalContent(Microsoft.Xna.Framework.Content.ContentManager content)
         {
             this.box = textureBoxFromType(type);
             this.boxTexture = content.Load<Texture2D>(textureFromType(type));
