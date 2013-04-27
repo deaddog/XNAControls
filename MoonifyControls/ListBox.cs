@@ -298,34 +298,33 @@ namespace MoonifyControls
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            Rectangle fillClip = new Rectangle((int)this.Location.X + 1, (int)this.Location.Y + 1, (int)this.Size.X - 2 - 7, (int)this.Size.Y - 2);
-
             Matrix offsetMatrix = Matrix.CreateTranslation(0, _contentOffset, 0);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, new RasterizerState() { ScissorTestEnable = true });
-            spriteBatch.GraphicsDevice.ScissorRectangle = fillClip;
-            fillBox.Draw(spriteBatch, fillTexture, this.Location, this.Size, Color.White);
-            spriteBatch.End();
-
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, new RasterizerState() { ScissorTestEnable = true }, null, offsetMatrix);
-
-            if (selectionIndex >= 0)
+            if (spriteBatch.Begin(Location.X + 1, Location.Y + 1, Size.X - 9, Size.Y - 2))
             {
-                sliderPosition.Update();
-                selectionBox.Draw(spriteBatch, selectionTexture,
-                    this.Location + new Vector2(1, sliderPosition), new Vector2(this.Size.X - 2, 25), Color.White);
+                fillBox.Draw(spriteBatch, fillTexture, this.Location, this.Size, Color.White);
+                spriteBatch.End();
             }
 
-            for (int i = 0; i < items.Count; i++)
-                DrawLine(spriteBatch, items.GetText(i), i);
-            spriteBatch.End();
+            if (spriteBatch.Begin(Location.X + 1, Location.Y + 1, Size.X - 9, Size.Y - 2, offsetMatrix))
+            {
+                if (selectionIndex >= 0)
+                {
+                    sliderPosition.Update();
+                    selectionBox.Draw(spriteBatch, selectionTexture,
+                        this.Location + new Vector2(1, sliderPosition), new Vector2(this.Size.X - 2, 25), Color.White);
+                }
 
-            Rectangle clip = new Rectangle((int)this.Location.X - 2, (int)this.Location.Y, (int)this.Size.X + 3 - 9, (int)this.Size.Y + 2);
+                for (int i = 0; i < items.Count; i++)
+                    DrawLine(spriteBatch, items.GetText(i), i);
+                spriteBatch.End();
+            }
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, new RasterizerState() { ScissorTestEnable = true });
-            spriteBatch.GraphicsDevice.ScissorRectangle = clip;
-            frameBox.Draw(spriteBatch, frameTexture, this.Location, this.Size, Color.White);
-            spriteBatch.End();
+            if (spriteBatch.Begin(Location.X - 2, Location.Y, Size.X - 6, Size.Y + 2))
+            {
+                frameBox.Draw(spriteBatch, frameTexture, this.Location, this.Size, Color.White);
+                spriteBatch.End();
+            }
 
             spriteBatch.Begin();
 
