@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
@@ -7,7 +8,7 @@ using XNA = Microsoft.Xna.Framework;
 
 namespace XNAControls
 {
-    public abstract class TextRenderer
+    public abstract class TextRenderer : IDisposable
     {
         private const byte NONMULTIPLIEDCOLOR = 255;
 
@@ -101,5 +102,17 @@ namespace XNAControls
 
             return texture;
         }
+
+        #region IDisposable Members
+
+        void IDisposable.Dispose()
+        {
+            this.Dispose();
+        }
+        protected virtual void Dispose()
+        {
+        }
+
+        #endregion
     }
 }

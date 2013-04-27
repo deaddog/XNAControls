@@ -37,7 +37,6 @@ namespace MoonifyControls
         public TextBox()
             : base(200, 30)
         {
-            font = new CharacterRenderer("HelveticaNeueLT Com 65 Md", 9f, System.Drawing.FontStyle.Regular, System.Drawing.Text.TextRenderingHint.AntiAlias);
         }
 
         public IconTypes IconType
@@ -172,6 +171,15 @@ namespace MoonifyControls
             iconSEARCH = content.Load<Texture2D>("TextBoxIconSearch");
 
             box = MoonifyBoxes.EmptyBox;
+
+            font = new CharacterRenderer("HelveticaNeueLT Com 65 Md", 9f, System.Drawing.FontStyle.Regular, System.Drawing.Text.TextRenderingHint.AntiAlias);
+        }
+        protected override void UnloadLocalContent(ContentManager content)
+        {
+            base.UnloadLocalContent(content);
+
+            (font as IDisposable).Dispose();
+            font = null;
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)

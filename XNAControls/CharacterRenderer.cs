@@ -45,5 +45,16 @@ namespace XNAControls
                 position += new Vector2(tex.Width, 0);
             }
         }
+
+        protected override void Dispose()
+        {
+            char[] chars = new char[characters.Keys.Count];
+            characters.Keys.CopyTo(chars, 0);
+            foreach (char c in chars)
+            {
+                characters[c].Dispose();
+                characters.Remove(c);
+            }
+        }
     }
 }

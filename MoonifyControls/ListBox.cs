@@ -79,9 +79,6 @@ namespace MoonifyControls
             : base(200, 120)
         {
             this.items = new ObjectCollection(this);
-            this.font = new CharacterRenderer("HelveticaNeueLT Com 65 Md", 9f,
-                System.Drawing.FontStyle.Regular, System.Drawing.Text.TextRenderingHint.AntiAlias);
-
             this.updateSliderPosition();
         }
         public ListBox(params T[] collection)
@@ -111,6 +108,13 @@ namespace MoonifyControls
 
             scrollSliderBox = MoonifyBoxes.ScrollbarSlider;
             scrollSliderTexture = content.Load<Texture2D>("ScrollbarSlider");
+
+            font = new CharacterRenderer("HelveticaNeueLT Com 65 Md", 9f, System.Drawing.FontStyle.Regular, System.Drawing.Text.TextRenderingHint.AntiAlias);
+        }
+        protected override void UnloadLocalContent(ContentManager content)
+        {
+            (font as IDisposable).Dispose();
+            font = null;
         }
 
         private int mouseDownIndex = -1;
