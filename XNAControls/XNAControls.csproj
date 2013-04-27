@@ -119,6 +119,7 @@
     <Compile Include="MouseEventArgs.cs" />
     <Compile Include="MouseEventHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpriteBatchExtension.cs" />
     <Compile Include="TextRenderer.cs" />
     <Compile Include="xfloat.cs" />
   </ItemGroup>
