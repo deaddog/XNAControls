@@ -130,7 +130,7 @@ namespace XNAControls
             MouseState ms = Mouse.GetState();
             Vector2 point = new Vector2(ms.X, ms.Y);
 
-            Control c = (from control in controls.Reverse() where control.IsInside(point) select control).FirstOrDefault();
+            Control c = downControls[0] ?? downControls[1] ?? downControls[2] ?? (from control in controls.Reverse() where control.IsInside(point) select control).FirstOrDefault();
             if (c != lastHoveredControl)
             {
                 if (lastHoveredControl != null)
