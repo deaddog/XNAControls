@@ -248,14 +248,14 @@ namespace MoonifyControls
                 float from = barSliderSize.Y - sliderHeight;
                 float to = allItemsSize - shownItemsSize;
 
-                _contentOffset = from == 0 ? 0 : -(to / from) * (_sliderOffset - sliderTopPosition);
+                _contentOffset = (int)Math.Round(from == 0 ? 0 : -(to / from) * (_sliderOffset - sliderTopPosition));
 
                 barSliderSize.Y = sliderHeight;
                 barSliderPosition.Y = _sliderOffset;
             }
         }
-        private float _contentOffset = 0;
-        private float contentOffset
+        private int _contentOffset = 0;
+        private int contentOffset
         {
             get { return _contentOffset; }
             set
@@ -284,8 +284,8 @@ namespace MoonifyControls
             float contentTopPosition = 0;
             float contentBotPosition = -(allItemsSize - shownItemsSize);
 
-            if (_contentOffset < contentBotPosition) _contentOffset = contentBotPosition;
-            if (_contentOffset > contentTopPosition) _contentOffset = contentTopPosition;
+            if (_contentOffset < contentBotPosition) _contentOffset = (int)contentBotPosition;
+            if (_contentOffset > contentTopPosition) _contentOffset = (int)contentTopPosition;
 
             float from = allItemsSize - shownItemsSize;
             float to = barSliderSize.Y - sliderHeight;
