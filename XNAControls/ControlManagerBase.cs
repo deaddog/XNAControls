@@ -15,7 +15,6 @@ namespace XNAControls
         private bool contentLoaded;
         private ContentManager content;
         private SpriteBatch spriteBatch;
-        private Texture2D background;
 
         private Control keyboardControl = null;
 
@@ -73,38 +72,37 @@ namespace XNAControls
             }
         }
 
-        protected override void LoadContent()
+        protected sealed override void LoadContent()
         {
             this.contentLoaded = true;
 
             this.spriteBatch = new SpriteBatch(Game.GraphicsDevice);
-            this.background = content.Load<Texture2D>("Background");
 
             for (int i = 0; i < controls.Count; i++)
                 controls[i].LoadResources(content, Game.Content);
+
+            LoadContent(content);
         }
-        protected override void UnloadContent()
+        protected virtual void LoadContent(ContentManager localContent)
+        {
+        }
+        protected sealed override void UnloadContent()
         {
             this.contentLoaded = false;
 
             this.spriteBatch.Dispose();
-            this.background = null;
 
             for (int i = 0; i < controls.Count; i++)
                 controls[i].UnloadResources(content, Game.Content);
+
+            UnloadContent(content);
+        }
+        protected virtual void UnloadContent(ContentManager localContent)
+        {
         }
 
         public override void Draw(GameTime gameTime)
         {
-            spriteBatch.Begin();
-            Rectangle rectangle = new Rectangle(0, 0, background.Width, background.Height);
-            if (Game.Window.ClientBounds.Width > rectangle.Width)
-                rectangle.Width = Game.Window.ClientBounds.Width;
-            if (Game.Window.ClientBounds.Height > rectangle.Height)
-                rectangle.Height = Game.Window.ClientBounds.Height;
-            spriteBatch.Draw(background, rectangle, Color.White);
-            spriteBatch.End();
-
             for (int i = 0; i < controls.Count; i++)
                 controls[i].Draw(spriteBatch, gameTime);
         }
