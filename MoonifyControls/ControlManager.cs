@@ -14,6 +14,10 @@ namespace MoonifyControls
             : base(game, "MoonifyContents")
         {
         }
+        public ControlManager(IntPtr controlHandle, IServiceProvider services, GraphicsDevice graphicsDevice)
+            : base(controlHandle, services, "MoonifyContents", graphicsDevice)
+        {
+        }
 
         public Texture2D Background
         {

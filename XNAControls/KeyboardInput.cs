@@ -29,7 +29,7 @@ namespace XNAControls
         /// </summary>
         public static event KeyEventHandler KeyUp;
         private delegate IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
-        
+
         private static IntPtr prevWndProc;
         private static WndProc hookProcDelegate;
         private static IntPtr hIMC;
@@ -44,7 +44,7 @@ namespace XNAControls
         private const int WM_GETDLGCODE = 0x87;
         private const int WM_IME_COMPOSITION = 0x10f;
         private const int DLGC_WANTALLKEYS = 4;
-        
+
         //Win32 functions that we're using	
         [DllImport("Imm32.dll")]
         private static extern IntPtr ImmGetContext(IntPtr hWnd);
@@ -76,6 +76,18 @@ namespace XNAControls
             prevWndProc = (IntPtr)SetWindowLong(window.Handle, GWL_WNDPROC,
                 (int)Marshal.GetFunctionPointerForDelegate(hookProcDelegate));
             hIMC = ImmGetContext(window.Handle);
+            initialized = true;
+        }
+
+        public static void Initialize(IntPtr controlHandle)
+        {
+            if (initialized)
+                throw new InvalidOperationException("TextInput.Initialize can only be called once!");
+
+            hookProcDelegate = new WndProc(HookProc);
+            prevWndProc = (IntPtr)SetWindowLong(controlHandle, GWL_WNDPROC,
+                (int)Marshal.GetFunctionPointerForDelegate(hookProcDelegate));
+            hIMC = ImmGetContext(controlHandle);
             initialized = true;
         }
         /// <summary>
