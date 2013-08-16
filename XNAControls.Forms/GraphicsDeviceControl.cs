@@ -8,8 +8,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 using Color = System.Drawing.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using System.ComponentModel;
 
-namespace XNAControls
+namespace XNAControls.Forms
 {
     /// <summary>
     /// Allows the usage of a control as an XNA canvas.
@@ -21,14 +22,15 @@ namespace XNAControls
         private SpriteBatch spritebatch;
 
         private GraphicsDeviceService graphicsDeviceService;
-        private ServiceContainer services = new ServiceContainer();
-        
+        private ServiceContainer services;
+
         private DateTime start = DateTime.Now;
         private DateTime last = DateTime.Now;
 
         /// <summary>
         /// Gets a <see cref="GraphicsDevice"/> that can be used to draw onto this <see cref="GraphicsDeviceControl"/>.
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public GraphicsDevice GraphicsDevice
         {
             get { return graphicsDeviceService.GraphicsDevice; }
@@ -37,6 +39,7 @@ namespace XNAControls
         /// <summary>
         /// Gets the <see cref="IServiceProvider"/> associated with this <see cref="GraphicsDeviceControl"/>.
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public IServiceProvider Services
         {
             get { return services; }
@@ -47,6 +50,8 @@ namespace XNAControls
         {
             if (!DesignMode)
             {
+                services = new ServiceContainer();
+
                 graphicsDeviceService = GraphicsDeviceService.AddRef(Handle, ClientSize.Width, ClientSize.Height, graphicsProfile);
                 services.AddService<IGraphicsDeviceService>(graphicsDeviceService);
 
@@ -223,7 +228,7 @@ namespace XNAControls
         protected sealed override void OnPaintBackground(PaintEventArgs pevent)
         {
         }
-        
+
 
         /// <summary>
         /// When overridden in a derived class, initializes the <see cref="GraphicsDeviceControl"/>.

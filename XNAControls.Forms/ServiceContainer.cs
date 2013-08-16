@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace XNAControls
+namespace XNAControls.Forms
 {
     /// <summary>
     /// Container class implements the IServiceProvider interface. This is used

@@ -2,7 +2,7 @@
 using System.Threading;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace XNAControls
+namespace XNAControls.Forms
 {
     internal class GraphicsDeviceService : IGraphicsDeviceService
     {
