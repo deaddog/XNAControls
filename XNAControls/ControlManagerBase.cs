@@ -8,27 +8,48 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XNAControls
 {
-    public abstract class ControlManagerBase : DrawableGameComponent
+    public abstract class ControlManagerBase : IDrawableGameComponent
     {
         private ControlCollection controls;
 
         private bool contentLoaded;
         private ContentManager content;
+        private ContentManager gameContent;
         private SpriteBatch spriteBatch;
+
+        private GraphicsDevice graphicsDevice;
 
         private Control keyboardControl = null;
 
         public ControlManagerBase(Game game, string contentRoot)
-            : base(game)
         {
             this.contentLoaded = false;
             this.content = new ContentManager(game.Services, contentRoot);
             this.controls = new ControlCollection(this);
 
+            this.graphicsDevice = game.GraphicsDevice;
+
             KeyboardInput.Initialize(game.Window);
             KeyboardInput.CharacterEntered += characterEntered;
             KeyboardInput.KeyDown += keyDown;
             KeyboardInput.KeyUp += keyUp;
+        }
+
+        public ControlManagerBase(IntPtr controlHandle, IServiceProvider services, string contentRoot, GraphicsDevice graphicsDevice)
+        {
+            this.contentLoaded = false;
+            this.content = new ContentManager(services, contentRoot);
+            this.gameContent = new ContentManager(services, "Content");
+            this.controls = new ControlCollection(this);
+
+            this.graphicsDevice = graphicsDevice;
+
+            KeyboardInput.Initialize(controlHandle);
+            KeyboardInput.CharacterEntered += characterEntered;
+            KeyboardInput.KeyDown += keyDown;
+            KeyboardInput.KeyUp += keyUp;
+
+            LoadContent();
         }
 
         private void characterEntered(object sender, CharacterEventArgs e)
@@ -72,28 +93,41 @@ namespace XNAControls
             }
         }
 
-        protected sealed override void LoadContent()
+        public virtual void Initialize()
+        {
+        }
+
+        void IDrawableGameComponent.LoadContent(ContentManager content)
+        {
+            LoadContent(content);
+        }
+        void IDrawableGameComponent.UnloadContent(ContentManager content)
+        {
+            UnloadContent(content);
+        }
+
+        internal void LoadContent()
         {
             this.contentLoaded = true;
 
-            this.spriteBatch = new SpriteBatch(Game.GraphicsDevice);
+            this.spriteBatch = new SpriteBatch(graphicsDevice);
 
             for (int i = 0; i < controls.Count; i++)
-                controls[i].LoadResources(content, Game.Content);
+                controls[i].LoadResources(content, gameContent);
 
             LoadContent(content);
         }
         protected virtual void LoadContent(ContentManager localContent)
         {
         }
-        protected sealed override void UnloadContent()
+        internal void UnloadContent()
         {
             this.contentLoaded = false;
 
             this.spriteBatch.Dispose();
 
             for (int i = 0; i < controls.Count; i++)
-                controls[i].UnloadResources(content, Game.Content);
+                controls[i].UnloadResources(content, gameContent);
 
             UnloadContent(content);
         }
@@ -101,7 +135,7 @@ namespace XNAControls
         {
         }
 
-        public override void Draw(GameTime gameTime)
+        public void Draw(GameTime gameTime)
         {
             for (int i = 0; i < controls.Count; i++)
                 controls[i].Draw(spriteBatch, gameTime);
@@ -125,7 +159,7 @@ namespace XNAControls
         private Control lastHoveredControl = null;
         private Control[] downControls = new Control[3];
         private MouseState oldMouseState;
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             MouseState ms = Mouse.GetState();
             Vector2 point = new Vector2(ms.X, ms.Y);
@@ -216,14 +250,14 @@ namespace XNAControls
             {
                 list.Add(control);
                 if (manager.contentLoaded)
-                    control.LoadResources(manager.content, manager.Game.Content);
+                    control.LoadResources(manager.content, manager.gameContent);
             }
             public bool Remove(Control control)
             {
                 if (list.Contains(control))
                 {
                     if (manager.contentLoaded)
-                        control.UnloadResources(manager.content, manager.Game.Content);
+                        control.UnloadResources(manager.content, manager.gameContent);
                     list.Remove(control);
                     return true;
                 }
@@ -254,5 +288,37 @@ namespace XNAControls
 
             #endregion
         }
+
+        #region IDrawable Members
+
+        public int DrawOrder
+        {
+            get { return 0; }
+        }
+        public event EventHandler<EventArgs> DrawOrderChanged;
+
+        public bool Visible
+        {
+            get { return true; }
+        }
+        public event EventHandler<EventArgs> VisibleChanged;
+
+        #endregion
+
+        #region IUpdateable Members
+
+        public bool Enabled
+        {
+            get { return true; }
+        }
+        public event EventHandler<EventArgs> EnabledChanged;
+
+        public int UpdateOrder
+        {
+            get { return 0; }
+        }
+        public event EventHandler<EventArgs> UpdateOrderChanged;
+
+        #endregion
     }
 }

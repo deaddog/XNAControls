@@ -104,12 +104,14 @@
     <Compile Include="CharacterRenderer.cs" />
     <Compile Include="Control.cs" />
     <Compile Include="ControlManagerBase.cs" />
+    <Compile Include="ControlManagerComponent.cs" />
     <Compile Include="ControlMessages.cs" />
     <Compile Include="FloatMoveEventArgs.cs" />
     <Compile Include="FloatMoveEventHandler.cs" />
     <Compile Include="DataLoader.cs" />
     <Compile Include="DataLoadManager.cs" />
     <Compile Include="DataLoadState.cs" />
+    <Compile Include="IDrawableGameComponent.cs" />
     <Compile Include="KeyboardInput.cs" />
     <Compile Include="KeyEventArgs.cs" />
     <Compile Include="KeyEventHandler.cs" />

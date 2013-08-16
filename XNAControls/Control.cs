@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XNAControls
 {
-    public class Control
+    public abstract class Control
     {
         private bool focused = false;
         private bool enabled;
