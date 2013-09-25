@@ -19,8 +19,7 @@ namespace XNAControls
         public Control(float initialwidth, float initialheight)
         {
             this.enabled = true;
-            this.location = Vector2.Zero;
-            this.InnerSizeChange(initialwidth, initialheight);
+            this.InnerBoundsChange(0, 0, initialwidth, initialheight);
         }
 
         public bool Focused
@@ -36,14 +35,7 @@ namespace XNAControls
         public Vector2 Location
         {
             get { return location; }
-            set
-            {
-                if (value != location)
-                {
-                    location = value;
-                    Message(ControlMessages.CONTROL_LOCATIONCHANGED);
-                }
-            }
+            set { InnerBoundsChange(value.X, value.Y, size.X, size.Y); }
         }
         public float X
         {
@@ -59,7 +51,7 @@ namespace XNAControls
         public Vector2 Size
         {
             get { return size; }
-            set { InnerSizeChange(value.X, value.Y); }
+            set { InnerBoundsChange(location.X, location.Y, value.X, value.Y); }
         }
         public float Width
         {
@@ -364,12 +356,18 @@ namespace XNAControls
             return point.X >= 0 && point.X < this.size.X && point.Y >= 0 && point.Y < this.size.Y;
         }
 
-        protected virtual void InnerSizeChange(float width, float height)
+        protected virtual void InnerBoundsChange(float x, float y, float width, float height)
         {
-            var temp = this.size;
+            var l = this.location;
+            var s = this.size;
+
+            this.location = new Vector2(x, y);
             this.size = new Vector2(width, height);
 
-            if (temp != this.size)
+            if (l != this.location)
+                Message(ControlMessages.CONTROL_LOCATIONCHANGED);
+
+            if (s != this.size)
                 Message(ControlMessages.CONTROL_SIZECHANGED);
         }
     }

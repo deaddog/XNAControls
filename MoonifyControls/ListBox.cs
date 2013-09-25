@@ -371,7 +371,7 @@ namespace MoonifyControls
             return index < items.Count ? index : -1;
         }
 
-        protected sealed override void InnerSizeChange(float width, float height)
+        protected override void InnerBoundsChange(float x, float y, float width, float height)
         {
             if (width < 30)
                 width = 30;
@@ -380,7 +380,7 @@ namespace MoonifyControls
 
             //height = ((int)(height - 2) / 25) * 25 + 2;
 
-            base.InnerSizeChange(width, height);
+            base.InnerBoundsChange(x, y, width, height);
         }
 
         #region Collection List
