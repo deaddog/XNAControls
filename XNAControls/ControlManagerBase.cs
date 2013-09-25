@@ -21,6 +21,14 @@ namespace XNAControls
 
         private Control keyboardControl = null;
 
+        private int mouseOffsetX = 0;
+        private int mouseOffsetY = 0;
+        public void SetMouseOffset(int x, int y)
+        {
+            this.mouseOffsetX = x;
+            this.mouseOffsetY = y;
+        }
+
         public ControlManagerBase(Game game, string contentRoot)
         {
             this.contentLoaded = false;
@@ -162,6 +170,7 @@ namespace XNAControls
         public void Update(GameTime gameTime)
         {
             MouseState ms = Mouse.GetState();
+            ms = new MouseState(ms.X + mouseOffsetX, ms.Y + mouseOffsetY, ms.ScrollWheelValue, ms.LeftButton, ms.MiddleButton, ms.RightButton, ms.XButton1, ms.XButton2);
             Vector2 point = new Vector2(ms.X, ms.Y);
 
             Control c = downControls[0] ?? downControls[1] ?? downControls[2] ?? (from control in controls.Reverse() where control.IsInside(point) select control).FirstOrDefault();
