@@ -38,13 +38,25 @@ namespace MoonifyControls
             this.Size = sizeFromType(this.type);
         }
 
+        public event EventHandler LeftChanged;
+        protected void OnLeftChanged(EventArgs e)
+        {
+            if (LeftChanged != null)
+                LeftChanged(this, e);
+        }
+
         public bool Left
         {
             get { return left; }
             set
             {
+                bool eventIt = left != value;
+
                 left = value;
                 this.xOffset.TargetValue = left ? xMin : xMax;
+
+                if (eventIt)
+                    OnLeftChanged(EventArgs.Empty);
             }
         }
 
@@ -198,6 +210,9 @@ namespace MoonifyControls
         private bool mouseDown = false;
         private void handleMouseDown(Vector2 pos)
         {
+            if (!Enabled)
+                return;
+
             if (isInsideHandle(pos))
             {
                 mouseDown = true;
@@ -244,7 +259,7 @@ namespace MoonifyControls
                 handleX = xMin;
             else if (handleX > xMax)
                 handleX = xMax;
-            spriteBatch.Draw(handleTexture, this.Location + new Vector2(handleX, yOffset), handleRectangle, Color.White);
+            spriteBatch.Draw(handleTexture, this.Location + new Vector2(handleX, yOffset), handleRectangle, Enabled ? Color.White : Color.Gray);
             spriteBatch.End();
         }
     }
