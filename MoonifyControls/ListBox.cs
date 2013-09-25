@@ -390,6 +390,9 @@ namespace MoonifyControls
             private ListBox<T> owner;
             private List<T> list;
 
+            private bool autoSort;
+            private SortClass itemSort;
+
             private Func<T, string> toString;
             private Dictionary<T, string> printedValue;
 
@@ -398,10 +401,22 @@ namespace MoonifyControls
                 this.owner = owner;
                 this.list = new List<T>();
 
+                this.autoSort = false;
+                this.itemSort = new SortClass() { Method = nameSort };
+
                 this.toString = itemToString;
                 this.printedValue = new Dictionary<T, string>();
             }
 
+            private int nameSort(T item1, T item2)
+            {
+                if (!printedValue.ContainsKey(item1))
+                    printedValue.Add(item1, toString(item1));
+                if (!printedValue.ContainsKey(item2))
+                    printedValue.Add(item2, toString(item2));
+
+                return printedValue[item1].CompareTo(printedValue[item2]);
+            }
             private string itemToString(T item)
             {
                 return item.ToString();
@@ -416,6 +431,31 @@ namespace MoonifyControls
             public string GetText(int index)
             {
                 return GetText(list[index]);
+            }
+
+            public bool AutoSort
+            {
+                get { return autoSort; }
+                set
+                {
+                    if (value == autoSort)
+                        return;
+
+                    autoSort = value;
+                    if (autoSort)
+                        list.Sort(itemSort.Method);
+                }
+            }
+
+            public Comparison<T> ItemSort
+            {
+                get { return itemSort.Method == nameSort ? null : itemSort.Method; }
+                set
+                {
+                    itemSort.Method = (value ?? nameSort);
+                    if (autoSort)
+                        list.Sort(itemSort.Method);
+                }
             }
 
             /// <summary>
@@ -451,6 +491,9 @@ namespace MoonifyControls
                 if (list.Contains(item))
                     throw new InvalidOperationException(this.GetType().Name + " cannot contain multiples of the same instance.");
 
+                if (autoSort)
+                    index = ~list.BinarySearch(item, itemSort);
+
                 list.Insert(index, item);
                 if (index <= owner.selectionIndex)
                     owner.selectionIndex = owner.selectionIndex + 1;
@@ -482,12 +525,15 @@ namespace MoonifyControls
                 get { return list[index]; }
                 set
                 {
+                    if (list.Contains(value))
+                        throw new InvalidOperationException(this.GetType().Name + " cannot contain multiples of the same instance.");
+                    else if (autoSort)
+                        index = ~list.BinarySearch(value, itemSort);
+
                     if (index == list.Count)
                         Add(value);
                     else if (index < 0 || index > list.Count)
                         throw new ArgumentOutOfRangeException("index");
-                    else if (list.Contains(value))
-                        throw new InvalidOperationException(this.GetType().Name + " cannot contain multiples of the same instance.");
                     else
                     {
                         printedValue.Remove(list[index]);
@@ -567,6 +613,15 @@ namespace MoonifyControls
             }
 
             #endregion
+
+            private class SortClass : IComparer<T>
+            {
+                public Comparison<T> Method;
+                public int Compare(T x, T y)
+                {
+                    return Method(x, y);
+                }
+            }
         }
 
         #endregion
