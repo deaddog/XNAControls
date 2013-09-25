@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace XNAControls
@@ -10,6 +11,8 @@ namespace XNAControls
     {
         private bool contentLoaded;
         private ControlCollection controls;
+        private ContentManager content;
+        private ContentManager gameContent;
 
         public ControlContainerBase(float initialwidth, float initialheight)
             : base(initialwidth, initialheight)
@@ -21,6 +24,28 @@ namespace XNAControls
         public ControlCollection Controls
         {
             get { return controls; }
+        }
+
+        protected sealed override void LoadLocalContent(ContentManager content)
+        {
+            this.content = content;
+            //Remaining load is handled by LoadContent, as it is always called lastly
+        }
+        protected sealed override void LoadContent(ContentManager content)
+        {
+            this.gameContent = content;
+            //Handle content load
+            throw new NotImplementedException();
+        }
+        protected sealed override void UnloadLocalContent(ContentManager content)
+        {
+            //Ignore, this is handled by UnloadContent, as it is always called lastly
+        }
+        protected sealed override void UnloadContent(ContentManager content)
+        {
+            //Unload all
+            //clear content references
+            throw new NotImplementedException();
         }
 
         public class ControlCollection : IEnumerable<Control>
