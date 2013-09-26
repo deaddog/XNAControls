@@ -26,34 +26,55 @@ namespace XNAControls
             get { return controls; }
         }
 
+        protected virtual void LoadSharedContent(ContentManager content)
+        {
+        }
+        protected virtual void LoadSharedLocalContent(ContentManager content)
+        {
+        }
+        protected virtual void UnloadSharedContent(ContentManager content)
+        {
+        }
+        protected virtual void UnloadSharedLocalContent(ContentManager content)
+        {
+        }
+
         protected internal sealed override void LoadLocalContent(ContentManager content)
         {
             this.content = content;
+
+            LoadSharedLocalContent(content);
             for (int i = 0; i < controls.Count; i++)
                 controls[i].LoadLocalContent(content);
         }
-        protected internal override void LoadContent(ContentManager content)
+        protected internal sealed override void LoadContent(ContentManager content)
         {
             this.gameContent = content;
+
+            LoadSharedContent(content);
             for (int i = 0; i < controls.Count; i++)
                 controls[i].LoadContent(content);
         }
-        protected internal override void UnloadLocalContent(ContentManager content)
+        protected internal sealed override void UnloadLocalContent(ContentManager content)
         {
             if (content != this.content)
                 throw new InvalidOperationException("Trying to unload content using different ContentManager.");
 
             for (int i = 0; i < controls.Count; i++)
                 controls[i].UnloadLocalContent(content);
+            UnloadSharedLocalContent(content);
+
             this.content = null;
         }
-        protected internal override void UnloadContent(ContentManager content)
+        protected internal sealed override void UnloadContent(ContentManager content)
         {
             if (content != this.gameContent)
                 throw new InvalidOperationException("Trying to unload content using different ContentManager.");
 
             for (int i = 0; i < controls.Count; i++)
                 controls[i].UnloadContent(content);
+            UnloadSharedContent(content);
+
             this.gameContent = null;
         }
 
