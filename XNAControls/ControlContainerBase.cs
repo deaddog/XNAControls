@@ -26,25 +26,34 @@ namespace XNAControls
             get { return controls; }
         }
 
-        protected sealed override void LoadLocalContent(ContentManager content)
+        protected internal sealed override void LoadLocalContent(ContentManager content)
         {
             this.content = content;
-            //Remaining load is handled by LoadContent, as it is always called lastly
+            //Handle local content load
+            throw new NotImplementedException();
         }
-        protected sealed override void LoadContent(ContentManager content)
+        protected internal override void LoadContent(ContentManager content)
         {
             this.gameContent = content;
             //Handle content load
             throw new NotImplementedException();
         }
-        protected sealed override void UnloadLocalContent(ContentManager content)
+        protected internal override void UnloadLocalContent(ContentManager content)
         {
-            //Ignore, this is handled by UnloadContent, as it is always called lastly
+            if (content != this.content)
+                throw new InvalidOperationException("Trying to unload content using different ContentManager.");
+
+            //Handle local content unload
+            this.content = null;
+            throw new NotImplementedException();
         }
-        protected sealed override void UnloadContent(ContentManager content)
+        protected internal override void UnloadContent(ContentManager content)
         {
-            //Unload all
-            //clear content references
+            if (content != this.gameContent)
+                throw new InvalidOperationException("Trying to unload content using different ContentManager.");
+
+            //Handle content unload
+            this.gameContent = null;
             throw new NotImplementedException();
         }
 

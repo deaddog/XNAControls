@@ -121,7 +121,10 @@ namespace XNAControls
             this.spriteBatch = new SpriteBatch(graphicsDevice);
 
             for (int i = 0; i < controls.Count; i++)
-                controls[i].LoadResources(content, gameContent);
+            {
+                controls[i].LoadLocalContent(content);
+                controls[i].LoadContent(gameContent);
+            }
 
             LoadContent(content);
         }
@@ -135,7 +138,10 @@ namespace XNAControls
             this.spriteBatch.Dispose();
 
             for (int i = 0; i < controls.Count; i++)
-                controls[i].UnloadResources(content, gameContent);
+            {
+                controls[i].UnloadLocalContent(content);
+                controls[i].UnloadContent(gameContent);
+            }
 
             UnloadContent(content);
         }
@@ -259,14 +265,20 @@ namespace XNAControls
             {
                 list.Add(control);
                 if (manager.contentLoaded)
-                    control.LoadResources(manager.content, manager.gameContent);
+                {
+                    control.LoadLocalContent(manager.content);
+                    control.LoadContent(manager.gameContent);
+                }
             }
             public bool Remove(Control control)
             {
                 if (list.Contains(control))
                 {
                     if (manager.contentLoaded)
-                        control.UnloadResources(manager.content, manager.gameContent);
+                    {
+                        control.UnloadLocalContent(manager.content);
+                        control.UnloadContent(manager.gameContent);
+                    }
                     list.Remove(control);
                     return true;
                 }
