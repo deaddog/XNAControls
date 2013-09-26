@@ -29,38 +29,47 @@ namespace XNAControls
         protected internal sealed override void LoadLocalContent(ContentManager content)
         {
             this.content = content;
-            //Handle local content load
-            throw new NotImplementedException();
+            for (int i = 0; i < controls.Count; i++)
+                controls[i].LoadLocalContent(content);
         }
         protected internal override void LoadContent(ContentManager content)
         {
             this.gameContent = content;
-            //Handle content load
-            throw new NotImplementedException();
+            for (int i = 0; i < controls.Count; i++)
+                controls[i].LoadContent(content);
         }
         protected internal override void UnloadLocalContent(ContentManager content)
         {
             if (content != this.content)
                 throw new InvalidOperationException("Trying to unload content using different ContentManager.");
 
-            //Handle local content unload
+            for (int i = 0; i < controls.Count; i++)
+                controls[i].UnloadLocalContent(content);
             this.content = null;
-            throw new NotImplementedException();
         }
         protected internal override void UnloadContent(ContentManager content)
         {
             if (content != this.gameContent)
                 throw new InvalidOperationException("Trying to unload content using different ContentManager.");
 
-            //Handle content unload
+            for (int i = 0; i < controls.Count; i++)
+                controls[i].UnloadContent(content);
             this.gameContent = null;
-            throw new NotImplementedException();
         }
 
         public class ControlCollection : IEnumerable<Control>
         {
             private ControlContainerBase container;
             private List<Control> list;
+
+            private bool LocalLoaded
+            {
+                get { return container == null ? false : container.content != null; }
+            }
+            private bool GameLoaded
+            {
+                get { return container == null ? false : container.gameContent != null; }
+            }
 
             internal ControlCollection(ControlContainerBase container)
             {
@@ -81,17 +90,19 @@ namespace XNAControls
             public void Add(Control control)
             {
                 list.Add(control);
-                if (container.contentLoaded)
-                    //Load control resources
-                throw new NotImplementedException();
+                if (GameLoaded)
+                    container.LoadContent(container.gameContent);
+                if (LocalLoaded)
+                    control.LoadLocalContent(container.content);
             }
             public bool Remove(Control control)
             {
                 if (list.Contains(control))
                 {
-                    if (container.contentLoaded)
-                        //Unload control resources
-                    throw new NotImplementedException();
+                    if (GameLoaded)
+                        container.UnloadContent(container.gameContent);
+                    if (LocalLoaded)
+                        control.UnloadLocalContent(container.content);
                     list.Remove(control);
                     return true;
                 }
