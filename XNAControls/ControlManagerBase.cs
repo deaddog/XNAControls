@@ -10,8 +10,6 @@ namespace XNAControls
 {
     public abstract class ControlManagerBase : ControlContainerBase, IDrawableGameComponent
     {
-        private ControlCollection controls;
-
         private SpriteBatch spriteBatch;
         private GraphicsDevice graphicsDevice;
 
@@ -28,8 +26,6 @@ namespace XNAControls
         public ControlManagerBase(Game game, string contentRoot)
             : base(0, 0)
         {
-            this.controls = new ControlCollection(this);
-
             this.graphicsDevice = game.GraphicsDevice;
 
             KeyboardInput.Initialize(game.Window);
@@ -43,8 +39,6 @@ namespace XNAControls
         public ControlManagerBase(IntPtr controlHandle, IServiceProvider services, string contentRoot, GraphicsDevice graphicsDevice)
             : base(0, 0)
         {
-            this.controls = new ControlCollection(this);
-
             this.graphicsDevice = graphicsDevice;
 
             KeyboardInput.Initialize(controlHandle);
@@ -72,17 +66,12 @@ namespace XNAControls
                 keyboardControl.Message(ControlMessages.KEYBOARD_KEYUP, (int)e.KeyCode, 0 + (e.Shift ? 1 : 0) + (e.Control ? 2 : 0));
         }
 
-        public ControlCollection Controls
-        {
-            get { return controls; }
-        }
-
         public Control KeyboardControl
         {
             get { return this.keyboardControl; }
             set
             {
-                if (value != null && !controls.Contains(value))
+                if (value != null && !Controls.Contains(value))
                     throw new InvalidOperationException("Control \"" + value.GetType().Name + "\" is not contained by this " + this.GetType().Name);
 
                 if (this.keyboardControl != value)
@@ -122,8 +111,8 @@ namespace XNAControls
 
         public void Draw(GameTime gameTime)
         {
-            for (int i = 0; i < controls.Count; i++)
-                controls[i].Draw(spriteBatch, gameTime);
+            for (int i = 0; i < Controls.Count; i++)
+                Controls[i].Draw(spriteBatch, gameTime);
         }
 
         private int buttonState(MouseState ms)
@@ -150,7 +139,7 @@ namespace XNAControls
             ms = new MouseState(ms.X + mouseOffsetX, ms.Y + mouseOffsetY, ms.ScrollWheelValue, ms.LeftButton, ms.MiddleButton, ms.RightButton, ms.XButton1, ms.XButton2);
             Vector2 point = new Vector2(ms.X, ms.Y);
 
-            Control c = downControls[0] ?? downControls[1] ?? downControls[2] ?? (from control in controls.Reverse() where control.IsInside(point) select control).FirstOrDefault();
+            Control c = downControls[0] ?? downControls[1] ?? downControls[2] ?? (from control in Controls.Reverse() where control.IsInside(point) select control).FirstOrDefault();
             if (c != lastHoveredControl)
             {
                 if (lastHoveredControl != null)
@@ -190,8 +179,8 @@ namespace XNAControls
 
             lastHoveredControl = c;
 
-            for (int i = 0; i < controls.Count; i++)
-                controls[i].Update(gameTime);
+            for (int i = 0; i < Controls.Count; i++)
+                Controls[i].Update(gameTime);
 
             oldMouseState = ms;
         }
@@ -209,76 +198,6 @@ namespace XNAControls
                     c.Message(ControlMessages.MOUSE_CLICK, parameters);
                 downControls[button] = null;
             }
-        }
-
-        public class ControlCollection : IEnumerable<Control>
-        {
-            private ControlManagerBase manager;
-            private List<Control> list;
-
-            internal ControlCollection(ControlManagerBase manager)
-            {
-                this.manager = manager;
-                this.list = new List<Control>();
-            }
-
-            public Control this[int index]
-            {
-                get { return list[index]; }
-            }
-
-            public int Count
-            {
-                get { return list.Count; }
-            }
-
-            public void Add(Control control)
-            {
-                list.Add(control);
-                if (manager.contentLoaded)
-                {
-                    control.LoadLocalContent(manager.content);
-                    control.LoadContent(manager.gameContent);
-                }
-            }
-            public bool Remove(Control control)
-            {
-                if (list.Contains(control))
-                {
-                    if (manager.contentLoaded)
-                    {
-                        control.UnloadLocalContent(manager.content);
-                        control.UnloadContent(manager.gameContent);
-                    }
-                    list.Remove(control);
-                    return true;
-                }
-                else
-                    return false;
-            }
-
-            public bool Contains(Control control)
-            {
-                return list.Contains(control);
-            }
-
-            #region IEnumerable<Control> Members
-
-            public IEnumerator<Control> GetEnumerator()
-            {
-                return list.GetEnumerator();
-            }
-
-            #endregion
-
-            #region IEnumerable Members
-
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            {
-                return list.GetEnumerator();
-            }
-
-            #endregion
         }
 
         #region IDrawable Members

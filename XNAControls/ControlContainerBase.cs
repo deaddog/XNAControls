@@ -76,6 +76,17 @@ namespace XNAControls
             this.gameContent = null;
         }
 
+        public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        {
+            for (int i = 0; i < controls.Count; i++)
+                controls[i].Draw(spriteBatch, gameTime);
+        }
+        public override void Update(GameTime gameTime)
+        {
+            for (int i = 0; i < controls.Count; i++)
+                controls[i].Update(gameTime);
+        }
+
         public class ControlCollection : IEnumerable<Control>
         {
             private ControlContainerBase container;
