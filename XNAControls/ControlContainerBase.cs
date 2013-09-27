@@ -9,7 +9,6 @@ namespace XNAControls
 {
     public class ControlContainerBase : Control
     {
-        private bool contentLoaded;
         private ControlCollection controls;
         private ContentManager content;
         private ContentManager gameContent;
@@ -17,7 +16,6 @@ namespace XNAControls
         public ControlContainerBase(float initialwidth, float initialheight)
             : base(initialwidth, initialheight)
         {
-            this.contentLoaded = false;
             this.controls = new ControlCollection(this);
         }
 

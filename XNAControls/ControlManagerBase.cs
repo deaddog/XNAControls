@@ -8,15 +8,11 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XNAControls
 {
-    public abstract class ControlManagerBase : IDrawableGameComponent
+    public abstract class ControlManagerBase : ControlContainerBase, IDrawableGameComponent
     {
         private ControlCollection controls;
 
-        private bool contentLoaded;
-        private ContentManager content;
-        private ContentManager gameContent;
         private SpriteBatch spriteBatch;
-
         private GraphicsDevice graphicsDevice;
 
         private Control keyboardControl = null;
@@ -30,9 +26,8 @@ namespace XNAControls
         }
 
         public ControlManagerBase(Game game, string contentRoot)
+            : base(0, 0)
         {
-            this.contentLoaded = false;
-            this.content = new ContentManager(game.Services, contentRoot);
             this.controls = new ControlCollection(this);
 
             this.graphicsDevice = game.GraphicsDevice;
@@ -41,13 +36,13 @@ namespace XNAControls
             KeyboardInput.CharacterEntered += characterEntered;
             KeyboardInput.KeyDown += keyDown;
             KeyboardInput.KeyUp += keyUp;
+
+            base.LoadLocalContent(new ContentManager(game.Services, contentRoot));
         }
 
         public ControlManagerBase(IntPtr controlHandle, IServiceProvider services, string contentRoot, GraphicsDevice graphicsDevice)
+            : base(0, 0)
         {
-            this.contentLoaded = false;
-            this.content = new ContentManager(services, contentRoot);
-            this.gameContent = new ContentManager(services, "Content");
             this.controls = new ControlCollection(this);
 
             this.graphicsDevice = graphicsDevice;
@@ -57,7 +52,8 @@ namespace XNAControls
             KeyboardInput.KeyDown += keyDown;
             KeyboardInput.KeyUp += keyUp;
 
-            LoadContent();
+            base.LoadLocalContent(new ContentManager(services, contentRoot));
+            base.LoadContent(new ContentManager(services, "Content"));
         }
 
         private void characterEntered(object sender, CharacterEventArgs e)
@@ -107,46 +103,21 @@ namespace XNAControls
 
         void IDrawableGameComponent.LoadContent(ContentManager content)
         {
-            LoadContent(content);
+            base.LoadContent(content);
         }
         void IDrawableGameComponent.UnloadContent(ContentManager content)
         {
-            UnloadContent(content);
+            base.UnloadContent(content);
         }
 
-        internal void LoadContent()
+        protected override void LoadSharedContent(ContentManager content)
         {
-            this.contentLoaded = true;
-
             this.spriteBatch = new SpriteBatch(graphicsDevice);
-
-            for (int i = 0; i < controls.Count; i++)
-            {
-                controls[i].LoadLocalContent(content);
-                controls[i].LoadContent(gameContent);
-            }
-
-            LoadContent(content);
         }
-        protected virtual void LoadContent(ContentManager localContent)
+        protected override void UnloadSharedContent(ContentManager content)
         {
-        }
-        internal void UnloadContent()
-        {
-            this.contentLoaded = false;
-
             this.spriteBatch.Dispose();
-
-            for (int i = 0; i < controls.Count; i++)
-            {
-                controls[i].UnloadLocalContent(content);
-                controls[i].UnloadContent(gameContent);
-            }
-
-            UnloadContent(content);
-        }
-        protected virtual void UnloadContent(ContentManager localContent)
-        {
+            this.spriteBatch = null;
         }
 
         public void Draw(GameTime gameTime)
