@@ -119,7 +119,12 @@ namespace XNAControls
 
             public void Add(Control control)
             {
+                if (control.Parent != null)
+                    control.Parent.controls.Remove(control);
+
+                control.Parent = this.container;
                 list.Add(control);
+
                 if (GameLoaded)
                     container.LoadContent(container.gameContent);
                 if (LocalLoaded)
@@ -127,13 +132,16 @@ namespace XNAControls
             }
             public bool Remove(Control control)
             {
-                if (list.Contains(control))
+                if (control.Parent == this.container)
                 {
                     if (GameLoaded)
                         container.UnloadContent(container.gameContent);
                     if (LocalLoaded)
                         control.UnloadLocalContent(container.content);
+
+                    control.Parent = null;
                     list.Remove(control);
+
                     return true;
                 }
                 else

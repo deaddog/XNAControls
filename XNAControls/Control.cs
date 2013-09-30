@@ -9,6 +9,9 @@ namespace XNAControls
     {
         private bool focused = false;
         private bool enabled;
+
+        private ControlContainerBase parent;
+
         private Vector2 location;
         private Vector2 size;
 
@@ -28,6 +31,16 @@ namespace XNAControls
             set { enabled = value; }
         }
 
+        public ControlContainerBase Parent
+        {
+            get { return parent; }
+            internal set { parent = value; }
+        }
+
+        protected Vector2 OffsetLocation
+        {
+            get { return location + (parent == null ? Vector2.Zero : parent.OffsetLocation); }
+        }
         public Vector2 Location
         {
             get { return location; }
@@ -337,7 +350,7 @@ namespace XNAControls
         }
         public bool IsInside(Vector2 point)
         {
-            point -= this.location;
+            point -= this.OffsetLocation;
             return point.X >= 0 && point.X < this.size.X && point.Y >= 0 && point.Y < this.size.Y;
         }
 
