@@ -144,6 +144,18 @@ namespace XNAControls
             {
                 return list.Contains(control);
             }
+            public bool Contains(Control control, bool recursive)
+            {
+                bool contains = Contains(control);
+                if (contains || !recursive)
+                    return contains;
+                else
+                    for (int i = 0; i < list.Count; i++)
+                        if (list[i] is ControlContainerBase && (list[i] as ControlContainerBase).Controls.Contains(control, true))
+                            return true;
+
+                return false;
+            }
 
             #region IEnumerable<Control> Members
 

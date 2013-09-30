@@ -71,7 +71,7 @@ namespace XNAControls
             get { return this.keyboardControl; }
             set
             {
-                if (value != null && !Controls.Contains(value))
+                if (value != null && !Controls.Contains(value, true))
                     throw new InvalidOperationException("Control \"" + value.GetType().Name + "\" is not contained by this " + this.GetType().Name);
 
                 if (this.keyboardControl != value)
