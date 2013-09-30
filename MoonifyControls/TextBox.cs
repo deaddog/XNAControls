@@ -186,7 +186,7 @@ namespace MoonifyControls
         {
             spriteBatch.Begin();
 
-            box.Draw(spriteBatch, backgroundBox, this.Location, this.Size, Color.White);
+            box.Draw(spriteBatch, backgroundBox, this.OffsetLocation, this.Size, Color.White);
 
             System.DateTime dt = System.DateTime.Now;
             if ((dt - lastCaretSwap).TotalMilliseconds >= delayCaret)
@@ -197,16 +197,16 @@ namespace MoonifyControls
             if (showCaret && this.Focused)
             {
                 int wid = font.TextWidth(text.Substring(0, caretIndex)) ?? 0;
-                spriteBatch.Draw(caret, this.Location + new Vector2(9 + wid, 6), Color.White);
+                spriteBatch.Draw(caret, this.OffsetLocation + new Vector2(9 + wid, 6), Color.White);
             }
 
             if (this.text.Length >= backgroundTextOffset && this.backgroundText.Length > 0)
             {
                 int wid = font.TextWidth(text.Substring(backgroundTextOffset)) ?? 0;
-                font.DrawString(spriteBatch, this.backgroundText, this.Location + new Vector2(11 + wid, 9), new Color(172, 179, 191));
+                font.DrawString(spriteBatch, this.backgroundText, this.OffsetLocation + new Vector2(11 + wid, 9), new Color(172, 179, 191));
             }
-            font.DrawString(spriteBatch, text, this.Location + new Vector2(11, 10), Color.Black * .3f);
-            font.DrawString(spriteBatch, text, this.Location + new Vector2(11, 9), Color.White);
+            font.DrawString(spriteBatch, text, this.OffsetLocation + new Vector2(11, 10), Color.Black * .3f);
+            font.DrawString(spriteBatch, text, this.OffsetLocation + new Vector2(11, 9), Color.White);
 
             Texture2D iconTexture;
             switch (iconType)
@@ -220,7 +220,7 @@ namespace MoonifyControls
 
             if (iconTexture != null)
             {
-                spriteBatch.Draw(iconbackground, this.Location + new Vector2(this.Size.X - 34, 0), Color.White);
+                spriteBatch.Draw(iconbackground, this.OffsetLocation + new Vector2(this.Size.X - 34, 0), Color.White);
                 float xScale = 1, yScale = 1;
                 if (iconTexture.Width > 33) xScale = iconTexture.Width / 33f;
                 if (iconTexture.Height > 30) yScale = iconTexture.Height / 30f;
@@ -229,7 +229,7 @@ namespace MoonifyControls
                 Vector2 pos = (new Vector2(33, 30) - new Vector2(iconTexture.Width, iconTexture.Height)) / 2f
                     + new Vector2(iconTexture.Width, iconTexture.Height) * ((1 - xScale) / 2f);
 
-                spriteBatch.Draw(iconTexture, this.Location + new Vector2(this.Size.X - 33, 0) + pos, Color.White);
+                spriteBatch.Draw(iconTexture, this.OffsetLocation + new Vector2(this.Size.X - 33, 0) + pos, Color.White);
             }
 
             spriteBatch.End();
