@@ -157,6 +157,16 @@ namespace XNAControls
                 return false;
             }
 
+            internal IEnumerable<Control> GetLeafs()
+            {
+                foreach (var control in list)
+                    if (control is ControlContainerBase)
+                        foreach (var c in (control as ControlContainerBase).controls.GetLeafs())
+                            yield return c;
+                    else
+                        yield return control;
+            }
+
             #region IEnumerable<Control> Members
 
             public IEnumerator<Control> GetEnumerator()
