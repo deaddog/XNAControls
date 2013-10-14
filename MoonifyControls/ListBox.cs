@@ -49,11 +49,28 @@ namespace MoonifyControls
                 {
                     int diff = Math.Abs(value - _selectionIndex);
                     float newPosition = 1 + value * 25;
-                    if (diff > 1 || value < 0 || _selectionIndex < 0)
+
+                    float y = value * 25;
+                    if (y + contentOffset < 0)
+                    {
+                        contentOffset = -value * 25;
+                        sliderPosition.CurrentValue = newPosition;
+                    }
+                    else if (y + 25 + contentOffset > this.Height)
+                    {
+                        int c = (int)(this.Height - y - 25);
+                        if ((contentOffset - c) % 25 != 0)
+                            c += -25 + (contentOffset - c) % 25;
+
+                        contentOffset = c;
+                        sliderPosition.CurrentValue = newPosition;
+                    }
+                    else if (diff > 1 || value < 0 || _selectionIndex < 0)
                         sliderPosition.CurrentValue = newPosition;
                     else
                         sliderPosition.TargetValue = newPosition;
                     _selectionIndex = value;
+
                     OnSelectedIndexChanged(EventArgs.Empty);
                 }
             }
