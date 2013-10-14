@@ -315,7 +315,10 @@ namespace MoonifyControls
                         this.Location + new Vector2(1, sliderPosition), new Vector2(this.Size.X - 2, 25), Color.White);
                 }
 
-                for (int i = 0; i < items.Count; i++)
+                int start = -contentOffset / 25;
+                int count = (int)this.Height / 25 + 1;
+
+                for (int i = start; i < items.Count && i - start < count; i++)
                     DrawLine(spriteBatch, items.GetText(i), i);
                 spriteBatch.End();
             }
