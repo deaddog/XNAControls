@@ -153,7 +153,7 @@ namespace MoonifyControls
                 case ControlMessages.MOUSE_MOVE:
                     {
                         int xG = par[0], yG = par[1];
-                        int xL = xG - (int)this.X, yL = yG - (int)this.Y;
+                        int xL = xG - (int)this.OffsetLocation.X, yL = yG - (int)this.OffsetLocation.Y;
                         if (mouseDownY >= 0 && yL >= 22 && yL <= this.Height - 22)
                         {
                             int diff = yG - mouseDownY;
@@ -174,7 +174,7 @@ namespace MoonifyControls
                 case ControlMessages.MOUSE_UP:
                     {
                         int xG = par[0], yG = par[1];
-                        int xL = xG - (int)this.X, yL = yG - (int)this.Y;
+                        int xL = xG - (int)this.OffsetLocation.X, yL = yG - (int)this.OffsetLocation.Y;
 
                         if (xL < this.Width - 16)
                         {
@@ -194,7 +194,7 @@ namespace MoonifyControls
                 case ControlMessages.MOUSE_DOWN:
                     {
                         int xG = par[0], yG = par[1];
-                        int xL = xG - (int)this.X, yL = yG - (int)this.Y;
+                        int xL = xG - (int)this.OffsetLocation.X, yL = yG - (int)this.OffsetLocation.Y;
                         mouseDownIndex = -1;
                         mouseDownY = -1;
 
@@ -317,19 +317,19 @@ namespace MoonifyControls
         {
             Matrix offsetMatrix = Matrix.CreateTranslation(0, _contentOffset, 0);
 
-            if (spriteBatch.Begin(Location.X + 1, Location.Y + 1, Size.X - 9, Size.Y - 2))
+            if (spriteBatch.Begin(OffsetLocation.X + 1, OffsetLocation.Y + 1, Size.X - 9, Size.Y - 2))
             {
-                fillBox.Draw(spriteBatch, fillTexture, this.Location, this.Size, Color.White);
+                fillBox.Draw(spriteBatch, fillTexture, this.OffsetLocation, this.Size, Color.White);
                 spriteBatch.End();
             }
 
-            if (spriteBatch.Begin(Location.X + 1, Location.Y + 1, Size.X - 9, Size.Y - 2, offsetMatrix))
+            if (spriteBatch.Begin(OffsetLocation.X + 1, OffsetLocation.Y + 1, Size.X - 9, Size.Y - 2, offsetMatrix))
             {
                 if (selectionIndex >= 0)
                 {
                     sliderPosition.Update();
                     selectionBox.Draw(spriteBatch, selectionTexture,
-                        this.Location + new Vector2(1, sliderPosition), new Vector2(this.Size.X - 2, 25), Color.White);
+                        this.OffsetLocation + new Vector2(1, sliderPosition), new Vector2(this.Size.X - 2, 25), Color.White);
                 }
 
                 int start = -contentOffset / 25;
@@ -340,16 +340,16 @@ namespace MoonifyControls
                 spriteBatch.End();
             }
 
-            if (spriteBatch.Begin(Location.X - 2, Location.Y, Size.X - 6, Size.Y + 2))
+            if (spriteBatch.Begin(OffsetLocation.X - 2, OffsetLocation.Y, Size.X - 6, Size.Y + 2))
             {
-                frameBox.Draw(spriteBatch, frameTexture, this.Location, this.Size, Color.White);
+                frameBox.Draw(spriteBatch, frameTexture, this.OffsetLocation, this.Size, Color.White);
                 spriteBatch.End();
             }
 
             spriteBatch.Begin();
 
-            scrollBarBox.Draw(spriteBatch, scrollBarTexture, this.Location + barBarPosition, barBarSize, Color.White);
-            scrollSliderBox.Draw(spriteBatch, scrollSliderTexture, this.Location + barSliderPosition, barSliderSize, Color.White);
+            scrollBarBox.Draw(spriteBatch, scrollBarTexture, this.OffsetLocation + barBarPosition, barBarSize, Color.White);
+            scrollSliderBox.Draw(spriteBatch, scrollSliderTexture, this.OffsetLocation + barSliderPosition, barSliderSize, Color.White);
             spriteBatch.End();
         }
 
@@ -359,7 +359,7 @@ namespace MoonifyControls
         }
         private void DrawLine(SpriteBatch spriteBatch, string text, int index, bool active)
         {
-            Vector2 pText = this.Location + new Vector2(12, 7 + index * 25);
+            Vector2 pText = this.OffsetLocation + new Vector2(12, 7 + index * 25);
             Vector2 pBlack = pText + new Vector2(0, 1);
 
             font.DrawString(spriteBatch, text, pBlack, Color.Black * .3f);
@@ -383,10 +383,10 @@ namespace MoonifyControls
         {
             if (!IsInside(point))
                 return -1;
-            if ((this.Size.Y - 2) % 25 == 0 && point.Y - this.Location.Y + 1 == this.Size.Y)
+            if ((this.Size.Y - 2) % 25 == 0 && point.Y - this.OffsetLocation.Y + 1 == this.Size.Y)
                 return -1;
 
-            point -= (this.Location + Vector2.One);
+            point -= (this.OffsetLocation + Vector2.One);
             int index = (int)(point.Y - _contentOffset) / 25;
             return index < items.Count ? index : -1;
         }

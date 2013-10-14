@@ -93,13 +93,13 @@ namespace MoonifyControls
         {
             spriteBatch.Begin();
 
-            backgroundBox.Draw(spriteBatch, backgroundTexture, this.Location, this.Size, Color.White);
+            backgroundBox.Draw(spriteBatch, backgroundTexture, this.OffsetLocation, this.Size, Color.White);
 
             foreach (var img in textures)
-                img.Draw(spriteBatch, this.Location, this.Size, Color.White);
+                img.Draw(spriteBatch, this.OffsetLocation, this.Size, Color.White);
 
             if (loadAlpha > 0)
-                loadingIcon.Draw(spriteBatch, gameTime, this.Location + (this.Size / 2), new Vector2(60, 60), Color.White * loadAlpha);
+                loadingIcon.Draw(spriteBatch, gameTime, this.OffsetLocation + (this.Size / 2), new Vector2(60, 60), Color.White * loadAlpha);
 
             spriteBatch.End();
         }

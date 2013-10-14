@@ -180,7 +180,7 @@ namespace MoonifyControls
                 default:
                     throw new NotImplementedException();
             }
-            point -= this.Location + new Vector2(handlePos, yOffset) + posOffset;
+            point -= this.OffsetLocation + new Vector2(handlePos, yOffset) + posOffset;
             return point.X >= 0 && point.X < sizeofHandle.X && point.Y >= 0 && point.Y < sizeofHandle.Y;
         }
 
@@ -231,7 +231,7 @@ namespace MoonifyControls
             mouseDown = false;
             this.xOffset.CurrentValue = this.xOffset.CurrentValue + moveCurrent - moveOrigin;
             moveOrigin = moveCurrent = 0;
-            float x = pos.X - this.Location.X;
+            float x = pos.X - this.OffsetLocation.X;
 
             if (x < Math.Abs(this.Size.X - x))
                 this.Left = true;
@@ -254,14 +254,14 @@ namespace MoonifyControls
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             spriteBatch.Begin();
-            box.Draw(spriteBatch, boxTexture, this.Location, this.Size, Color.White);
+            box.Draw(spriteBatch, boxTexture, this.OffsetLocation, this.Size, Color.White);
 
             float handleX = xOffset + moveCurrent - moveOrigin;
             if (handleX < xMin)
                 handleX = xMin;
             else if (handleX > xMax)
                 handleX = xMax;
-            spriteBatch.Draw(handleTexture, this.Location + new Vector2(handleX, yOffset), handleRectangle, Enabled ? Color.White : Color.Gray);
+            spriteBatch.Draw(handleTexture, this.OffsetLocation + new Vector2(handleX, yOffset), handleRectangle, Enabled ? Color.White : Color.Gray);
             spriteBatch.End();
         }
     }
