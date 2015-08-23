@@ -23,31 +23,29 @@ namespace XNAControls
             this.mouseOffsetY = y;
         }
 
-        public ControlManagerBase(Game game, string contentRoot)
-            : base(0, 0)
-        {
-            this.graphicsDevice = game.GraphicsDevice;
-
-            KeyboardInput.Initialize(game.Window);
-            KeyboardInput.CharacterEntered += characterEntered;
-            KeyboardInput.KeyDown += keyDown;
-            KeyboardInput.KeyUp += keyUp;
-
-            base.LoadLocalContent(new ContentManager(game.Services, contentRoot));
-        }
-
-        public ControlManagerBase(IntPtr controlHandle, IServiceProvider services, string contentRoot, GraphicsDevice graphicsDevice)
+        private ControlManagerBase(string contentRoot, GraphicsDevice graphicsDevice, IServiceProvider services)
             : base(0, 0)
         {
             this.graphicsDevice = graphicsDevice;
 
-            KeyboardInput.Initialize(controlHandle);
             KeyboardInput.CharacterEntered += characterEntered;
             KeyboardInput.KeyDown += keyDown;
             KeyboardInput.KeyUp += keyUp;
 
             base.LoadLocalContent(new ContentManager(services, contentRoot));
             base.LoadContent(new ContentManager(services, "Content"));
+        }
+
+        public ControlManagerBase(Game game, string contentRoot)
+            : this(contentRoot, game.GraphicsDevice, game.Services)
+        {
+            KeyboardInput.Initialize(game.Window);
+        }
+
+        public ControlManagerBase(IntPtr controlHandle, IServiceProvider services, string contentRoot, GraphicsDevice graphicsDevice)
+            : this(contentRoot, graphicsDevice, services)
+        {
+            KeyboardInput.Initialize(controlHandle);
         }
 
         private void characterEntered(object sender, CharacterEventArgs e)
