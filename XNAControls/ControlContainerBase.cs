@@ -10,13 +10,13 @@ namespace XNAControls
     public class ControlContainerBase : Control
     {
         private ControlCollection controls;
-        private ContentManager content;
-        private ContentManager gameContent;
+        private ContentManagers content;
 
         public ControlContainerBase(float initialwidth, float initialheight)
             : base(initialwidth, initialheight)
         {
             this.controls = new ControlCollection(this);
+            this.content = null;
         }
 
         public ControlCollection Controls
@@ -27,47 +27,28 @@ namespace XNAControls
         protected virtual void LoadSharedContent(ContentManagers content)
         {
         }
-        protected virtual void UnloadSharedContent()
+        protected virtual void UnloadSharedContent(ContentManagers content)
         {
         }
 
-        protected internal sealed override void LoadLocalContent(ContentManager content)
+        protected internal sealed override void LoadContent(ContentManagers content)
         {
             this.content = content;
-
-            LoadSharedLocalContent(content);
-            for (int i = 0; i < controls.Count; i++)
-                controls[i].LoadLocalContent(content);
-        }
-        protected internal sealed override void LoadContent(ContentManager content)
-        {
-            this.gameContent = content;
 
             LoadSharedContent(content);
             for (int i = 0; i < controls.Count; i++)
                 controls[i].LoadContent(content);
         }
-        protected internal sealed override void UnloadLocalContent(ContentManager content)
+        protected internal sealed override void UnloadContent(ContentManagers content)
         {
             if (content != this.content)
-                throw new InvalidOperationException("Trying to unload content using different ContentManager.");
-
-            for (int i = 0; i < controls.Count; i++)
-                controls[i].UnloadLocalContent(content);
-            UnloadSharedLocalContent(content);
-
-            this.content = null;
-        }
-        protected internal sealed override void UnloadContent(ContentManager content)
-        {
-            if (content != this.gameContent)
                 throw new InvalidOperationException("Trying to unload content using different ContentManager.");
 
             for (int i = 0; i < controls.Count; i++)
                 controls[i].UnloadContent(content);
             UnloadSharedContent(content);
 
-            this.gameContent = null;
+            this.content = null;
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
