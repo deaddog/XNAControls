@@ -126,7 +126,7 @@ namespace XNAControls
                 list.Add(control);
 
                 if (GameLoaded)
-                    container.LoadContent(container.gameContent);
+                    control.LoadContent(container.gameContent);
                 if (LocalLoaded)
                     control.LoadLocalContent(container.content);
             }
@@ -135,7 +135,7 @@ namespace XNAControls
                 if (control.Parent == this.container)
                 {
                     if (GameLoaded)
-                        container.UnloadContent(container.gameContent);
+                        control.UnloadContent(container.gameContent);
                     if (LocalLoaded)
                         control.UnloadLocalContent(container.content);
 
