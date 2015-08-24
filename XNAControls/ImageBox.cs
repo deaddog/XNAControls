@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace XNAControls
 {
-    public class ImageBox : Control
+    public abstract class ImageBox : Control
     {
         private static DeadDog.GUI.IMoveMethods showMethod = new DeadDog.GUI.MoveSineLine(1, 1);
         private static DeadDog.GUI.IMoveMethods hideMethod = new DeadDog.GUI.MoveSineLine(1, 5);
@@ -87,7 +87,7 @@ namespace XNAControls
             loadingIcon = new LoadingIcon(content, LoadingIconTypes.Type1);
         }
 
-        public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        public sealed override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             spriteBatch.Begin();
 
@@ -101,7 +101,7 @@ namespace XNAControls
 
             spriteBatch.End();
         }
-        public override void Update(GameTime gameTime)
+        public sealed override void Update(GameTime gameTime)
         {
             if (pending != null && pending.State.HasFlag(DataLoadState.Complete))
             {
@@ -117,6 +117,11 @@ namespace XNAControls
             if (textures.Count > 0 && textures.Last.Value.Full)
                 while (textures.Count > 1)
                     textures.RemoveFirst();
+
+            UpdateImage(gameTime);
+        }
+        protected virtual void UpdateImage(GameTime gameTime)
+        {
         }
 
         private class AlphaImage
