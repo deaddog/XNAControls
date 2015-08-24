@@ -94,7 +94,7 @@ namespace XNAControls
             DrawBackground(spriteBatch, gameTime, OffsetLocation, Size);
 
             foreach (var img in textures)
-                img.Draw(spriteBatch, this.OffsetLocation, this.Size, Color.White);
+                img.Draw(spriteBatch, gameTime, this.OffsetLocation, this.Size);
 
             if (loadAlpha > 0)
                 DrawLoading(spriteBatch, gameTime, OffsetLocation, Size, loadAlpha.CurrentValue);
@@ -104,9 +104,13 @@ namespace XNAControls
             spriteBatch.End();
         }
 
+        protected abstract void DrawImage(SpriteBatch spriteBatch, GameTime gameTime, Texture2D image, Vector2 position, Vector2 size, float alpha);
+
         protected abstract void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position, Vector2 size);
         protected abstract void DrawLoading(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position, Vector2 size, float alpha);
         protected abstract void DrawForeground(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position, Vector2 size);
+
+        protected abstract Vector4 ImageMargins { get; }
 
         public sealed override void Update(GameTime gameTime)
         {
@@ -168,15 +172,16 @@ namespace XNAControls
                 get { return texture; }
             }
 
-            public void Draw(SpriteBatch spritebatch, Vector2 location, Vector2 size, Color color)
+            public void Draw(SpriteBatch spritebatch, GameTime gameTime, Vector2 location, Vector2 size)
             {
-                Vector2 scale = size - new Vector2(10, 10);
-                scale /= new Vector2(texture.Width, texture.Height);
+                var margins = owner.ImageMargins;
+
+                location += new Vector2(margins.X, margins.Y);
+                size -= new Vector2(margins.X + margins.Z, margins.Y + margins.W);
 
                 alpha.Update();
-                color *= alpha.CurrentValue;
 
-                spritebatch.Draw(texture, location + new Vector2(5, 5), null, color, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
+                owner.DrawImage(spritebatch, gameTime, texture, location, size, alpha.CurrentValue);
             }
         }
     }
