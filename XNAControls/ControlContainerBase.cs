@@ -67,14 +67,7 @@ namespace XNAControls
             private ControlContainerBase container;
             private List<Control> list;
 
-            private bool LocalLoaded
-            {
-                get { return container == null ? false : container.content != null; }
-            }
-            private bool GameLoaded
-            {
-                get { return container == null ? false : container.gameContent != null; }
-            }
+            private bool ContentLoaded => container?.content != null;
 
             internal ControlCollection(ControlContainerBase container)
             {
@@ -100,19 +93,15 @@ namespace XNAControls
                 control.Parent = this.container;
                 list.Add(control);
 
-                if (GameLoaded)
-                    control.LoadContent(container.gameContent);
-                if (LocalLoaded)
-                    control.LoadLocalContent(container.content);
+                if (ContentLoaded)
+                    control.LoadContent(container.content);
             }
             public bool Remove(Control control)
             {
                 if (control.Parent == this.container)
                 {
-                    if (GameLoaded)
-                        control.UnloadContent(container.gameContent);
-                    if (LocalLoaded)
-                        control.UnloadLocalContent(container.content);
+                    if (ContentLoaded)
+                        control.UnloadContent(container.content);
 
                     control.Parent = null;
                     list.Remove(control);
