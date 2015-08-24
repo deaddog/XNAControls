@@ -210,17 +210,17 @@ namespace XNAControls
 
         #region IDrawable Members
 
-        public int DrawOrder
+        int IDrawable.DrawOrder
         {
             get { return 0; }
         }
-        public event EventHandler<EventArgs> DrawOrderChanged;
+        event EventHandler<EventArgs> IDrawable.DrawOrderChanged { add { } remove { } }
 
-        public bool Visible
+        bool IDrawable.Visible
         {
             get { return true; }
         }
-        public event EventHandler<EventArgs> VisibleChanged;
+        event EventHandler<EventArgs> IDrawable.VisibleChanged { add { } remove { } }
 
         #endregion
 
