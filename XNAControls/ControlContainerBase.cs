@@ -27,7 +27,7 @@ namespace XNAControls
         protected virtual void LoadSharedContent(ContentManagers content)
         {
         }
-        protected virtual void UnloadSharedContent(ContentManagers content)
+        protected virtual void UnloadSharedContent()
         {
         }
 
@@ -39,14 +39,11 @@ namespace XNAControls
             for (int i = 0; i < controls.Count; i++)
                 controls[i].LoadContent(content);
         }
-        protected internal sealed override void UnloadContent(ContentManagers content)
+        protected internal sealed override void UnloadContent()
         {
-            if (content != this.content)
-                throw new InvalidOperationException("Trying to unload content using different ContentManager.");
-
             for (int i = 0; i < controls.Count; i++)
-                controls[i].UnloadContent(content);
-            UnloadSharedContent(content);
+                controls[i].UnloadContent();
+            UnloadSharedContent();
 
             this.content = null;
         }
@@ -101,7 +98,7 @@ namespace XNAControls
                 if (control.Parent == this.container)
                 {
                     if (ContentLoaded)
-                        control.UnloadContent(container.content);
+                        control.UnloadContent();
 
                     control.Parent = null;
                     list.Remove(control);

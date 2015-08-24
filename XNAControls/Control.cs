@@ -329,7 +329,7 @@ namespace XNAControls
         protected internal virtual void LoadContent(ContentManagers content)
         {
         }
-        protected internal virtual void UnloadContent(ContentManagers content)
+        protected internal virtual void UnloadContent()
         {
         }
 

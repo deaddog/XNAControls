@@ -98,7 +98,7 @@ namespace XNAControls
         protected virtual void LoadManagerContent(ContentManagers content)
         {
         }
-        protected virtual void UnloadManagerContent(ContentManagers content)
+        protected virtual void UnloadManagerContent()
         {
         }
 
@@ -107,9 +107,9 @@ namespace XNAControls
             this.spriteBatch = new SpriteBatch(graphicsDevice);
             LoadManagerContent(content);
         }
-        protected sealed override void UnloadSharedContent(ContentManagers content)
+        protected sealed override void UnloadSharedContent()
         {
-            UnloadManagerContent(content);
+            UnloadManagerContent();
             this.spriteBatch.Dispose();
             this.spriteBatch = null;
         }

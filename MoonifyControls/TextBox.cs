@@ -174,7 +174,7 @@ namespace MoonifyControls
 
             font = new CharacterRenderer("HelveticaNeueLT Com 65 Md", 9f, System.Drawing.FontStyle.Regular, System.Drawing.Text.TextRenderingHint.AntiAlias);
         }
-        protected override void UnloadContent(ContentManagers content)
+        protected override void UnloadContent()
         {
             (font as IDisposable).Dispose();
             font = null;
