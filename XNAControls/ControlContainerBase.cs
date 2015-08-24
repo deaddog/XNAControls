@@ -10,13 +10,13 @@ namespace XNAControls
     public class ControlContainerBase : Control
     {
         private ControlCollection controls;
-        private ContentManager content;
-        private ContentManager gameContent;
+        private ContentManagers content;
 
         public ControlContainerBase(float initialwidth, float initialheight)
             : base(initialwidth, initialheight)
         {
             this.controls = new ControlCollection(this);
+            this.content = null;
         }
 
         public ControlCollection Controls
@@ -24,56 +24,28 @@ namespace XNAControls
             get { return controls; }
         }
 
-        protected virtual void LoadSharedContent(ContentManager content)
+        protected virtual void LoadSharedContent(ContentManagers content)
         {
         }
-        protected virtual void LoadSharedLocalContent(ContentManager content)
-        {
-        }
-        protected virtual void UnloadSharedContent(ContentManager content)
-        {
-        }
-        protected virtual void UnloadSharedLocalContent(ContentManager content)
+        protected virtual void UnloadSharedContent()
         {
         }
 
-        protected internal sealed override void LoadLocalContent(ContentManager content)
+        protected internal sealed override void LoadContent(ContentManagers content)
         {
             this.content = content;
-
-            LoadSharedLocalContent(content);
-            for (int i = 0; i < controls.Count; i++)
-                controls[i].LoadLocalContent(content);
-        }
-        protected internal sealed override void LoadContent(ContentManager content)
-        {
-            this.gameContent = content;
 
             LoadSharedContent(content);
             for (int i = 0; i < controls.Count; i++)
                 controls[i].LoadContent(content);
         }
-        protected internal sealed override void UnloadLocalContent(ContentManager content)
+        protected internal sealed override void UnloadContent()
         {
-            if (content != this.content)
-                throw new InvalidOperationException("Trying to unload content using different ContentManager.");
-
             for (int i = 0; i < controls.Count; i++)
-                controls[i].UnloadLocalContent(content);
-            UnloadSharedLocalContent(content);
+                controls[i].UnloadContent();
+            UnloadSharedContent();
 
             this.content = null;
-        }
-        protected internal sealed override void UnloadContent(ContentManager content)
-        {
-            if (content != this.gameContent)
-                throw new InvalidOperationException("Trying to unload content using different ContentManager.");
-
-            for (int i = 0; i < controls.Count; i++)
-                controls[i].UnloadContent(content);
-            UnloadSharedContent(content);
-
-            this.gameContent = null;
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -92,14 +64,7 @@ namespace XNAControls
             private ControlContainerBase container;
             private List<Control> list;
 
-            private bool LocalLoaded
-            {
-                get { return container == null ? false : container.content != null; }
-            }
-            private bool GameLoaded
-            {
-                get { return container == null ? false : container.gameContent != null; }
-            }
+            private bool ContentLoaded => container?.content != null;
 
             internal ControlCollection(ControlContainerBase container)
             {
@@ -125,19 +90,15 @@ namespace XNAControls
                 control.Parent = this.container;
                 list.Add(control);
 
-                if (GameLoaded)
-                    container.LoadContent(container.gameContent);
-                if (LocalLoaded)
-                    control.LoadLocalContent(container.content);
+                if (ContentLoaded)
+                    control.LoadContent(container.content);
             }
             public bool Remove(Control control)
             {
                 if (control.Parent == this.container)
                 {
-                    if (GameLoaded)
-                        container.UnloadContent(container.gameContent);
-                    if (LocalLoaded)
-                        control.UnloadLocalContent(container.content);
+                    if (ContentLoaded)
+                        control.UnloadContent();
 
                     control.Parent = null;
                     list.Remove(control);

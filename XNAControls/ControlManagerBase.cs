@@ -8,10 +8,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XNAControls
 {
-    public abstract class ControlManagerBase : ControlContainerBase, IDrawableGameComponent
+    public abstract class ControlManagerBase : ControlContainerBase, IGameComponent, IDrawable, IUpdateable
     {
         private SpriteBatch spriteBatch;
         private GraphicsDevice graphicsDevice;
+
+        private ContentManager containerContent;
 
         private Control keyboardControl = null;
 
@@ -32,8 +34,13 @@ namespace XNAControls
             KeyboardInput.KeyDown += keyDown;
             KeyboardInput.KeyUp += keyUp;
 
-            base.LoadLocalContent(new ContentManager(services, contentRoot));
-            base.LoadContent(new ContentManager(services, "Content"));
+            this.containerContent = new ContentManager(services, contentRoot);
+
+            ContentManagers managers = new ContentManagers(
+                containerContent,
+                new ContentManager(services, "Content")
+                );
+            base.LoadContent(managers);
         }
 
         public ControlManagerBase(Game game, string contentRoot)
@@ -88,21 +95,21 @@ namespace XNAControls
         {
         }
 
-        void IDrawableGameComponent.LoadContent(ContentManager content)
+        protected virtual void LoadManagerContent(ContentManagers content)
         {
-            base.LoadContent(content);
         }
-        void IDrawableGameComponent.UnloadContent(ContentManager content)
+        protected virtual void UnloadManagerContent()
         {
-            base.UnloadContent(content);
         }
 
-        protected override void LoadSharedContent(ContentManager content)
+        protected sealed override void LoadSharedContent(ContentManagers content)
         {
             this.spriteBatch = new SpriteBatch(graphicsDevice);
+            LoadManagerContent(content);
         }
-        protected override void UnloadSharedContent(ContentManager content)
+        protected sealed override void UnloadSharedContent()
         {
+            UnloadManagerContent();
             this.spriteBatch.Dispose();
             this.spriteBatch = null;
         }
@@ -203,17 +210,17 @@ namespace XNAControls
 
         #region IDrawable Members
 
-        public int DrawOrder
+        int IDrawable.DrawOrder
         {
             get { return 0; }
         }
-        public event EventHandler<EventArgs> DrawOrderChanged;
+        event EventHandler<EventArgs> IDrawable.DrawOrderChanged { add { } remove { } }
 
-        public bool Visible
+        bool IDrawable.Visible
         {
             get { return true; }
         }
-        public event EventHandler<EventArgs> VisibleChanged;
+        event EventHandler<EventArgs> IDrawable.VisibleChanged { add { } remove { } }
 
         #endregion
 

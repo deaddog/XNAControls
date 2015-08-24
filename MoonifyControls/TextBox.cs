@@ -163,21 +163,19 @@ namespace MoonifyControls
             }
         }
 
-        protected sealed override void LoadLocalContent(ContentManager content)
+        protected override void LoadContent(ContentManagers content)
         {
-            backgroundBox = content.Load<Texture2D>("EmptyBox");
-            caret = content.Load<Texture2D>("Caret");
-            iconbackground = content.Load<Texture2D>("TextBoxIconBack");
-            iconSEARCH = content.Load<Texture2D>("TextBoxIconSearch");
+            backgroundBox = content.ContainerContent.Load<Texture2D>("EmptyBox");
+            caret = content.ContainerContent.Load<Texture2D>("Caret");
+            iconbackground = content.ContainerContent.Load<Texture2D>("TextBoxIconBack");
+            iconSEARCH = content.ContainerContent.Load<Texture2D>("TextBoxIconSearch");
 
             box = MoonifyBoxes.EmptyBox;
 
             font = new CharacterRenderer("HelveticaNeueLT Com 65 Md", 9f, System.Drawing.FontStyle.Regular, System.Drawing.Text.TextRenderingHint.AntiAlias);
         }
-        protected override void UnloadLocalContent(ContentManager content)
+        protected override void UnloadContent()
         {
-            base.UnloadLocalContent(content);
-
             (font as IDisposable).Dispose();
             font = null;
         }

@@ -82,11 +82,11 @@ namespace MoonifyControls
             }
         }
 
-        protected override void LoadLocalContent(ContentManager content)
+        protected override void LoadContent(ContentManagers content)
         {
-            backgroundTexture = content.Load<Texture2D>("ImageBox");
+            backgroundTexture = content.ContainerContent.Load<Texture2D>("ImageBox");
             backgroundBox = MoonifyBoxes.ImageBox;
-            loadingIcon = new LoadingIcon(content, LoadingIconTypes.Type1);
+            loadingIcon = new LoadingIcon(content.ContainerContent, LoadingIconTypes.Type1);
         }
 
         public override void Draw(SpriteBatch spriteBatch, GameTime gameTime)

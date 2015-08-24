@@ -109,26 +109,26 @@ namespace MoonifyControls
                 this.items.Add(t);
         }
 
-        protected sealed override void LoadLocalContent(ContentManager content)
+        protected sealed override void LoadContent(ContentManagers content)
         {
             frameBox = MoonifyBoxes.EmptyBoxFrame;
-            frameTexture = content.Load<Texture2D>("EmptyBoxFrame");
+            frameTexture = content.ContainerContent.Load<Texture2D>("EmptyBoxFrame");
 
             fillBox = MoonifyBoxes.EmptyBoxFill;
-            fillTexture = content.Load<Texture2D>("EmptyBoxFill");
+            fillTexture = content.ContainerContent.Load<Texture2D>("EmptyBoxFill");
 
             selectionBox = new Box(1, 0, 208, 0, 1, 0, 0, 25, 0, 2);
-            selectionTexture = content.Load<Texture2D>("ListBoxHighlight");
+            selectionTexture = content.ContainerContent.Load<Texture2D>("ListBoxHighlight");
 
             scrollBarBox = MoonifyBoxes.ScrollbarBar;
-            scrollBarTexture = content.Load<Texture2D>("ScrollbarBar");
+            scrollBarTexture = content.ContainerContent.Load<Texture2D>("ScrollbarBar");
 
             scrollSliderBox = MoonifyBoxes.ScrollbarSlider;
-            scrollSliderTexture = content.Load<Texture2D>("ScrollbarSlider");
+            scrollSliderTexture = content.ContainerContent.Load<Texture2D>("ScrollbarSlider");
 
             font = new CharacterRenderer("HelveticaNeueLT Com 65 Md", 9f, System.Drawing.FontStyle.Regular, System.Drawing.Text.TextRenderingHint.AntiAlias);
         }
-        protected override void UnloadLocalContent(ContentManager content)
+        protected override void UnloadContent()
         {
             (font as IDisposable).Dispose();
             font = null;

@@ -326,17 +326,10 @@ namespace XNAControls
         {
         }
 
-        protected internal virtual void LoadLocalContent(ContentManager content)
+        protected internal virtual void LoadContent(ContentManagers content)
         {
         }
-        protected internal virtual void UnloadLocalContent(ContentManager content)
-        {
-        }
-
-        protected internal virtual void LoadContent(ContentManager content)
-        {
-        }
-        protected internal virtual void UnloadContent(ContentManager content)
+        protected internal virtual void UnloadContent()
         {
         }
 
