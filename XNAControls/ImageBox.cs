@@ -97,7 +97,7 @@ namespace XNAControls
                 img.Draw(spriteBatch, this.OffsetLocation, this.Size, Color.White);
 
             if (loadAlpha > 0)
-                loadingIcon.Draw(spriteBatch, gameTime, this.OffsetLocation + (this.Size / 2), new Vector2(60, 60), Color.White * loadAlpha);
+                DrawLoading(spriteBatch, gameTime, OffsetLocation, Size, loadAlpha.CurrentValue);
 
             DrawForeground(spriteBatch, gameTime, OffsetLocation, Size);
 
@@ -105,6 +105,7 @@ namespace XNAControls
         }
 
         protected abstract void DrawBackground(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position, Vector2 size);
+        protected abstract void DrawLoading(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position, Vector2 size, float alpha);
         protected abstract void DrawForeground(SpriteBatch spriteBatch, GameTime gameTime, Vector2 position, Vector2 size);
 
         public sealed override void Update(GameTime gameTime)
