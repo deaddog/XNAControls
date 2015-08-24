@@ -113,7 +113,6 @@
     <Compile Include="DataLoader.cs" />
     <Compile Include="DataLoadManager.cs" />
     <Compile Include="DataLoadState.cs" />
-    <Compile Include="IDrawableGameComponent.cs" />
     <Compile Include="KeyboardInput.cs" />
     <Compile Include="KeyEventArgs.cs" />
     <Compile Include="KeyEventHandler.cs" />

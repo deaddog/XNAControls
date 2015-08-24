@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XNAControls
 {
-    public abstract class ControlManagerBase : ControlContainerBase, IDrawableGameComponent
+    public abstract class ControlManagerBase : ControlContainerBase, IGameComponent, IDrawable, IUpdateable
     {
         private SpriteBatch spriteBatch;
         private GraphicsDevice graphicsDevice;
@@ -86,15 +86,6 @@ namespace XNAControls
 
         public virtual void Initialize()
         {
-        }
-
-        void IDrawableGameComponent.LoadContent(ContentManager content)
-        {
-            base.LoadContent(content);
-        }
-        void IDrawableGameComponent.UnloadContent(ContentManager content)
-        {
-            base.UnloadContent(content);
         }
 
         protected override void LoadSharedContent(ContentManager content)
