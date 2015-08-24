@@ -239,12 +239,12 @@ namespace MoonifyControls
                 this.Left = false;
         }
 
-        protected sealed override void LoadLocalContent(Microsoft.Xna.Framework.Content.ContentManager content)
+        protected override void LoadContent(ContentManagers content)
         {
             this.box = textureBoxFromType(type);
-            this.boxTexture = content.Load<Texture2D>(textureFromType(type));
+            this.boxTexture = content.ContainerContent.Load<Texture2D>(textureFromType(type));
 
-            this.handleTexture = content.Load<Texture2D>("SwitchBoxHandles");
+            this.handleTexture = content.ContainerContent.Load<Texture2D>("SwitchBoxHandles");
         }
 
         public override void Update(GameTime gameTime)

@@ -24,9 +24,10 @@ namespace MoonifyControls
             get { return background; }
         }
 
-        protected override void LoadSharedLocalContent(ContentManager content)
+        protected override void LoadManagerContent(ContentManagers content)
         {
-            this.background = content.Load<Texture2D>("Background");
+            base.LoadSharedContent(content);
+            this.background = content.ContainerContent.Load<Texture2D>("Background");
         }
     }
 }
