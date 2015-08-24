@@ -24,16 +24,10 @@ namespace XNAControls
             get { return controls; }
         }
 
-        protected virtual void LoadSharedContent(ContentManager content)
+        protected virtual void LoadSharedContent(ContentManagers content)
         {
         }
-        protected virtual void LoadSharedLocalContent(ContentManager content)
-        {
-        }
-        protected virtual void UnloadSharedContent(ContentManager content)
-        {
-        }
-        protected virtual void UnloadSharedLocalContent(ContentManager content)
+        protected virtual void UnloadSharedContent()
         {
         }
 
