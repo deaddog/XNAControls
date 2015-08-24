@@ -102,6 +102,7 @@
     <Compile Include="CharacterEventArgs.cs" />
     <Compile Include="CharacterEventHandler.cs" />
     <Compile Include="CharacterRenderer.cs" />
+    <Compile Include="ContentManagers.cs" />
     <Compile Include="Control.cs" />
     <Compile Include="ControlContainerBase.cs" />
     <Compile Include="ControlManagerBase.cs" />
