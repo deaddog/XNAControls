@@ -13,6 +13,8 @@ namespace XNAControls
         private SpriteBatch spriteBatch;
         private GraphicsDevice graphicsDevice;
 
+        private ContentManager containerContent;
+
         private Control keyboardControl = null;
 
         private int mouseOffsetX = 0;
@@ -32,8 +34,13 @@ namespace XNAControls
             KeyboardInput.KeyDown += keyDown;
             KeyboardInput.KeyUp += keyUp;
 
-            base.LoadLocalContent(new ContentManager(services, contentRoot));
-            base.LoadContent(new ContentManager(services, "Content"));
+            this.containerContent = new ContentManager(services, contentRoot);
+
+            ContentManagers managers = new ContentManagers(
+                containerContent,
+                new ContentManager(services, "Content")
+                );
+            base.LoadContent(managers);
         }
 
         public ControlManagerBase(Game game, string contentRoot)
@@ -88,12 +95,21 @@ namespace XNAControls
         {
         }
 
-        protected override void LoadSharedContent(ContentManager content)
+        protected virtual void LoadManagerContent(ContentManagers content)
+        {
+        }
+        protected virtual void UnloadManagerContent(ContentManagers content)
+        {
+        }
+
+        protected sealed override void LoadSharedContent(ContentManagers content)
         {
             this.spriteBatch = new SpriteBatch(graphicsDevice);
+            LoadManagerContent(content);
         }
-        protected override void UnloadSharedContent(ContentManager content)
+        protected sealed override void UnloadSharedContent(ContentManagers content)
         {
+            UnloadManagerContent(content);
             this.spriteBatch.Dispose();
             this.spriteBatch = null;
         }
