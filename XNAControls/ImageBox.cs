@@ -13,11 +13,7 @@ namespace XNAControls
         private AlphaImage texture;
         private LinkedList<AlphaImage> textures;
 
-        private Texture2D backgroundTexture;
-        private Box backgroundBox;
-
         private DataLoader<Texture2D> pending;
-        private LoadingIcon loadingIcon;
         private xfloat loadAlpha;
 
         public ImageBox(float width, float height)
@@ -78,13 +74,6 @@ namespace XNAControls
                 loadAlpha.SetMethod(showMethod);
                 loadAlpha.TargetValue = 1;
             }
-        }
-
-        protected internal override void LoadLocalContent(ContentManager content)
-        {
-            backgroundTexture = content.Load<Texture2D>("ImageBox");
-            backgroundBox = MoonifyBoxes.ImageBox;
-            loadingIcon = new LoadingIcon(content, LoadingIconTypes.Type1);
         }
 
         public sealed override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
