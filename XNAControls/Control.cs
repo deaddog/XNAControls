@@ -347,6 +347,9 @@ namespace XNAControls
             return point.X >= 0 && point.X < this.size.X && point.Y >= 0 && point.Y < this.size.Y;
         }
 
+        private void boundsChange(float x, float y, float width, float height)
+        {
+        }
         protected virtual void InnerBoundsChange(float x, float y, float width, float height)
         {
             var l = this.location;
