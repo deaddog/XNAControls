@@ -26,7 +26,6 @@ namespace MoonifyControls
 
         protected override void LoadManagerContent(ContentManagers content)
         {
-            base.LoadSharedContent(content);
             this.background = content.ContainerContent.Load<Texture2D>("Background");
         }
     }
