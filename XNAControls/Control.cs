@@ -39,7 +39,7 @@ namespace XNAControls
 
         protected Vector2 OffsetLocation
         {
-            get { return location + (parent == null ? Vector2.Zero : parent.OffsetLocation); }
+            get { return location + parent?.OffsetLocation ?? Vector2.Zero; }
         }
         public Vector2 Location
         {
@@ -353,6 +353,16 @@ namespace XNAControls
             var s = new Vector2(width, height);
 
             InnerBoundsChange(ref l.X, ref l.Y, ref s.X, ref s.Y);
+            var p = parent;
+            if (p != null)
+            {
+                var templ = l;
+                var temps = s;
+
+                parent?.ControlBoundsChange(this, ref l.X, ref l.Y, ref s.X, ref s.Y);
+                if (l != templ || s != temps)
+                    InnerBoundsChange(ref l.X, ref l.Y, ref s.X, ref s.Y);
+            }
 
             bool locationChange = l != this.location;
             this.location = l;
