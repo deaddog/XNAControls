@@ -233,17 +233,12 @@ namespace MoonifyControls
             spriteBatch.End();
         }
 
-        protected override void InnerBoundsChange(float x, float y, float width, float height)
+        protected override void InnerBoundsChange(ref float x, ref float y, ref float width, ref float height)
         {
-            if (width < 30)
-                width = 30;
-            if (height < 30)
-                height = 30;
+            width = Math.Max(width, 30);
+            height = Math.Max(height, 30);
 
-            if (height != 30)
-                height = 30;
-
-            base.InnerBoundsChange(x, y, width, height);
+            height = Math.Min(height, 30);
         }
 
         /// <summary>

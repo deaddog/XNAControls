@@ -59,6 +59,10 @@ namespace XNAControls
                 controls[i].Update(gameTime);
         }
 
+        protected internal virtual void ControlBoundsChange(Control control, ref float x, ref float y, ref float width, ref float height)
+        {
+        }
+
         public class ControlCollection : IEnumerable<Control>
         {
             private ControlContainerBase container;

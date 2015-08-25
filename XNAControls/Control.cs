@@ -18,7 +18,7 @@ namespace XNAControls
         public Control(float initialwidth, float initialheight)
         {
             this.enabled = true;
-            this.InnerBoundsChange(0, 0, initialwidth, initialheight);
+            this.boundsChange(0, 0, initialwidth, initialheight);
         }
 
         public bool Focused
@@ -39,12 +39,12 @@ namespace XNAControls
 
         protected Vector2 OffsetLocation
         {
-            get { return location + (parent == null ? Vector2.Zero : parent.OffsetLocation); }
+            get { return location + parent?.OffsetLocation ?? Vector2.Zero; }
         }
         public Vector2 Location
         {
             get { return location; }
-            set { InnerBoundsChange(value.X, value.Y, size.X, size.Y); }
+            set { boundsChange(value.X, value.Y, size.X, size.Y); }
         }
         public float X
         {
@@ -60,7 +60,7 @@ namespace XNAControls
         public Vector2 Size
         {
             get { return size; }
-            set { InnerBoundsChange(location.X, location.Y, value.X, value.Y); }
+            set { boundsChange(location.X, location.Y, value.X, value.Y); }
         }
         public float Width
         {
@@ -347,19 +347,37 @@ namespace XNAControls
             return point.X >= 0 && point.X < this.size.X && point.Y >= 0 && point.Y < this.size.Y;
         }
 
-        protected virtual void InnerBoundsChange(float x, float y, float width, float height)
+        private void boundsChange(float x, float y, float width, float height)
         {
-            var l = this.location;
-            var s = this.size;
+            var l = new Vector2(x, y);
+            var s = new Vector2(width, height);
 
-            this.location = new Vector2(x, y);
-            this.size = new Vector2(width, height);
+            InnerBoundsChange(ref l.X, ref l.Y, ref s.X, ref s.Y);
+            var p = parent;
+            if (p != null)
+            {
+                var templ = l;
+                var temps = s;
 
-            if (l != this.location)
+                parent?.ControlBoundsChange(this, ref l.X, ref l.Y, ref s.X, ref s.Y);
+                if (l != templ || s != temps)
+                    InnerBoundsChange(ref l.X, ref l.Y, ref s.X, ref s.Y);
+            }
+
+            bool locationChange = l != this.location;
+            this.location = l;
+
+            bool sizeChange = s != this.size;
+            this.size = s;
+
+            if (locationChange)
                 Message(ControlMessages.CONTROL_LOCATIONCHANGED);
 
-            if (s != this.size)
+            if (sizeChange)
                 Message(ControlMessages.CONTROL_SIZECHANGED);
+        }
+        protected virtual void InnerBoundsChange(ref float x, ref float y, ref float width, ref float height)
+        {
         }
     }
 }

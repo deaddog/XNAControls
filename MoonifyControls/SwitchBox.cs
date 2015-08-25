@@ -60,16 +60,12 @@ namespace MoonifyControls
             }
         }
 
-        protected override void InnerBoundsChange(float x, float y, float width, float height)
+        protected override void InnerBoundsChange(ref float x, ref float y, ref float width, ref float height)
         {
             Vector2 size = sizeFromType(type);
 
-            if (width != size.X)
-                width = size.X;
-            if (height != size.Y)
-                height = size.Y;
-
-            base.InnerBoundsChange(x, y, width, height);
+            width = size.X;
+            height = size.Y;
         }
 
         private static Vector2 sizeFromType(SwitchBoxTypes type)

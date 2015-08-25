@@ -391,16 +391,12 @@ namespace MoonifyControls
             return index < items.Count ? index : -1;
         }
 
-        protected override void InnerBoundsChange(float x, float y, float width, float height)
+        protected override void InnerBoundsChange(ref float x, ref float y, ref float width, ref float height)
         {
-            if (width < 30)
-                width = 30;
-            if (height < 27)
-                height = 27;
+            width = Math.Max(width, 30);
+            height = Math.Max(height, 27);
 
             //height = ((int)(height - 2) / 25) * 25 + 2;
-
-            base.InnerBoundsChange(x, y, width, height);
         }
 
         #region Collection List
