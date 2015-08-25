@@ -393,10 +393,8 @@ namespace MoonifyControls
 
         protected override void InnerBoundsChange(float x, float y, float width, float height)
         {
-            if (width < 30)
-                width = 30;
-            if (height < 27)
-                height = 27;
+            width = Math.Max(width, 30);
+            height = Math.Max(height, 27);
 
             //height = ((int)(height - 2) / 25) * 25 + 2;
 

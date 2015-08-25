@@ -64,10 +64,8 @@ namespace MoonifyControls
         {
             Vector2 size = sizeFromType(type);
 
-            if (width != size.X)
-                width = size.X;
-            if (height != size.Y)
-                height = size.Y;
+            width = size.X;
+            height = size.Y;
 
             base.InnerBoundsChange(x, y, width, height);
         }
